@@ -1,0 +1,208 @@
+---
+title: "Bitácora de Cómputo — Álgebra Matricial en R"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+---
+
+## 2. Objetivo
+
+Aprender a crear matrices en R a partir de vectores, nombrar sus renglones y columnas, acceder a elementos específicos mediante índices, y realizar operaciones matriciales fundamentales (suma, resta, multiplicación escalar y producto matricial), así como calcular matrices transpuestas e inversas.
+
+---
+
+## 3. Datos utilizados
+
+Para esta práctica se utilizaron dos fuentes:
+
+- **Vectores construidos manualmente** (`etzel`, `a`, `b`, `c`, `A`, `B`) para ilustrar la creación y operación de matrices.
+- **Dataset `iris`** de R base, eliminando la columna categórica `Species` para obtener una matriz numérica de 150 × 4.
+
+---
+
+## 4. Procedimiento
+
+### 4.1 Creación de matrices
+
+**a) Dividiendo un vector**
+
+Se creó el vector `etzel` con los enteros del 1 al 25 y se reorganizó en matrices indicando el número de renglones (`nrow`) o columnas (`ncol`):
+
+```{r}
+etzel <- c(1:25)
+etzel
+
+m1 <- matrix(etzel, nrow = 5)   # 5 renglones, 5 columnas
+m1
+
+m2 <- matrix(etzel, ncol = 3)   # 3 columnas
+m2
+```
+
+**b) Combinando vectores de igual longitud**
+
+Se unieron tres vectores usando `rbind()` (por renglones) y `cbind()` (por columnas):
+
+```{r}
+a <- c(12, 24, 36)
+b <- c(2,  3,  4)
+c <- c(20, 40, 60)
+
+m3 <- rbind(a, b, c)   # Cada vector es un renglón
+m3
+
+m4 <- cbind(a, b, c)   # Cada vector es una columna
+m4
+```
+
+### 4.2 Nombrar renglones y columnas
+
+```{r}
+rownames(m4) <- c("lunes", "martes", "miercoles")
+m4
+```
+
+### 4.3 Acceso a elementos (indexación)
+
+Los elementos se acceden con `[renglón, columna]`. Dejar un índice vacío selecciona todo:
+
+```{r}
+m2[ , ]        # Toda la matriz
+m3[3, 3]       # Elemento en renglón 3, columna 3
+m3[ , 2]       # Todos los renglones de la columna 2
+m3[1, ]        # Renglón 1, todas las columnas
+```
+
+### 4.4 Operaciones matriciales
+
+Se definieron las matrices A y B de 3×3 con `byrow = TRUE` para ingresar valores por renglón:
+
+```{r}
+A <- matrix(c(3,2,4, 7,5,0, 1,0,8), nrow = 3, byrow = TRUE)
+B <- matrix(c(6,1,0, 2,8,7, 3,4,5), nrow = 3, byrow = TRUE)
+
+A
+B
+```
+
+**Transpuestas:**
+
+```{r}
+t(A)
+t(B)
+```
+
+**Suma y resta:**
+
+```{r}
+A + B
+A - B
+```
+
+**Productos escalares:**
+
+```{r}
+-4 * A
+2 * B
+```
+
+**Producto matricial:**
+
+```{r}
+A %*% B   # A × B
+B %*% A   # B × A  (resultado distinto — no conmutativa)
+```
+
+**Inversa:**
+
+```{r}
+solve(A)
+solve(B)
+```
+
+### 4.5 Aplicación con el dataset iris
+
+Se eliminó la columna `Species` y se calcularon tres matrices estadísticas:
+
+```{r}
+head(iris, 10)
+
+iris1 <- iris[ , -5]   # Solo columnas numéricas
+
+mcorrelacion <- cor(iris1)
+mcorrelacion
+
+mvarcov <- cov(iris1)
+mvarcov
+
+mdis_eucl <- dist(iris1, method = "euclidean")
+mdis_canb <- dist(iris1, method = "canberra")
+mdis_manh <- dist(iris1, method = "manhattan")
+```
+
+---
+
+## 5. Resultados
+
+### 5.1 Matrices construidas
+
+`matrix()` con `nrow = 5` produjo una matriz 5×5 llenada **por columna** (comportamiento predeterminado de R). Con `ncol = 3`, como 25 no es divisible entre 3, R recicla valores y emite una advertencia.
+
+Con `rbind()` cada vector se convierte en un **renglón**; con `cbind()`, en una **columna**. Ambas requieren que los vectores tengan la misma longitud.
+
+### 5.2 Operaciones matriciales
+
+La suma y resta se realizan **elemento a elemento**. El producto escalar multiplica cada entrada por la constante.
+
+El producto matricial `A %*% B ≠ B %*% A`, lo que confirma que la multiplicación de matrices **no es conmutativa**, consistente con los resultados obtenidos a mano en clase.
+
+`solve()` retorna la inversa siempre que el determinante sea distinto de cero. Si la matriz es singular, R lanza un error de sistema computacionalmente singular.
+
+### 5.3 Matrices estadísticas sobre iris
+
+La **matriz de correlación** muestra valores entre -1 y 1. Se observó alta correlación positiva entre `Petal.Length` y `Petal.Width` (r ≈ 0.96).
+
+La **matriz de covarianza** refleja las unidades originales, por lo que sus magnitudes son menos comparables directamente entre variables con escalas distintas.
+
+La **matriz de distancias** genera una matriz triangular inferior con las distancias entre cada par de las 150 observaciones. El método `canberra` es más sensible a diferencias relativas en valores pequeños; `manhattan` usa distancias absolutas en lugar de la raíz cuadrada de diferencias al cuadrado.
+
+---
+
+## 6. Problemas encontrados
+
+- Al crear `m2` con `ncol = 3` sobre un vector de longitud 25, R generó una advertencia de reciclado. Fue necesario entender que R completa la última columna repitiendo elementos del inicio del vector.
+
+- La sintaxis del producto matricial (`%*%`) no era intuitiva al principio; se confundió con la multiplicación elemento a elemento (`*`). Hubo que revisar la diferencia conceptual entre ambas operaciones.
+
+- Las líneas de código para `mcorrelacion`, `mvarcov` y `mdis` en el script original tenían el operador de asignación escapado (`\<-`), lo que impedía que corrieran directamente.
+
+- Los ejemplos de `solve()` y `eigen()` quedaron incompletos en el script original (solo el nombre de la función sin código ejecutable), lo que limitó la práctica de la inversa y los valores propios.
+
+---
+
+## 7. Aprendizaje
+
+Se logró comprender la diferencia entre crear una matriz a partir de un vector y construirla combinando vectores con `rbind`/`cbind`. Esto clarifica la relación entre vectores y matrices en R.
+
+Quedó claro que el acceso por índices `[i, j]` es análogo a la notación matricial del salón de clases, lo que facilita la transición entre teoría e implementación.
+
+El ejercicio con `iris` mostró la utilidad inmediata del álgebra matricial en estadística: las matrices de correlación, covarianza y distancia son la base de métodos multivariados como componentes principales, análisis de conglomerados y escalamiento multidimensional.
+
+**Pendiente:** profundizar en `solve()` para matrices singulares y en `eigen()` (valores y vectores propios), que son fundamentales para PCA y otros análisis del curso.
+
+---
+
+*Bitácora de Cómputo — Álgebra Matricial en R*
