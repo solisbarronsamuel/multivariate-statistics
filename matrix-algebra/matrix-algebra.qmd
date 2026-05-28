@@ -1,47 +1,57 @@
 ---
-title: "Bitácora de Cómputo — Álgebra Matricial en R"
-author: ""
-date: "`r Sys.Date()`"
-output:
-  html_document:
-    theme: flatly
-    highlight: tango
-    toc: true
-    toc_float: true
-    toc_depth: 4
-    code_folding: show
+title: "Matrix Algebra"
+author: "Samuel Solís Barrón"
+execute:
+  echo: false
+  warning: false
+  message: false
+  cache: false
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+---
+
+## Objetivo
+
+Elaborar matrices a partir de vectores, acceder a elementos mediante índices y  realizar operaciones matriciales en lenguaje R.
+
+---
+
+## Datos utilizados
+
+La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
+
+```{r}
+#| echo: true
+
+data(iris)    # Carga el dataset iris que viene preinstalado en R base.
+              # No requiere ningún paquete adicional; R lo tiene disponible
+              # directamente con esta función.
+
+iris1 <- iris[, 1:4]   # Crea un nuevo data frame llamado iris1 que contiene
+                        # únicamente las columnas 1 a 4 del dataset original.
+                        # La notación [filas, columnas] selecciona subconjuntos:
+                        # dejar filas vacío significa "todas las filas";
+                        # 1:4 significa columnas 1, 2, 3 y 4.
+                        # Se excluye la columna 5 (Species) porque PCA solo
+                        # acepta variables numéricas continuas.
+
+head(iris1)   # Muestra las primeras 6 filas de iris1 en la consola.
+              # Es una verificación rápida para confirmar que el subconjunto
+              # se creó correctamente y contiene las columnas esperadas.
 ```
 
 ---
 
-## 2. Objetivo
+## Procedimiento
 
-Aprender a crear matrices en R a partir de vectores, nombrar sus renglones y columnas, acceder a elementos específicos mediante índices, y realizar operaciones matriciales fundamentales (suma, resta, multiplicación escalar y producto matricial), así como calcular matrices transpuestas e inversas.
-
----
-
-## 3. Datos utilizados
-
-Para esta práctica se utilizaron dos fuentes:
-
-- **Vectores construidos manualmente** (`etzel`, `a`, `b`, `c`, `A`, `B`) para ilustrar la creación y operación de matrices.
-- **Dataset `iris`** de R base, eliminando la columna categórica `Species` para obtener una matriz numérica de 150 × 4.
-
----
-
-## 4. Procedimiento
-
-### 4.1 Creación de matrices
+### Creación de matrices
 
 **a) Dividiendo un vector**
 
 Se creó el vector `etzel` con los enteros del 1 al 25 y se reorganizó en matrices indicando el número de renglones (`nrow`) o columnas (`ncol`):
 
 ```{r}
+
 etzel <- c(1:25)
 etzel
 
@@ -68,14 +78,14 @@ m4 <- cbind(a, b, c)   # Cada vector es una columna
 m4
 ```
 
-### 4.2 Nombrar renglones y columnas
+### Nombrar renglones y columnas
 
 ```{r}
 rownames(m4) <- c("lunes", "martes", "miercoles")
 m4
 ```
 
-### 4.3 Acceso a elementos (indexación)
+### Acceso a elementos (indexación)
 
 Los elementos se acceden con `[renglón, columna]`. Dejar un índice vacío selecciona todo:
 
@@ -86,7 +96,7 @@ m3[ , 2]       # Todos los renglones de la columna 2
 m3[1, ]        # Renglón 1, todas las columnas
 ```
 
-### 4.4 Operaciones matriciales
+### Operaciones matriciales
 
 Se definieron las matrices A y B de 3×3 con `byrow = TRUE` para ingresar valores por renglón:
 
@@ -133,12 +143,12 @@ solve(A)
 solve(B)
 ```
 
-### 4.5 Aplicación con el dataset iris
+### Aplicación con el dataset iris
 
 Se eliminó la columna `Species` y se calcularon tres matrices estadísticas:
 
 ```{r}
-head(iris, 10)
+head(iris)
 
 iris1 <- iris[ , -5]   # Solo columnas numéricas
 
@@ -155,15 +165,15 @@ mdis_manh <- dist(iris1, method = "manhattan")
 
 ---
 
-## 5. Resultados
+## Resultados
 
-### 5.1 Matrices construidas
+### Matrices construidas
 
 `matrix()` con `nrow = 5` produjo una matriz 5×5 llenada **por columna** (comportamiento predeterminado de R). Con `ncol = 3`, como 25 no es divisible entre 3, R recicla valores y emite una advertencia.
 
 Con `rbind()` cada vector se convierte en un **renglón**; con `cbind()`, en una **columna**. Ambas requieren que los vectores tengan la misma longitud.
 
-### 5.2 Operaciones matriciales
+### Operaciones matriciales
 
 La suma y resta se realizan **elemento a elemento**. El producto escalar multiplica cada entrada por la constante.
 
@@ -171,7 +181,7 @@ El producto matricial `A %*% B ≠ B %*% A`, lo que confirma que la multiplicaci
 
 `solve()` retorna la inversa siempre que el determinante sea distinto de cero. Si la matriz es singular, R lanza un error de sistema computacionalmente singular.
 
-### 5.3 Matrices estadísticas sobre iris
+### Matrices estadísticas sobre iris
 
 La **matriz de correlación** muestra valores entre -1 y 1. Se observó alta correlación positiva entre `Petal.Length` y `Petal.Width` (r ≈ 0.96).
 
@@ -181,15 +191,11 @@ La **matriz de distancias** genera una matriz triangular inferior con las distan
 
 ---
 
-## 6. Problemas encontrados
+## Problemas encontrados
 
 - Al crear `m2` con `ncol = 3` sobre un vector de longitud 25, R generó una advertencia de reciclado. Fue necesario entender que R completa la última columna repitiendo elementos del inicio del vector.
 
 - La sintaxis del producto matricial (`%*%`) no era intuitiva al principio; se confundió con la multiplicación elemento a elemento (`*`). Hubo que revisar la diferencia conceptual entre ambas operaciones.
-
-- Las líneas de código para `mcorrelacion`, `mvarcov` y `mdis` en el script original tenían el operador de asignación escapado (`\<-`), lo que impedía que corrieran directamente.
-
-- Los ejemplos de `solve()` y `eigen()` quedaron incompletos en el script original (solo el nombre de la función sin código ejecutable), lo que limitó la práctica de la inversa y los valores propios.
 
 ---
 
