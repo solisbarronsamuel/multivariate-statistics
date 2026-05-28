@@ -10,6 +10,7 @@ book:
     - intro.qmd
     - summary.qmd
     - matrix-algebra/matrix-algebra.qmd
+    - data-frame/data-frame.qmd
     - references.qmd
 
 bibliography: references.bib
