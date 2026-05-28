@@ -8,39 +8,44 @@ execute:
   cache: false
 ---
 
----
-
 ## Objetivo
 
 Elaborar matrices a partir de vectores, acceder a elementos mediante índices y  realizar operaciones matriciales en lenguaje R.
 
----
-
 ## Datos utilizados
+
+::: {.panel-tabset}
+
+### Descripción general
+[tabla comparativa y nota sobre filtros]
+
+#### iris
 
 La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
 
 ```{r}
 #| echo: true
 
-data(iris)    # Carga el dataset iris que viene preinstalado en R base.
-              # No requiere ningún paquete adicional; R lo tiene disponible
-              # directamente con esta función.
+data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
+iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
+DT::datatable(iris1)
 
-iris1 <- iris[, 1:4]   # Crea un nuevo data frame llamado iris1 que contiene
-                        # únicamente las columnas 1 a 4 del dataset original.
-                        # La notación [filas, columnas] selecciona subconjuntos:
-                        # dejar filas vacío significa "todas las filas";
-                        # 1:4 significa columnas 1, 2, 3 y 4.
-                        # Se excluye la columna 5 (Species) porque PCA solo
-                        # acepta variables numéricas continuas.
-
-head(iris1)   # Muestra las primeras 6 filas de iris1 en la consola.
-              # Es una verificación rápida para confirmar que el subconjunto
-              # se creó correctamente y contiene las columnas esperadas.
 ```
 
----
+### ChickWeight
+
+La base de datos `ChickWeight` está incluida en R. Proviene de un experimento  nutricional descrito por Crowder & Hand (1990) en el que se evaluó el efecto de  cuatro dietas proteicas sobre el crecimiento de pollitos. La variable de respuesta es `weight` (peso corporal en gramos), la variable temporal es `Time` (día de  medición, de 0 a 21), el identificador del sujeto es `Chick` (pollito 1 al 50) y la variable de agrupación es `Diet` (dieta asignada: 1, 2, 3 ó 4).
+
+```{r}
+#| echo: true
+
+data(ChickWeight)  # Carga ChickWeight desde R base.
+cw <- ChickWeight  # Nombre más corto para facilitar su uso.
+DT::datatable(cw, options = list(pageLength = 10))
+
+```
+
+:::
 
 ## Procedimiento
 
@@ -199,7 +204,7 @@ La **matriz de distancias** genera una matriz triangular inferior con las distan
 
 ---
 
-## 7. Aprendizaje
+## Aprendizaje
 
 Se logró comprender la diferencia entre crear una matriz a partir de un vector y construirla combinando vectores con `rbind`/`cbind`. Esto clarifica la relación entre vectores y matrices en R.
 
