@@ -1,0 +1,112 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "multivariate-statistics",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. (USA) 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "2  Summary",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. (USA) 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "References"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html",
+    "href": "matrix-algebra/matrix-algebra.html",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "",
+    "text": "2. Objetivo\nAprender a crear matrices en R a partir de vectores, nombrar sus renglones y columnas, acceder a elementos específicos mediante índices, y realizar operaciones matriciales fundamentales (suma, resta, multiplicación escalar y producto matricial), así como calcular matrices transpuestas e inversas.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#objetivo",
+    "href": "matrix-algebra/matrix-algebra.html#objetivo",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "2. Objetivo",
+    "text": "2. Objetivo\nAprender a crear matrices en R a partir de vectores, nombrar sus renglones y columnas, acceder a elementos específicos mediante índices, y realizar operaciones matriciales fundamentales (suma, resta, multiplicación escalar y producto matricial), así como calcular matrices transpuestas e inversas.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#datos-utilizados",
+    "href": "matrix-algebra/matrix-algebra.html#datos-utilizados",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "3. Datos utilizados",
+    "text": "3. Datos utilizados\nPara esta práctica se utilizaron dos fuentes:\n\nVectores construidos manualmente (etzel, a, b, c, A, B) para ilustrar la creación y operación de matrices.\nDataset iris de R base, eliminando la columna categórica Species para obtener una matriz numérica de 150 × 4.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#procedimiento",
+    "href": "matrix-algebra/matrix-algebra.html#procedimiento",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "4. Procedimiento",
+    "text": "4. Procedimiento\n\n4.1 Creación de matrices\na) Dividiendo un vector\nSe creó el vector etzel con los enteros del 1 al 25 y se reorganizó en matrices indicando el número de renglones (nrow) o columnas (ncol):\n\netzel &lt;- c(1:25)\netzel\n\n [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25\n\nm1 &lt;- matrix(etzel, nrow = 5)   # 5 renglones, 5 columnas\nm1\n\n     [,1] [,2] [,3] [,4] [,5]\n[1,]    1    6   11   16   21\n[2,]    2    7   12   17   22\n[3,]    3    8   13   18   23\n[4,]    4    9   14   19   24\n[5,]    5   10   15   20   25\n\nm2 &lt;- matrix(etzel, ncol = 3)   # 3 columnas\nm2\n\n      [,1] [,2] [,3]\n [1,]    1   10   19\n [2,]    2   11   20\n [3,]    3   12   21\n [4,]    4   13   22\n [5,]    5   14   23\n [6,]    6   15   24\n [7,]    7   16   25\n [8,]    8   17    1\n [9,]    9   18    2\n\n\nb) Combinando vectores de igual longitud\nSe unieron tres vectores usando rbind() (por renglones) y cbind() (por columnas):\n\na &lt;- c(12, 24, 36)\nb &lt;- c(2,  3,  4)\nc &lt;- c(20, 40, 60)\n\nm3 &lt;- rbind(a, b, c)   # Cada vector es un renglón\nm3\n\n  [,1] [,2] [,3]\na   12   24   36\nb    2    3    4\nc   20   40   60\n\nm4 &lt;- cbind(a, b, c)   # Cada vector es una columna\nm4\n\n      a b  c\n[1,] 12 2 20\n[2,] 24 3 40\n[3,] 36 4 60\n\n\n\n\n4.2 Nombrar renglones y columnas\n\nrownames(m4) &lt;- c(\"lunes\", \"martes\", \"miercoles\")\nm4\n\n           a b  c\nlunes     12 2 20\nmartes    24 3 40\nmiercoles 36 4 60\n\n\n\n\n4.3 Acceso a elementos (indexación)\nLos elementos se acceden con [renglón, columna]. Dejar un índice vacío selecciona todo:\n\nm2[ , ]        # Toda la matriz\n\n      [,1] [,2] [,3]\n [1,]    1   10   19\n [2,]    2   11   20\n [3,]    3   12   21\n [4,]    4   13   22\n [5,]    5   14   23\n [6,]    6   15   24\n [7,]    7   16   25\n [8,]    8   17    1\n [9,]    9   18    2\n\nm3[3, 3]       # Elemento en renglón 3, columna 3\n\n c \n60 \n\nm3[ , 2]       # Todos los renglones de la columna 2\n\n a  b  c \n24  3 40 \n\nm3[1, ]        # Renglón 1, todas las columnas\n\n[1] 12 24 36\n\n\n\n\n4.4 Operaciones matriciales\nSe definieron las matrices A y B de 3×3 con byrow = TRUE para ingresar valores por renglón:\n\nA &lt;- matrix(c(3,2,4, 7,5,0, 1,0,8), nrow = 3, byrow = TRUE)\nB &lt;- matrix(c(6,1,0, 2,8,7, 3,4,5), nrow = 3, byrow = TRUE)\n\nA\n\n     [,1] [,2] [,3]\n[1,]    3    2    4\n[2,]    7    5    0\n[3,]    1    0    8\n\nB\n\n     [,1] [,2] [,3]\n[1,]    6    1    0\n[2,]    2    8    7\n[3,]    3    4    5\n\n\nTranspuestas:\n\nt(A)\n\n     [,1] [,2] [,3]\n[1,]    3    7    1\n[2,]    2    5    0\n[3,]    4    0    8\n\nt(B)\n\n     [,1] [,2] [,3]\n[1,]    6    2    3\n[2,]    1    8    4\n[3,]    0    7    5\n\n\nSuma y resta:\n\nA + B\n\n     [,1] [,2] [,3]\n[1,]    9    3    4\n[2,]    9   13    7\n[3,]    4    4   13\n\nA - B\n\n     [,1] [,2] [,3]\n[1,]   -3    1    4\n[2,]    5   -3   -7\n[3,]   -2   -4    3\n\n\nProductos escalares:\n\n-4 * A\n\n     [,1] [,2] [,3]\n[1,]  -12   -8  -16\n[2,]  -28  -20    0\n[3,]   -4    0  -32\n\n2 * B\n\n     [,1] [,2] [,3]\n[1,]   12    2    0\n[2,]    4   16   14\n[3,]    6    8   10\n\n\nProducto matricial:\n\nA %*% B   # A × B\n\n     [,1] [,2] [,3]\n[1,]   34   35   34\n[2,]   52   47   35\n[3,]   30   33   40\n\nB %*% A   # B × A  (resultado distinto — no conmutativa)\n\n     [,1] [,2] [,3]\n[1,]   25   17   24\n[2,]   69   44   64\n[3,]   42   26   52\n\n\nInversa:\n\nsolve(A)\n\n           [,1]       [,2]        [,3]\n[1,] -3.3333333  1.3333333  1.66666667\n[2,]  4.6666667 -1.6666667 -2.33333333\n[3,]  0.4166667 -0.1666667 -0.08333333\n\nsolve(B)\n\n           [,1]        [,2]        [,3]\n[1,]  0.1445783 -0.06024096  0.08433735\n[2,]  0.1325301  0.36144578 -0.50602410\n[3,] -0.1927711 -0.25301205  0.55421687\n\n\n\n\n4.5 Aplicación con el dataset iris\nSe eliminó la columna Species y se calcularon tres matrices estadísticas:\n\nhead(iris, 10)\n\n   Sepal.Length Sepal.Width Petal.Length Petal.Width Species\n1           5.1         3.5          1.4         0.2  setosa\n2           4.9         3.0          1.4         0.2  setosa\n3           4.7         3.2          1.3         0.2  setosa\n4           4.6         3.1          1.5         0.2  setosa\n5           5.0         3.6          1.4         0.2  setosa\n6           5.4         3.9          1.7         0.4  setosa\n7           4.6         3.4          1.4         0.3  setosa\n8           5.0         3.4          1.5         0.2  setosa\n9           4.4         2.9          1.4         0.2  setosa\n10          4.9         3.1          1.5         0.1  setosa\n\niris1 &lt;- iris[ , -5]   # Solo columnas numéricas\n\nmcorrelacion &lt;- cor(iris1)\nmcorrelacion\n\n             Sepal.Length Sepal.Width Petal.Length Petal.Width\nSepal.Length    1.0000000  -0.1175698    0.8717538   0.8179411\nSepal.Width    -0.1175698   1.0000000   -0.4284401  -0.3661259\nPetal.Length    0.8717538  -0.4284401    1.0000000   0.9628654\nPetal.Width     0.8179411  -0.3661259    0.9628654   1.0000000\n\nmvarcov &lt;- cov(iris1)\nmvarcov\n\n             Sepal.Length Sepal.Width Petal.Length Petal.Width\nSepal.Length    0.6856935  -0.0424340    1.2743154   0.5162707\nSepal.Width    -0.0424340   0.1899794   -0.3296564  -0.1216394\nPetal.Length    1.2743154  -0.3296564    3.1162779   1.2956094\nPetal.Width     0.5162707  -0.1216394    1.2956094   0.5810063\n\nmdis_eucl &lt;- dist(iris1, method = \"euclidean\")\nmdis_canb &lt;- dist(iris1, method = \"canberra\")\nmdis_manh &lt;- dist(iris1, method = \"manhattan\")",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#resultados",
+    "href": "matrix-algebra/matrix-algebra.html#resultados",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "5. Resultados",
+    "text": "5. Resultados\n\n5.1 Matrices construidas\nmatrix() con nrow = 5 produjo una matriz 5×5 llenada por columna (comportamiento predeterminado de R). Con ncol = 3, como 25 no es divisible entre 3, R recicla valores y emite una advertencia.\nCon rbind() cada vector se convierte en un renglón; con cbind(), en una columna. Ambas requieren que los vectores tengan la misma longitud.\n\n\n5.2 Operaciones matriciales\nLa suma y resta se realizan elemento a elemento. El producto escalar multiplica cada entrada por la constante.\nEl producto matricial A %*% B ≠ B %*% A, lo que confirma que la multiplicación de matrices no es conmutativa, consistente con los resultados obtenidos a mano en clase.\nsolve() retorna la inversa siempre que el determinante sea distinto de cero. Si la matriz es singular, R lanza un error de sistema computacionalmente singular.\n\n\n5.3 Matrices estadísticas sobre iris\nLa matriz de correlación muestra valores entre -1 y 1. Se observó alta correlación positiva entre Petal.Length y Petal.Width (r ≈ 0.96).\nLa matriz de covarianza refleja las unidades originales, por lo que sus magnitudes son menos comparables directamente entre variables con escalas distintas.\nLa matriz de distancias genera una matriz triangular inferior con las distancias entre cada par de las 150 observaciones. El método canberra es más sensible a diferencias relativas en valores pequeños; manhattan usa distancias absolutas en lugar de la raíz cuadrada de diferencias al cuadrado.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#problemas-encontrados",
+    "href": "matrix-algebra/matrix-algebra.html#problemas-encontrados",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "6. Problemas encontrados",
+    "text": "6. Problemas encontrados\n\nAl crear m2 con ncol = 3 sobre un vector de longitud 25, R generó una advertencia de reciclado. Fue necesario entender que R completa la última columna repitiendo elementos del inicio del vector.\nLa sintaxis del producto matricial (%*%) no era intuitiva al principio; se confundió con la multiplicación elemento a elemento (*). Hubo que revisar la diferencia conceptual entre ambas operaciones.\nLas líneas de código para mcorrelacion, mvarcov y mdis en el script original tenían el operador de asignación escapado (\\&lt;-), lo que impedía que corrieran directamente.\nLos ejemplos de solve() y eigen() quedaron incompletos en el script original (solo el nombre de la función sin código ejecutable), lo que limitó la práctica de la inversa y los valores propios.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  },
+  {
+    "objectID": "matrix-algebra/matrix-algebra.html#aprendizaje",
+    "href": "matrix-algebra/matrix-algebra.html#aprendizaje",
+    "title": "Bitácora de Cómputo — Álgebra Matricial en R",
+    "section": "7. Aprendizaje",
+    "text": "7. Aprendizaje\nSe logró comprender la diferencia entre crear una matriz a partir de un vector y construirla combinando vectores con rbind/cbind. Esto clarifica la relación entre vectores y matrices en R.\nQuedó claro que el acceso por índices [i, j] es análogo a la notación matricial del salón de clases, lo que facilita la transición entre teoría e implementación.\nEl ejercicio con iris mostró la utilidad inmediata del álgebra matricial en estadística: las matrices de correlación, covarianza y distancia son la base de métodos multivariados como componentes principales, análisis de conglomerados y escalamiento multidimensional.\nPendiente: profundizar en solve() para matrices singulares y en eigen() (valores y vectores propios), que son fundamentales para PCA y otros análisis del curso.\n\nBitácora de Cómputo — Álgebra Matricial en R",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bitácora de Cómputo — Álgebra Matricial en R</span>"
+    ]
+  }
+]

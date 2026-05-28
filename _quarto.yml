@@ -1,0 +1,26 @@
+project:
+  type: book
+
+book:
+  title: "multivariate-statistics"
+  author: "Norah Jones"
+  date: "5/26/2026"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - matrix-algebra\matrix-algebra.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+editor: source
+
