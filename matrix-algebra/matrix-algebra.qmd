@@ -17,31 +17,33 @@ Elaborar matrices a partir de vectores, acceder a elementos mediante índices y 
 ::: {.panel-tabset}
 
 ### Descripción general
-[tabla comparativa y nota sobre filtros]
-
-#### iris
 
 La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
 
+### Código R
+
+El código para cargar las bases de datos es el siguiente:
+
 ```{r}
+#| echo: true
+#| eval: false
+
+data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
+iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
+DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
+                      # Muestra 10 filas por página.
+
+```
+
+### iris
+
+```{r}
+
 #| echo: true
 
 data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
 DT::datatable(iris1)
-
-```
-
-### ChickWeight
-
-La base de datos `ChickWeight` está incluida en R. Proviene de un experimento  nutricional descrito por Crowder & Hand (1990) en el que se evaluó el efecto de  cuatro dietas proteicas sobre el crecimiento de pollitos. La variable de respuesta es `weight` (peso corporal en gramos), la variable temporal es `Time` (día de  medición, de 0 a 21), el identificador del sujeto es `Chick` (pollito 1 al 50) y la variable de agrupación es `Diet` (dieta asignada: 1, 2, 3 ó 4).
-
-```{r}
-#| echo: true
-
-data(ChickWeight)  # Carga ChickWeight desde R base.
-cw <- ChickWeight  # Nombre más corto para facilitar su uso.
-DT::datatable(cw, options = list(pageLength = 10))
 
 ```
 
