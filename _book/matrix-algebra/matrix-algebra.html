@@ -8,7 +8,7 @@
 
 <meta name="author" content="Samuel Solís Barrón">
 
-<title>3&nbsp; Matrix Algebra – multivariate-statistics</title>
+<title>1&nbsp; Matrix Algebra – Estadística Multivariada con R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -35,7 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../data-frame/data-frame.html" rel="next">
-<link href="../summary.html" rel="prev">
+<link href="../index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -107,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../matrix-algebra/matrix-algebra.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../matrix-algebra/matrix-algebra.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -122,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">multivariate-statistics</a> 
+      <a href="../">Estadística Multivariada con R</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -140,32 +140,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../matrix-algebra/matrix-algebra.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../data-frame/data-frame.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Frames</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Frames</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../manova/manova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">MANOVA y MANCOVA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -184,24 +172,24 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">3.1</span> Objetivo</a></li>
-  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">3.2</span> Datos utilizados</a></li>
-  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">3.3</span> Procedimiento</a>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">1.1</span> Objetivo</a></li>
+  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">1.2</span> Datos utilizados</a></li>
+  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">1.3</span> Procedimiento</a>
   <ul class="collapse">
-  <li><a href="#creación-de-matrices" id="toc-creación-de-matrices" class="nav-link" data-scroll-target="#creación-de-matrices"><span class="header-section-number">3.3.1</span> Creación de matrices</a></li>
-  <li><a href="#nombrar-renglones-y-columnas" id="toc-nombrar-renglones-y-columnas" class="nav-link" data-scroll-target="#nombrar-renglones-y-columnas"><span class="header-section-number">3.3.2</span> Nombrar renglones y columnas</a></li>
-  <li><a href="#acceso-a-elementos-indexación" id="toc-acceso-a-elementos-indexación" class="nav-link" data-scroll-target="#acceso-a-elementos-indexación"><span class="header-section-number">3.3.3</span> Acceso a elementos (indexación)</a></li>
-  <li><a href="#operaciones-matriciales" id="toc-operaciones-matriciales" class="nav-link" data-scroll-target="#operaciones-matriciales"><span class="header-section-number">3.3.4</span> Operaciones matriciales</a></li>
-  <li><a href="#aplicación-con-el-dataset-iris" id="toc-aplicación-con-el-dataset-iris" class="nav-link" data-scroll-target="#aplicación-con-el-dataset-iris"><span class="header-section-number">3.3.5</span> Aplicación con el dataset iris</a></li>
+  <li><a href="#creación-de-matrices" id="toc-creación-de-matrices" class="nav-link" data-scroll-target="#creación-de-matrices"><span class="header-section-number">1.3.1</span> Creación de matrices</a></li>
+  <li><a href="#nombrar-renglones-y-columnas" id="toc-nombrar-renglones-y-columnas" class="nav-link" data-scroll-target="#nombrar-renglones-y-columnas"><span class="header-section-number">1.3.2</span> Nombrar renglones y columnas</a></li>
+  <li><a href="#acceso-a-elementos-indexación" id="toc-acceso-a-elementos-indexación" class="nav-link" data-scroll-target="#acceso-a-elementos-indexación"><span class="header-section-number">1.3.3</span> Acceso a elementos (indexación)</a></li>
+  <li><a href="#operaciones-matriciales" id="toc-operaciones-matriciales" class="nav-link" data-scroll-target="#operaciones-matriciales"><span class="header-section-number">1.3.4</span> Operaciones matriciales</a></li>
+  <li><a href="#aplicación-con-el-dataset-iris" id="toc-aplicación-con-el-dataset-iris" class="nav-link" data-scroll-target="#aplicación-con-el-dataset-iris"><span class="header-section-number">1.3.5</span> Aplicación con el dataset iris</a></li>
   </ul></li>
-  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">3.4</span> Resultados</a>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">1.4</span> Resultados</a>
   <ul class="collapse">
-  <li><a href="#matrices-construidas" id="toc-matrices-construidas" class="nav-link" data-scroll-target="#matrices-construidas"><span class="header-section-number">3.4.1</span> Matrices construidas</a></li>
-  <li><a href="#operaciones-matriciales-1" id="toc-operaciones-matriciales-1" class="nav-link" data-scroll-target="#operaciones-matriciales-1"><span class="header-section-number">3.4.2</span> Operaciones matriciales</a></li>
-  <li><a href="#matrices-estadísticas-sobre-iris" id="toc-matrices-estadísticas-sobre-iris" class="nav-link" data-scroll-target="#matrices-estadísticas-sobre-iris"><span class="header-section-number">3.4.3</span> Matrices estadísticas sobre iris</a></li>
+  <li><a href="#matrices-construidas" id="toc-matrices-construidas" class="nav-link" data-scroll-target="#matrices-construidas"><span class="header-section-number">1.4.1</span> Matrices construidas</a></li>
+  <li><a href="#operaciones-matriciales-1" id="toc-operaciones-matriciales-1" class="nav-link" data-scroll-target="#operaciones-matriciales-1"><span class="header-section-number">1.4.2</span> Operaciones matriciales</a></li>
+  <li><a href="#matrices-estadísticas-sobre-iris" id="toc-matrices-estadísticas-sobre-iris" class="nav-link" data-scroll-target="#matrices-estadísticas-sobre-iris"><span class="header-section-number">1.4.3</span> Matrices estadísticas sobre iris</a></li>
   </ul></li>
-  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">3.5</span> Problemas encontrados</a></li>
-  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">3.6</span> Aprendizaje</a></li>
+  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">1.5</span> Problemas encontrados</a></li>
+  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">1.6</span> Aprendizaje</a></li>
   </ul>
 </nav>
     </div>
@@ -210,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></h1>
 </div>
 
 
@@ -233,12 +221,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="objetivo" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">3.1</span> Objetivo</h2>
+<section id="objetivo" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">1.1</span> Objetivo</h2>
 <p>Elaborar matrices a partir de vectores, acceder a elementos mediante índices y realizar operaciones matriciales en lenguaje R.</p>
 </section>
-<section id="datos-utilizados" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="datos-utilizados"><span class="header-section-number">3.2</span> Datos utilizados</h2>
+<section id="datos-utilizados" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="datos-utilizados"><span class="header-section-number">1.2</span> Datos utilizados</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Descripción general</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Código R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">iris</a></li></ul>
 <div class="tab-content">
@@ -265,10 +253,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="procedimiento" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">3.3</span> Procedimiento</h2>
-<section id="creación-de-matrices" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="creación-de-matrices"><span class="header-section-number">3.3.1</span> Creación de matrices</h3>
+<section id="procedimiento" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">1.3</span> Procedimiento</h2>
+<section id="creación-de-matrices" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="creación-de-matrices"><span class="header-section-number">1.3.1</span> Creación de matrices</h3>
 <p><strong>a) Dividiendo un vector</strong></p>
 <p>Se creó el vector <code>etzel</code> con los enteros del 1 al 25 y se reorganizó en matrices indicando el número de renglones (<code>nrow</code>) o columnas (<code>ncol</code>):</p>
 <div class="cell">
@@ -313,8 +301,8 @@ c   20   40   60</code></pre>
 </div>
 </div>
 </section>
-<section id="nombrar-renglones-y-columnas" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="nombrar-renglones-y-columnas"><span class="header-section-number">3.3.2</span> Nombrar renglones y columnas</h3>
+<section id="nombrar-renglones-y-columnas" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="nombrar-renglones-y-columnas"><span class="header-section-number">1.3.2</span> Nombrar renglones y columnas</h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>           a b  c
@@ -324,8 +312,8 @@ miercoles 36 4 60</code></pre>
 </div>
 </div>
 </section>
-<section id="acceso-a-elementos-indexación" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="acceso-a-elementos-indexación"><span class="header-section-number">3.3.3</span> Acceso a elementos (indexación)</h3>
+<section id="acceso-a-elementos-indexación" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="acceso-a-elementos-indexación"><span class="header-section-number">1.3.3</span> Acceso a elementos (indexación)</h3>
 <p>Los elementos se acceden con <code>[renglón, columna]</code>. Dejar un índice vacío selecciona todo:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -353,8 +341,8 @@ miercoles 36 4 60</code></pre>
 </div>
 </div>
 </section>
-<section id="operaciones-matriciales" class="level3" data-number="3.3.4">
-<h3 data-number="3.3.4" class="anchored" data-anchor-id="operaciones-matriciales"><span class="header-section-number">3.3.4</span> Operaciones matriciales</h3>
+<section id="operaciones-matriciales" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="operaciones-matriciales"><span class="header-section-number">1.3.4</span> Operaciones matriciales</h3>
 <p>Se definieron las matrices A y B de 3×3 con <code>byrow = TRUE</code> para ingresar valores por renglón:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -446,8 +434,8 @@ miercoles 36 4 60</code></pre>
 </div>
 </div>
 </section>
-<section id="aplicación-con-el-dataset-iris" class="level3" data-number="3.3.5">
-<h3 data-number="3.3.5" class="anchored" data-anchor-id="aplicación-con-el-dataset-iris"><span class="header-section-number">3.3.5</span> Aplicación con el dataset iris</h3>
+<section id="aplicación-con-el-dataset-iris" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="aplicación-con-el-dataset-iris"><span class="header-section-number">1.3.5</span> Aplicación con el dataset iris</h3>
 <p>Se eliminó la columna <code>Species</code> y se calcularon tres matrices estadísticas:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -477,37 +465,37 @@ Petal.Width     0.5162707  -0.1216394    1.2956094   0.5810063</code></pre>
 <hr>
 </section>
 </section>
-<section id="resultados" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="resultados"><span class="header-section-number">3.4</span> Resultados</h2>
-<section id="matrices-construidas" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="matrices-construidas"><span class="header-section-number">3.4.1</span> Matrices construidas</h3>
+<section id="resultados" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="resultados"><span class="header-section-number">1.4</span> Resultados</h2>
+<section id="matrices-construidas" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="matrices-construidas"><span class="header-section-number">1.4.1</span> Matrices construidas</h3>
 <p><code>matrix()</code> con <code>nrow = 5</code> produjo una matriz 5×5 llenada <strong>por columna</strong> (comportamiento predeterminado de R). Con <code>ncol = 3</code>, como 25 no es divisible entre 3, R recicla valores y emite una advertencia.</p>
 <p>Con <code>rbind()</code> cada vector se convierte en un <strong>renglón</strong>; con <code>cbind()</code>, en una <strong>columna</strong>. Ambas requieren que los vectores tengan la misma longitud.</p>
 </section>
-<section id="operaciones-matriciales-1" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="operaciones-matriciales-1"><span class="header-section-number">3.4.2</span> Operaciones matriciales</h3>
+<section id="operaciones-matriciales-1" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="operaciones-matriciales-1"><span class="header-section-number">1.4.2</span> Operaciones matriciales</h3>
 <p>La suma y resta se realizan <strong>elemento a elemento</strong>. El producto escalar multiplica cada entrada por la constante.</p>
 <p>El producto matricial <code>A %*% B ≠ B %*% A</code>, lo que confirma que la multiplicación de matrices <strong>no es conmutativa</strong>, consistente con los resultados obtenidos a mano en clase.</p>
 <p><code>solve()</code> retorna la inversa siempre que el determinante sea distinto de cero. Si la matriz es singular, R lanza un error de sistema computacionalmente singular.</p>
 </section>
-<section id="matrices-estadísticas-sobre-iris" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="matrices-estadísticas-sobre-iris"><span class="header-section-number">3.4.3</span> Matrices estadísticas sobre iris</h3>
+<section id="matrices-estadísticas-sobre-iris" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="matrices-estadísticas-sobre-iris"><span class="header-section-number">1.4.3</span> Matrices estadísticas sobre iris</h3>
 <p>La <strong>matriz de correlación</strong> muestra valores entre -1 y 1. Se observó alta correlación positiva entre <code>Petal.Length</code> y <code>Petal.Width</code> (r ≈ 0.96).</p>
 <p>La <strong>matriz de covarianza</strong> refleja las unidades originales, por lo que sus magnitudes son menos comparables directamente entre variables con escalas distintas.</p>
 <p>La <strong>matriz de distancias</strong> genera una matriz triangular inferior con las distancias entre cada par de las 150 observaciones. El método <code>canberra</code> es más sensible a diferencias relativas en valores pequeños; <code>manhattan</code> usa distancias absolutas en lugar de la raíz cuadrada de diferencias al cuadrado.</p>
 <hr>
 </section>
 </section>
-<section id="problemas-encontrados" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">3.5</span> Problemas encontrados</h2>
+<section id="problemas-encontrados" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">1.5</span> Problemas encontrados</h2>
 <ul>
 <li><p>Al crear <code>m2</code> con <code>ncol = 3</code> sobre un vector de longitud 25, R generó una advertencia de reciclado. Fue necesario entender que R completa la última columna repitiendo elementos del inicio del vector.</p></li>
 <li><p>La sintaxis del producto matricial (<code>%*%</code>) no era intuitiva al principio; se confundió con la multiplicación elemento a elemento (<code>*</code>). Hubo que revisar la diferencia conceptual entre ambas operaciones.</p></li>
 </ul>
 <hr>
 </section>
-<section id="aprendizaje" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">3.6</span> Aprendizaje</h2>
+<section id="aprendizaje" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">1.6</span> Aprendizaje</h2>
 <p>Se logró comprender la diferencia entre crear una matriz a partir de un vector y construirla combinando vectores con <code>rbind</code>/<code>cbind</code>. Esto clarifica la relación entre vectores y matrices en R.</p>
 <p>Quedó claro que el acceso por índices <code>[i, j]</code> es análogo a la notación matricial del salón de clases, lo que facilita la transición entre teoría e implementación.</p>
 <p>El ejercicio con <code>iris</code> mostró la utilidad inmediata del álgebra matricial en estadística: las matrices de correlación, covarianza y distancia son la base de métodos multivariados como componentes principales, análisis de conglomerados y escalamiento multidimensional.</p>
@@ -921,13 +909,13 @@ Petal.Width     0.5162707  -0.1216394    1.2956094   0.5810063</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../summary.html" class="pagination-link" aria-label="Summary">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span>
+      <a href="../index.html" class="pagination-link" aria-label="Preface">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../data-frame/data-frame.html" class="pagination-link" aria-label="Data Frames">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Frames</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Frames</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

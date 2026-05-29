@@ -3,12 +3,10 @@ project:
 
 book:
   title: "Estadística Multivariada con R"
-  author: "Norah Jones"
+  author: "Samuel Solís Barrón"
   date: "5/26/2026"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
     - matrix-algebra/matrix-algebra.qmd
     - data-frame/data-frame.qmd
     - manova/manova.qmd
