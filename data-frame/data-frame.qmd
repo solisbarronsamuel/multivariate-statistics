@@ -47,7 +47,10 @@ La base de datos `ChickWeight`, incluida en R base, proviene de un experimento  
 
 El código para cargar las bases de datos es el siguiente:
 
-```
+```{r}
+
+#| echo: false
+
 data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
 DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda, orden y paginación.
@@ -55,6 +58,7 @@ DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda, orden y
 data(ChickWeight)     # Carga ChickWeight desde R base.
 cw <- ChickWeight     # Asigna un nombre más corto para facilitar su uso en el código.
 DT::datatable(cw, options = list(pageLength = 10))  # Muestra 10 filas por página.
+
 ```
 
 ### iris

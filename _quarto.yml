@@ -9,6 +9,7 @@ book:
     - index.qmd
     - matrix-algebra/matrix-algebra.qmd
     - data-frame/data-frame.qmd
+    - data-visualization/data-visualization.qmd
     - manova/manova.qmd
     - references.qmd
 

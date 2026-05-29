@@ -32,7 +32,32 @@ execute:
 
 ::: {.panel-tabset}
 
-## Descripción general
+## paquetes
+
+```{r instalar-paquetes}
+
+#| eval: false
+#| echo: true
+
+install.packages(c("ggplot2", "GGally", "pheatmap", "aplpack", "dplyr", "here"))
+
+```
+
+```{r cargar-paquetes}
+
+#| eval: true
+#| echo: true
+
+library(ggplot2)
+library(GGally)
+library(pheatmap)
+library(aplpack)
+library(dplyr)
+library(here)
+
+```
+
+## descripción general
 
 La base de datos **`mtcars`** incluida en R base. Proviene de la revista *Motor Trend* (1974) y contiene datos de pruebas de rendimiento para 32 automóviles. No tiene una variable categórica principal, aunque `cyl` (cilindros: 4, 6 u 8) suele usarse como factor de agrupación. Las variables utilizadas en el heatmap son:
 
@@ -50,109 +75,70 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 - `Petal.Length` — longitud del pétalo (cm).
 - `Petal.Width` — ancho del pétalo (cm).
 
-La base de datos **datos-multivariada**. Proviene de las mediciones generadas durante el curso con variables morfométricas medidas en el grupo e incluye las mediciones de otras generaciones. Contiene una columna de identificador (columna 1), una columna de sexo (columna 2) y variables numéricas en las columnas restantes. Se utiliza en la matriz de dispersión (*ggpairs*), el heatmap principal y las caras de Chernoff principales.
+La base de datos `datos-multivariada`. Proviene de las mediciones generadas durante el curso con variables morfométricas medidas en el grupo e incluye las mediciones de otras generaciones. Contiene una columna de identificador (columna 1), una columna de sexo (columna 2) y variables numéricas en las columnas restantes.
 
-## Código R
+## código R
 
-El código para cargar las bases de datos es el siguiente:
+```{r}
+#| echo: true
+#| eval: false
 
-```r
-# mtcars 
-data(mtcars)           # Carga mtcars desde R base. No requiere paquetes adicionales.
-DT::datatable(mtcars)  # Tabla HTML interactiva con búsqueda, orden y paginación.
+# mtcars
+data(mtcars)
+DT::datatable(mtcars)
 
 # iris
-data(iris)             # Carga iris desde R base. No requiere paquetes adicionales.
-iris1 <- iris[, 1:4]   # Selecciona solo las 4 columnas numéricas (excluye Species).
+data(iris)
+iris1 <- iris[, 1:4]
 DT::datatable(iris1)
 
 # Datos propios
-datos <- read.csv("data/datos-multivariada.csv")  # Carga datos-multivariada desde la 
-                                                  # carpeta data. No requiere 
-                                                  # paquetes adicionales.
+datos <- read.csv(
+  here("data", "datos-multivariada.csv"),
+  dec = ",",
+  sep = ","
+)
 DT::datatable(datos, options = list(pageLength = 10))
 ```
 
-### mtcars
+## mtcars
 
 ```{r}
-
 #| echo: false
 #| eval: true
 
 data(mtcars)
 DT::datatable(mtcars)
-
 ```
 
-### iris
+## iris
 
 ```{r}
-
 #| echo: false
 #| eval: true
 
 data(iris)
 iris1 <- iris[, 1:4]
 DT::datatable(iris1)
-
 ```
 
-### Datos propios
+## datos propios
 
 ```{r}
-
 #| echo: false
 #| eval: true
 
-datos <- read.csv("data/datos-multivariada.csv")
+datos <- read.csv(
+  here("data", "datos-multivariada.csv"),
+  dec = ",",
+  sep = ";"
+)
 DT::datatable(datos, options = list(pageLength = 10))
-
 ```
 
 :::
 
 ## Procedimiento
-
-### Instalación y carga de paquetes
-
-```{r instalar-paquetes}
-
-#| eval: false
-
-# install.packages() descarga e instala paquetes desde el repositorio CRAN.
-# Solo debe ejecutarse una vez por entorno de trabajo; no se incluye en
-# documentos reproducibles que se comparten, para no modificar el entorno
-# del receptor sin su consentimiento.
-#
-# Paquetes instalados:
-#   ggplot2  — sistema de gráficos basado en la gramática de gráficas (Wilkinson, 2005).
-#   GGally   — extensión de ggplot2 que añade ggpairs() para matrices de dispersión.
-#   pheatmap — heatmaps con leyenda automática y mayor control de personalización.
-#   aplpack  — contiene faces(), la función para las Caras de Chernoff.
-#   dplyr    — verbos para manipulación y agrupación de data frames.
-
-install.packages(c("ggplot2", "GGally", "pheatmap", "aplpack", "dplyr"))
-
-```
-
-```{r cargar-paquetes}
-
-# library() carga cada paquete en la sesión activa de R, poniendo a
-# disposición todas sus funciones. Debe ejecutarse al inicio de cada
-# sesión en la que se usen estas herramientas.
-#
-# Se suprime warning = FALSE y message = FALSE (definido globalmente en el
-# bloque execute del YAML) para evitar que los mensajes de inicio de
-# dplyr y GGally contaminen la salida del documento.
-
-library(ggplot2)   # Sistema de visualización de datos
-library(GGally)    # Matrices de dispersión con correlaciones integradas
-library(pheatmap)  # Heatmaps con leyenda automática
-library(aplpack)   # Caras de Chernoff (faces())
-library(dplyr)     # Manipulación y agrupación de data frames
-
-```
 
 ### Parte 1 — Matrices de dispersión con `ggpairs()`
 
@@ -173,10 +159,10 @@ library(dplyr)     # Manipulación y agrupación de data frames
 #                      inesperados al filtrar o comparar cadenas de texto.
 
 datos <- read.csv(
-  "data/datos-multivariada.csv",
-  dec              = ",",
-  sep              = ",",
-  stringsAsFactors = FALSE
+   here("data", "datos-multivariada.csv"),
+  dec    = ",",
+  sep    = ",",
+   stringsAsFactors = FALSE
 )
 
 # datos[, -c(1, 2)] usa índices negativos para excluir las columnas 1 y 2
@@ -253,13 +239,14 @@ ggpairs(flea, columns = 2:4, ggplot2::aes(colour = species))
 # axis.text = element_text(size = 6) reduce el texto de los ejes para que
 # no se solapen cuando hay muchas variables en la matriz.
 
+datos_num <- datos[, sapply(datos, is.numeric)]
+
 pairs_plot <- ggpairs(
-  datos,
-  columns = 3:16,
-  title   = "Relaciones entre Variables Morfométricas",
-  upper   = list(continuous = wrap("cor",    size = 1.5)),
-  lower   = list(continuous = wrap("points", alpha = 0.3, size = 0.3)),
-  diag    = list(continuous = wrap("densityDiag"))
+  datos_num,
+  title = "Relaciones entre Variables Morfométricas",
+  upper = list(continuous = wrap("cor",    size = 1.5)),
+  lower = list(continuous = wrap("points", alpha = 0.3, size = 0.3)),
+  diag  = list(continuous = wrap("densityDiag"))
 ) +
   theme_bw() +
   theme(
@@ -312,7 +299,7 @@ Un heatmap representa los valores de una matriz mediante una escala de colores c
 
 #### Ejemplo con `mtcars`
 
-```{r heatmap-mtcars}
+```{r heatmap-mtcars-1}
 
 # as.matrix() convierte el data frame mtcars a una matriz numérica pura.
 # La función heatmap() de R base requiere este formato: no puede operar
@@ -334,7 +321,7 @@ heatmap(data_mtcars, main = "Heatmap – mtcars (sin escalar)")
 
 ```
 
-```{r heatmap-mtcars}
+```{r heatmap-mtcars-2}
 
 # scale = "column" estandariza cada variable (columna) de forma independiente:
 #   valor_estandarizado = (x - media_columna) / desviación_columna
@@ -351,7 +338,7 @@ heatmap(data_mtcars, scale = "column",
 
 #### Heatmap básico — datos propios
 
-```{r heatmap-basico}
+```{r heatmap-basico-1}
 
 # datos_sin ya contiene solo las columnas numéricas (columnas 1 y 2 excluidas).
 # as.matrix() lo convierte a matriz numérica para poder pasarlo a heatmap().
@@ -363,7 +350,7 @@ head(datos_matrix, 10)
 
 ```
 
-```{r heatmap-basico}
+```{r heatmap-basico-2}
 
 # heatmap() con los parámetros por defecto:
 #   - Aplica agrupamiento jerárquico sobre filas y columnas (dendrograma).
@@ -631,11 +618,12 @@ Las diferencias visuales entre las tres caras reflejan las diferencias reales en
 # que el documento sea reproducible en cualquier máquina con el archivo presente.
 
 datos <- read.csv(
-  "data/datos-multivariada.csv",
-  dec              = ",",
-  sep              = ",",
-  stringsAsFactors = FALSE
+   here("data", "datos-multivariada.csv"),
+  dec    = ",",
+  sep    = ",",
+   stringsAsFactors = FALSE
 )
+
 
 # datos[, -1] elimina solo la columna 1 (identificador) pero conserva la
 # columna 2 (sexo), ya que necesitamos esa variable para separar los grupos.
