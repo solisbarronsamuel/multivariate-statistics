@@ -85,12 +85,11 @@ La base de datos `datos-multivariada`. Proviene de las mediciones generadas dura
 
 # mtcars
 data(mtcars)
-DT::datatable(mtcars)
 
 # iris
 data(iris)
 iris1 <- iris[, 1:4]
-DT::datatable(iris1)
+
 
 # Datos propios
 datos <- read.csv(
@@ -98,7 +97,7 @@ datos <- read.csv(
   dec = ",",
   sep = ","
 )
-DT::datatable(datos, options = list(pageLength = 10))
+
 ```
 
 ## mtcars
