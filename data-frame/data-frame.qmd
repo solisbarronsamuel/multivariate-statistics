@@ -62,6 +62,7 @@ DT::datatable(cw, options = list(pageLength = 10))  # Muestra 10 filas por pági
 ```{r}
 
 #| echo: false
+#| eval: true
 
 data(iris)
 iris1 <- iris[, 1:4]
@@ -74,6 +75,7 @@ DT::datatable(iris1)
 ```{r}
 
 #| echo: false
+#| eval: true
 
 data(ChickWeight)
 cw <- ChickWeight
@@ -89,7 +91,7 @@ DT::datatable(cw, options = list(pageLength = 10))
 
 Antes de manipular cualquier conjunto de datos, es una buena práctica inspeccionarlo brevemente para confirmar su estructura, los nombres de las columnas y los tipos de datos.
 
-```{r explorar-datos}
+```{r explorar-datos-1}
 
 # head() muestra las primeras n filas de un data frame (por defecto n = 6).
 # Es útil para verificar que las columnas tienen los tipos correctos
@@ -100,7 +102,7 @@ head(ChickWeight)   # Primeras 6 filas de ChickWeight
 
 ```
 
-```{r explorar-datos}
+```{r explorar-datos-2}
 
 head(iris)          # Primeras 6 filas de iris
 
@@ -110,7 +112,7 @@ head(iris)          # Primeras 6 filas de iris
 
 La sintaxis general de indexación en R es `data[filas, columnas]`. Dejar un espacio en blanco en alguna dimensión significa *conservar todo* en esa dimensión.
 
-```{r sintaxis-general}
+```r sintaxis-general
 
 #| eval: false
 
@@ -126,7 +128,7 @@ datos[ , ]               # conservar todas las filas y todas las columnas
 
 #### Selección de columnas
 
-```{r seleccion-columnas}
+```r seleccion-columnas
 
 #| eval: false
 
@@ -154,7 +156,7 @@ nuevo_dato <- datos[ , -5]
 
 #### Selección de filas
 
-```{r seleccion-filas}
+```r seleccion-filas
 
 #| eval: false
 
@@ -224,7 +226,7 @@ library(dplyr)
 | `summarise()`  | Calcular resúmenes estadísticos         |
 | `group_by()`   | Agrupar para operaciones por grupo      |
 
-```{r crear-df}
+```r crear-df
 
 # Se crea el objeto df como copia de iris para trabajar con los ejemplos
 # sin modificar el data frame original.
@@ -236,7 +238,7 @@ df <- iris
 
 #### `select()` — Seleccionar columnas
 
-```{r select-ejemplos}
+```r select-ejemplos
 
 #| eval: false
 
@@ -263,7 +265,7 @@ df %>% select(starts_with("Sepal"))
 
 #### `filter()` — Filtrar filas
 
-```{r filter-ejemplos}
+```r filter-ejemplos
 
 #| eval: false
 
@@ -290,7 +292,7 @@ df %>% filter(Species == "setosa" | Species == "virginica")
 
 #### `mutate()` — Crear nuevas columnas
 
-```{r mutate-ejemplo}
+```r mutate-ejemplo
 
 #| eval: false
 
@@ -305,7 +307,7 @@ df %>% mutate(Sepal.Area = Sepal.Length * Sepal.Width)
 
 #### `arrange()` — Ordenar filas
 
-```{r arrange-ejemplo}
+```r arrange-ejemplo
 
 #| eval: false
 
@@ -323,7 +325,7 @@ df %>% arrange(desc(Sepal.Length))
 
 #### `relocate()` — Reordenar columnas
 
-```{r relocate-ejemplo}
+```r relocate-ejemplo
 
 #| eval: false
 
@@ -341,7 +343,7 @@ df %>% relocate(Sepal.Length, after = Species)
 
 #### `summarise()` — Resúmenes estadísticos
 
-```{r summarise-ejemplo}
+```r summarise-ejemplo
 
 #| eval: false
 
@@ -357,7 +359,7 @@ df %>% summarise(media_largo = mean(Sepal.Length))
 
 #### `group_by()` + `summarise()` — Resúmenes por grupo
 
-```{r group-summarise}
+```r group-summarise
 
 #| eval: false
 
@@ -375,7 +377,7 @@ df %>%
 
 #### Pipeline encadenado — ejemplo completo
 
-```{r pipeline-encadenado}
+```r pipeline-encadenado
 
 #| eval: false
 
