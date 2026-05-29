@@ -2,8 +2,18 @@
 title: "Data Frames"
 subtitle: "Indexación y Manipulación con R Base y `dplyr`"
 author: "Samuel Solís Barrón"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Contenido"
+    number-sections: true
+    code-fold: false
+    code-tools: true
+    theme: cosmo
+    highlight-style: github
 execute:
-  echo: false
+  echo: true
   warning: false
   message: false
   cache: false
@@ -11,36 +21,40 @@ execute:
 
 ## Objetivo
 
-Extraer subconjuntos de un dataframe de dos maneras distintas: usando la sintaxis de indexación de R base (`[ , ]`, `which()`, `subset()`) y usando los verbos del paquete `dplyr` del ecosistema Tidyverse (`filter()`, `select()`, `mutate()`, `arrange()`, `summarise()`, etc.).
+Extraer subconjuntos de un data frame de dos maneras distintas: usando la sintaxis de indexación de R base (`[ , ]`, `which()`, `subset()`) y usando los verbos del paquete `dplyr` del ecosistema Tidyverse (`filter()`, `select()`, `mutate()`, `arrange()`, `relocate()`, `summarise()`, etc.).
 
 ## Datos utilizados
 
-Se utilizaron dos bases de datos integradas en R base.
-
 ::: {.panel-tabset}
 
-### Descripción general
+## Descripción general
 
-La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
+La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
 
-La base de datos `ChickWeight` está incluida en R. Proviene de un experimento  nutricional descrito por Crowder & Hand (1990) en el que se evaluó el efecto de  cuatro dietas proteicas sobre el crecimiento de pollitos. La variable de respuesta es `weight` (peso corporal en gramos), la variable temporal es `Time` (día de  medición, de 0 a 21), el identificador del sujeto es `Chick` (pollito 1 al 50) y la variable de agrupación es `Diet` (dieta asignada: 1, 2, 3 ó 4).
+- `Sepal.Length` — longitud del sépalo (cm).
+- `Sepal.Width` — ancho del sépalo (cm).
+- `Petal.Length` — longitud del pétalo (cm).
+- `Petal.Width` — ancho del pétalo (cm).
 
-### Código R
+La base de datos `ChickWeight`, incluida en R base, proviene de un experimento  nutricional descrito por Crowder & Hand (1990) en el que se evaluó el efecto de cuatro dietas proteicas sobre el crecimiento de pollitos. La variable de agrupación (factor) es `Diet` (dietas 1, 2, 3 y 4), con mediciones repetidas por sujeto a lo largo del tiempo. Las variables del conjunto son:
+
+- `weight` — peso corporal del pollito (gramos).
+- `Time`   — día de medición (0 a 21).
+- `Chick`  — identificador del pollito (1 al 50).
+- `Diet`   — dieta proteica asignada (1, 2, 3 ó 4).
+
+## Código R
 
 El código para cargar las bases de datos es el siguiente:
 
-```{r}
-
-#| echo: true
-
+```
 data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
-DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
+DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda, orden y paginación.
 
 data(ChickWeight)     # Carga ChickWeight desde R base.
-cw <- ChickWeight     # Nombre más corto para facilitar su uso.
+cw <- ChickWeight     # Asigna un nombre más corto para facilitar su uso en el código.
 DT::datatable(cw, options = list(pageLength = 10))  # Muestra 10 filas por página.
-
 ```
 
 ### iris
@@ -48,8 +62,9 @@ DT::datatable(cw, options = list(pageLength = 10))  # Muestra 10 filas por pági
 ```{r}
 
 #| echo: false
-data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
-iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
+
+data(iris)
+iris1 <- iris[, 1:4]
 DT::datatable(iris1)
 
 ```
@@ -60,8 +75,8 @@ DT::datatable(iris1)
 
 #| echo: false
 
-data(ChickWeight)  # Carga ChickWeight desde R base.
-cw <- ChickWeight  # Nombre más corto para facilitar su uso.
+data(ChickWeight)
+cw <- ChickWeight
 DT::datatable(cw, options = list(pageLength = 10))
 
 ```
@@ -72,14 +87,20 @@ DT::datatable(cw, options = list(pageLength = 10))
 
 ### Exploración inicial de las bases de datos
 
+Antes de manipular cualquier conjunto de datos, es una buena práctica inspeccionarlo brevemente para confirmar su estructura, los nombres de las columnas y los tipos de datos.
+
 ```{r explorar-datos}
 
-
-# head() muestra las primeras filas de un data frame.
-# Sirve para verificar la estructura (nombres de columnas, tipos de datos)
-# antes de empezar a manipular los datos.
+# head() muestra las primeras n filas de un data frame (por defecto n = 6).
+# Es útil para verificar que las columnas tienen los tipos correctos
+# (numérico, factor, entero) antes de aplicar filtros o transformaciones.
+# Si el data frame tiene miles de filas, head() evita imprimir todo en pantalla.
 
 head(ChickWeight)   # Primeras 6 filas de ChickWeight
+
+```
+
+```{r explorar-datos}
 
 head(iris)          # Primeras 6 filas de iris
 
@@ -87,66 +108,105 @@ head(iris)          # Primeras 6 filas de iris
 
 ### R Base: Indexación de Data Frames
 
-La sintaxis general de indexación en R es `data[filas, columnas]`. Dejar un espacio en blanco significa *conservar todo* en esa dimensión.
+La sintaxis general de indexación en R es `data[filas, columnas]`. Dejar un espacio en blanco en alguna dimensión significa *conservar todo* en esa dimensión.
 
-```{r sintaxis-general, eval=FALSE}
+```{r sintaxis-general}
 
-# Forma general
-datos[filas, columnas]   # seleccionar filas y columnas
-datos[ , ]               # conservar todo
+#| eval: false
+
+# El operador [ ] es el indexador fundamental de R para vectores,
+# matrices y data frames. Para data frames acepta dos argumentos
+# separados por una coma: [filas, columnas].
+# Omitir uno de los dos (dejar el espacio vacío) conserva esa dimensión completa.
+
+datos[filas, columnas]   # seleccionar filas y columnas específicas
+datos[ , ]               # conservar todas las filas y todas las columnas
 
 ```
 
 #### Selección de columnas
 
-```{r seleccion-columnas, eval=FALSE}
+```{r seleccion-columnas}
 
-# Quedarse con una sola columna (por posición)
+#| eval: false
+
+# Seleccionar una sola columna por su posición (número entero).
+# El resultado es un vector, no un data frame.
+
 nuevo_dato <- datos[ , 40]
 
-# Seleccionar varias columnas no contiguas
+# c() ("combine") construye un vector de índices no contiguos.
+# Aquí se conservan la columna 2 y la columna 5, saltando las demás.
+
 nuevo_dato <- datos[ , c(2, 5)]
 
-# Seleccionar un rango de columnas
+# El operador : genera una secuencia de enteros consecutivos.
+# c(2:5) equivale a c(2, 3, 4, 5), conservando cuatro columnas contiguas.
+
 nuevo_dato <- datos[ , c(2:5)]
 
-# Eliminar una columna (signo negativo)
+# El signo negativo en el índice excluye la columna indicada.
+# -5 elimina la quinta columna y conserva todas las demás.
+
 nuevo_dato <- datos[ , -5]
 
 ```
 
 #### Selección de filas
 
-```{r seleccion-filas, eval=FALSE}
+```{r seleccion-filas}
 
-# Seleccionar las primeras 50 observaciones por posición
+#| eval: false
+
+# El operador : selecciona un rango de filas por posición.
+# 1:50 conserva las primeras cincuenta observaciones del data frame.
+
 nuevo_dato <- datos[1:50, ]
 
-# Seleccionar filas que cumplen una condición con which()
-# which() devuelve los índices (posiciones) donde la condición es TRUE
+# which() devuelve los índices (posiciones numéricas) de los elementos
+# de un vector lógico que son TRUE. Aquí filtra las filas donde
+# la columna gender es igual al texto "mujer".
+# El resultado de which() se usa directamente como índice de fila.
+
 nuevo_dato <- datos[which(datos$gender == "mujer"), ]
 
-# Combinar condiciones con & (AND lógico) y => (mayor o igual)
+# El operador & ("AND" lógico) combina dos condiciones:
+# ambas deben ser TRUE para que la fila se conserve.
+# >= es el operador "mayor o igual que".
+# Este ejemplo selecciona mujeres de 65 años o más.
+
 nuevo_dato <- datos[which(datos$gender == "mujer" & datos$age >= 65), ]
 
-# Usando subset(): más legible para condiciones combinadas con selección de columnas
+# subset() es una función de R base diseñada para filtrar y seleccionar
+# de forma más legible. El primer argumento es el data frame, el segundo
+# es la condición de filtrado de filas, y select = especifica las columnas
+# que se quieren conservar, referenciadas por nombre sin comillas.
+
 nuevo_dato <- subset(datos, age >= 20, select = c(ID, Weight))
 
 ```
 
 ### Tidyverse: Manipulación con `dplyr`
 
-`dplyr` es un paquete del ecosistema Tidyverse que ofrece verbos (funciones) especializados para manipular data frames de forma legible. Las operaciones se encadenan con el operador pipe `%>%`, que pasa el resultado de una función como primer argumento de la siguiente.
+`dplyr` es un paquete del ecosistema Tidyverse que ofrece verbos (funciones) especializados para manipular data frames de forma legible. Las operaciones se encadenan con el operador pipe `%>%`, que pasa el resultado de una función como primer argumento de la siguiente función en la cadena.
 
 ```{r instalar-dplyr}
 
-#| eval = FALSE
+#| eval: false
+
+# install.packages() descarga e instala un paquete desde CRAN.
+# Solo es necesario ejecutarlo una vez por entorno de trabajo.
 
 install.packages("dplyr")
 
 ```
 
 ```{r cargar-dplyr}
+
+# library() carga el paquete dplyr en la sesión activa de R,
+# poniendo a disposición todos sus verbos: filter(), select(),
+# mutate(), arrange(), summarise(), group_by(), etc.
+# Debe ejecutarse al inicio de cada sesión de R en la que se use dplyr.
 
 library(dplyr)
 
@@ -166,7 +226,10 @@ library(dplyr)
 
 ```{r crear-df}
 
-# Se crea el objeto df a partir de iris para trabajar con los ejemplos
+# Se crea el objeto df como copia de iris para trabajar con los ejemplos
+# sin modificar el data frame original.
+# El operador <- asigna el valor del lado derecho al nombre del lado izquierdo.
+
 df <- iris
 
 ```
@@ -175,11 +238,26 @@ df <- iris
 
 ```{r select-ejemplos}
 
-#| eval = FALSE
+#| eval: false
 
-df %>% select(Sepal.Length, Sepal.Width)      # seleccionar por nombre
-df %>% select(-Species)                       # eliminar una columna
-df %>% select(starts_with("Sepal"))           # columnas cuyo nombre empieza con "Sepal"
+# select() conserva únicamente las columnas especificadas por nombre.
+# No es necesario usar comillas ni el operador $.
+# El pipe %>% pasa df como primer argumento de select() de forma implícita.
+
+df %>% select(Sepal.Length, Sepal.Width)
+
+# El signo negativo dentro de select() excluye la columna indicada
+# y conserva todas las demás. Más expresivo que [ , -5] porque
+# usa el nombre en lugar del número de posición.
+
+df %>% select(-Species)
+
+# starts_with() es una función auxiliar ("selection helper") de dplyr
+# que selecciona todas las columnas cuyo nombre comienza con el prefijo dado.
+# Equivale a listar manualmente Sepal.Length y Sepal.Width, pero
+# escala automáticamente si se añaden más columnas con ese prefijo.
+
+df %>% select(starts_with("Sepal"))
 
 ```
 
@@ -187,18 +265,25 @@ df %>% select(starts_with("Sepal"))           # columnas cuyo nombre empieza con
 
 ```{r filter-ejemplos}
 
-#| eval = FALSE
+#| eval: false
 
-# Filtrar por categoría exacta
+# filter() conserva únicamente las filas que cumplen la condición dada.
+# == es el operador de igualdad (dos signos =); uno solo es asignación.
+
 df %>% filter(Species == "setosa")
 
-# Filtrar por condición numérica
+# > es el operador "mayor que". Conserva filas donde Sepal.Length supera 5.
+
 df %>% filter(Sepal.Length > 5)
 
-# Condición compuesta con AND (&)
+# & combina dos condiciones con AND lógico: ambas deben cumplirse.
+# Solo se conservan flores setosa con sépalo largo mayor a 5 cm.
+
 df %>% filter(Species == "setosa" & Sepal.Length > 5)
 
-# Condición compuesta con OR (|)
+# | es el operador OR lógico: basta con que se cumpla una de las dos condiciones.
+# Conserva todas las flores que sean setosa O virginica.
+
 df %>% filter(Species == "setosa" | Species == "virginica")
 
 ```
@@ -207,9 +292,13 @@ df %>% filter(Species == "setosa" | Species == "virginica")
 
 ```{r mutate-ejemplo}
 
-#| eval = FALSE
+#| eval: false
 
-# Se crea una nueva columna Sepal.Area como producto de largo por ancho
+# mutate() añade una nueva columna al data frame sin eliminar las existentes.
+# El nombre de la nueva columna (Sepal.Area) se define a la izquierda del =.
+# La expresión de la derecha puede usar cualquier operación vectorizada de R.
+# Aquí se calcula el área aproximada del sépalo como largo × ancho.
+
 df %>% mutate(Sepal.Area = Sepal.Length * Sepal.Width)
 
 ```
@@ -218,10 +307,17 @@ df %>% mutate(Sepal.Area = Sepal.Length * Sepal.Width)
 
 ```{r arrange-ejemplo}
 
-#| eval = FALSE
+#| eval: false
 
-df %>% arrange(Sepal.Length)           # ascendente (de menor a mayor)
-df %>% arrange(desc(Sepal.Length))     # descendente (de mayor a menor)
+# arrange() ordena las filas del data frame según la columna indicada.
+# Por defecto el orden es ascendente (de menor a mayor).
+
+df %>% arrange(Sepal.Length)
+
+# desc() ("descending") invierte el orden a descendente (de mayor a menor).
+# Es una función auxiliar usada exclusivamente dentro de arrange().
+
+df %>% arrange(desc(Sepal.Length))
 
 ```
 
@@ -229,19 +325,32 @@ df %>% arrange(desc(Sepal.Length))     # descendente (de mayor a menor)
 
 ```{r relocate-ejemplo}
 
-#| eval = FALSE
+#| eval: false
 
-df %>% relocate(Sepal.Length)                      # mover al principio
-df %>% relocate(Sepal.Length, after = Species)     # mover después de Species
+# relocate() mueve una o más columnas a una posición distinta del data frame.
+# Sin argumentos adicionales, mueve la columna especificada al principio (posición 1).
+
+df %>% relocate(Sepal.Length)
+
+# El argumento after = indica que la columna debe colocarse
+# inmediatamente después de la columna de referencia indicada.
+
+df %>% relocate(Sepal.Length, after = Species)
+
 ```
 
 #### `summarise()` — Resúmenes estadísticos
 
 ```{r summarise-ejemplo}
 
-#| eval = FALSE
+#| eval: false
 
-# Calcular la media del largo del sépalo en todo el data frame
+# summarise() (también escrito summarize()) colapsa todo el data frame
+# en una sola fila que contiene la(s) estadística(s) calculada(s).
+# Aquí se calcula la media aritmética de Sepal.Length para todas las filas.
+# mean() calcula el promedio aritmético de un vector numérico.
+# El resultado es un data frame de 1 fila × 1 columna llamada media_largo.
+
 df %>% summarise(media_largo = mean(Sepal.Length))
 
 ```
@@ -250,9 +359,14 @@ df %>% summarise(media_largo = mean(Sepal.Length))
 
 ```{r group-summarise}
 
-#| eval = FALSE
+#| eval: false
 
-# Calcular la media del largo del sépalo para cada especie por separado
+# group_by() no modifica los datos visualmente, pero añade metadata interna
+# que indica a summarise() (y a otras funciones) que las operaciones
+# deben realizarse de forma independiente dentro de cada nivel del factor.
+# Aquí se calcula la media de Sepal.Length para cada especie por separado,
+# produciendo un data frame de 3 filas (una por especie) × 2 columnas.
+
 df %>%
   group_by(Species) %>%
   summarise(media_largo = mean(Sepal.Length))
@@ -263,9 +377,17 @@ df %>%
 
 ```{r pipeline-encadenado}
 
-#| eval = FALSE
+#| eval: false
 
-# Filtrar solo setosa → crear columna de área → calcular área media
+# Este pipeline combina tres verbos en secuencia:
+#
+# 1. filter() conserva solo las flores de la especie setosa.
+# 2. mutate() añade la columna Sepal.Area = largo × ancho del sépalo.
+# 3. group_by() + summarise() calculan la media del área para esa especie.
+# El resultado es un data frame de 1 fila × 2 columnas (Species, area_media).
+# El operador %>% evita guardar objetos intermedios y hace el flujo legible
+# de arriba hacia abajo, como una receta de pasos secuenciales.
+
 df %>%
   filter(Species == "setosa") %>%
   mutate(Sepal.Area = Sepal.Length * Sepal.Width) %>%
@@ -280,193 +402,335 @@ df %>%
 
 ```{r res-chick1}
 
+# which() evalúa la condición Diet == 2 sobre cada fila y devuelve
+# un vector de índices enteros donde la condición es TRUE.
+# Esos índices se usan directamente entre los corchetes para seleccionar filas.
+# Al dejar el espacio de columnas vacío ( , ) se conservan las cuatro
+# columnas originales: weight, Time, Chick y Diet.
+# head(..., 5) muestra solo las primeras 5 filas del resultado.
+
 chick1 <- ChickWeight[which(ChickWeight$Diet == 2), ]
 head(chick1, 5)
 
 ```
 
-**a)** Se obtienen las observaciones de los pollitos asignados a la dieta 2. La tabla conserva las cuatro columnas originales y muestra solo las filas donde `Diet == 2`.
+**Interpretación:** El subconjunto `chick1` contiene todas las observaciones de los pollitos asignados a la dieta 2, conservando íntegramente las cuatro columnas originales (`weight`, `Time`, `Chick`, `Diet`). La columna `Diet` toma el valor 2 en todas las filas, confirmando que el filtro se aplicó correctamente. Las primeras filas corresponden a mediciones tempranas (días 0 y 2), donde los pesos son bajos porque los pollitos apenas comenzaban el experimento. `which()` garantiza que las filas con valores `NA` en la condición se descarten automáticamente, a diferencia del indexado lógico directo que las conservaría como `NA`.
+
+---
 
 ```{r res-chick2}
 
+# ChickWeight$Chick == 4 genera un vector lógico (TRUE/FALSE) de la misma
+# longitud que el data frame. R lo convierte internamente a índices para
+# seleccionar las filas correspondientes al pollito 4.
+# c("weight", "Time") selecciona columnas por nombre, descartando Chick y Diet.
+# El resultado es un data frame con 2 columnas y tantas filas como mediciones
+# tenga el pollito 4 (12 mediciones, una por cada día de observación).
+
 chick2 <- ChickWeight[ChickWeight$Chick == 4, c("weight", "Time")]
 head(chick2, 5)
-
 ```
 
-**b)** Para el pollito 4 se conservan únicamente el peso (`weight`) y el tiempo (`Time`). Esto es útil para graficar la curva de crecimiento de un individuo específico.
+**Interpretación:** `chick2` contiene el historial de peso del pollito número 4 a lo largo del tiempo, mostrando únicamente las columnas `weight` y `Time`. Esta estructura bidimensional es ideal para graficar la curva de crecimiento individual: `Time` en el eje X y `weight` en el eje Y. La selección de columnas por nombre es más robusta que por posición numérica, ya que no depende del orden de las columnas en el data frame original.
+
+---
 
 ```{r res-chick3}
 
+# El operador | ("OR" lógico) evalúa las dos condiciones de forma independiente
+# en cada fila y conserva la fila si al menos una de ellas es TRUE.
+# ChickWeight$Diet == 1 | ChickWeight$Diet == 4 produce un vector lógico
+# que es TRUE para cualquier dieta que sea 1 o que sea 4.
+# Al dejar las columnas vacías se conservan las cuatro variables originales.
+
 chick3 <- ChickWeight[ChickWeight$Diet == 1 | ChickWeight$Diet == 4, ]
 head(chick3, 5)
-
 ```
 
-**c)** La tabla incluye las observaciones de dietas 1 y 4 combinadas. El operador `|` (OR) garantiza que se conserven ambos grupos.
+**Interpretación:** `chick3` combina todas las observaciones de las dietas 1 y 4 en un único data frame. Las primeras filas mostradas pertenecen a la dieta 1 porque el data frame original está ordenado por `Chick` y los pollitos de la dieta 1 aparecen primero. Este subconjunto es útil para comparar directamente el efecto de estas dos dietas, por ejemplo mediante un boxplot o un modelo lineal. El operador `|` es el equivalente en R base del `filter(Diet %in% c(1, 4))` de `dplyr`.
+
+---
 
 ```{r res-chick4}
 
+# ChickWeight$weight > 100 genera un vector lógico de 578 elementos.
+# Solo las posiciones donde el peso supera los 100 gramos resultan TRUE.
+# Al usarlo como índice de filas [ , ] sin especificar columnas,
+# se conservan todas las variables del data frame para esas observaciones.
+
 chick4 <- ChickWeight[ChickWeight$weight > 100, ]
 head(chick4, 5)
-
 ```
 
-**d)** Solo aparecen pollitos con peso superior a 100 g. Estos tienden a ser observaciones de días de medición más avanzados, cuando los pollitos ya han crecido considerablemente.
+**Interpretación:** `chick4` conserva únicamente las observaciones donde el pollito ya superó los 100 gramos de peso corporal. Las primeras filas del resultado corresponden a días de medición avanzados (días 8 a 12 aproximadamente), lo que indica que los pollitos tardan al menos una semana en alcanzar ese umbral de peso bajo condiciones normales. Este tipo de filtro es útil para analizar únicamente la fase de crecimiento acelerado del experimento.
+
+---
 
 ```{r res-chick5}
 
+# ChickWeight$Time == 10 filtra las filas del día de medición 10.
+# 1:3 genera el vector de índices c(1, 2, 3), seleccionando las tres
+# primeras columnas del data frame: weight, Time y Chick.
+# La columna Diet (posición 4) queda excluida de esta selección.
+
 chick5 <- ChickWeight[ChickWeight$Time == 10, 1:3]
 head(chick5, 5)
-
 ```
 
-**e)** La tabla filtra el día 10 de medición y conserva solo las tres primeras columnas (`weight`, `Time`, `Chick`), omitiendo `Diet`.
+**Interpretación:** `chick5` representa una "fotografía transversal" del experimento en el día 10: muestra el peso de cada pollito en ese momento específico, junto con su identificador, pero omite la variable `Diet`. Este tipo de subconjunto es útil para comparar el peso en un punto de tiempo fijo entre todos los animales. Si se quisiera incluir la dieta para identificar diferencias entre grupos, bastará con eliminar la restricción de columnas o incluir la posición 4 en el rango de selección.
+
+---
 
 ### R Base con `iris`
 
 ```{r res-iris1}
 
+# [ , "Species"] selecciona la columna llamada Species por su nombre exacto.
+# En R base, seleccionar UNA sola columna con [ , nombre] devuelve un VECTOR
+# (en este caso un factor con tres niveles), no un data frame.
+# head(..., 5) funciona sobre vectores y muestra los primeros 5 elementos.
+
 iris1 <- iris[ , "Species"]
 head(iris1, 5)
-
 ```
 
-**a)** Al seleccionar una sola columna con `[ , "Species"]`, R devuelve un vector de factores (no un data frame). Las primeras cinco entradas corresponden a *setosa*.
+**Interpretación:** El resultado de `iris1` es un **factor** con tres niveles (`setosa`, `versicolor`, `virginica`), no un data frame. R imprime las primeras cinco observaciones seguidas de la línea `Levels: setosa versicolor virginica`, que indica los tres valores posibles del factor. Las cinco primeras filas corresponden a *setosa* porque el data frame original está ordenado con las 50 observaciones de cada especie en bloques consecutivos. Esta diferencia de tipo (vector vs. data frame) es un punto de confusión frecuente entre R base y `dplyr`, donde `select()` siempre preserva la estructura de data frame.
+
+---
 
 ```{r res-iris2}
 
+# El índice negativo -5 excluye la quinta columna (Species) del data frame.
+# R conserva automáticamente todas las demás columnas (1 a 4).
+# El resultado es un data frame de 150 filas × 4 columnas numéricas.
+
 iris2 <- iris[ , -5]
 head(iris2, 5)
-
 ```
 
-**b)** Al excluir la columna 5 (`Species`) con el signo negativo, se obtiene un data frame con solo las cuatro variables numéricas.
+**Interpretación:** `iris2` es un data frame de 150 filas y 4 columnas numéricas (`Sepal.Length`, `Sepal.Width`, `Petal.Length`, `Petal.Width`), con la columna categórica `Species` eliminada. Este subconjunto es el formato requerido, por ejemplo, para calcular una matriz de correlaciones con `cor()` o para ajustar un modelo de componentes principales con `prcomp()`, ya que ambas funciones requieren entrada exclusivamente numérica.
+
+---
 
 ```{r res-iris3}
 
+# iris$Sepal.Length > 5.0 evalúa la condición en las 150 filas y
+# produce un vector lógico de 150 elementos.
+# Al usarlo directamente como índice de filas (sin which()),
+# las filas donde la condición es FALSE se descartan;
+# si hubiera NAs en la columna, esas filas se conservarían como NA —
+# a diferencia de which(), que las eliminaría.
+# La coma sin nada a su derecha conserva todas las columnas.
+
 iris3 <- iris[iris$Sepal.Length > 5.0, ]
 head(iris3, 5)
-
 ```
 
-**c)** Se conservan solo las flores con sépalo largo mayor a 5 cm. La mayoría de las flores de *setosa* quedan excluidas, ya que esa especie tiende a tener sépalos más cortos.
+**Interpretación:** `iris3` contiene todas las flores con sépalo largo mayor a 5.0 cm. De las 150 observaciones originales, 118 cumplen esta condición (solo 32 tienen sépalo ≤ 5.0 cm). La mayoría de las flores excluidas son de la especie *setosa*, que tiene sépalos sistemáticamente más cortos, con una media de 5.006 cm. Las primeras filas del resultado pertenecen a *setosa* con valores justo por encima del umbral (5.1 cm), lo que confirma que el filtro es inclusivo para valores mayores estrictos.
+
+---
 
 ```{r res-iris4}
 
+# which() devuelve los índices de fila donde iris$Species == "setosa" es TRUE.
+# Esto garantiza que no se incluyen filas con NA en la columna Species,
+# aunque en este dataset no hay valores faltantes.
+# La coma vacía a la derecha conserva todas las columnas (Sepal, Petal y Species).
+
 iris4 <- iris[which(iris$Species == "setosa"), ]
 head(iris4, 5)
-
 ```
 
-**d)** El subconjunto contiene las 50 observaciones de *setosa*. `which()` devuelve los índices de filas donde la condición es verdadera.
+**Interpretación:** `iris4` contiene exactamente las 50 observaciones de la especie *setosa* con sus cinco columnas originales. Todas las filas de la columna `Species` muestran el valor `setosa`, confirmando que el filtro es correcto. Este subconjunto resulta útil para analizar las características morfológicas de la especie de forma aislada, por ejemplo para calcular sus estadísticos descriptivos o ajustar un modelo de regresión exclusivo para ese grupo.
+
+---
 
 ```{r res-iris5}
 
+# El operador | (OR lógico) combina dos condiciones sobre la columna Species.
+# La primera condición es TRUE para "virginica", la segunda para "versicolor".
+# which() devuelve los 100 índices donde al menos una condición es TRUE,
+# excluyendo completamente las 50 filas de "setosa".
+
 iris5 <- iris[which(iris$Species == "virginica" | iris$Species == "versicolor"), ]
 head(iris5, 5)
-
 ```
 
-**e)** Se excluye *setosa* y se conservan las 100 observaciones de *virginica* y *versicolor*. Las primeras filas corresponden a *versicolor*, que aparece primero en el data frame original.
+**Interpretación:** `iris5` contiene las 100 observaciones de las especies *virginica* y *versicolor*, con sus cinco columnas originales. Las primeras filas pertenecen a *versicolor* porque en el data frame original las especies aparecen en el orden setosa → versicolor → virginica. Este subconjunto es relevante para análisis discriminantes o de agrupamiento donde se quiere estudiar la separabilidad entre las dos especies de mayor tamaño, que son morfológicamente más similares entre sí que con *setosa*.
+
+---
 
 ### `dplyr` con `ChickWeight`
 
 ```{r res-chick1d}
 
+# filter() evalúa la condición Diet == 2 fila por fila y conserva
+# solo las filas donde el resultado es TRUE.
+# A diferencia de R base, no es necesario usar $ para referirse
+# a la columna; dplyr la encuentra automáticamente dentro del data frame
+# pasado por el pipe %>%.
+
 chick1_d <- ChickWeight %>% filter(Diet == 2)
 head(chick1_d, 5)
-
 ```
 
-**a)** El resultado es idéntico al obtenido con R base. `filter()` es más legible porque no requiere repetir el nombre del data frame dentro de la condición.
+**Interpretación:** El resultado de `chick1_d` es idéntico al de `chick1` obtenido con R base: conserva todas las observaciones de la dieta 2 con sus cuatro columnas. La ventaja de `filter()` sobre la indexación con `which()` es sintáctica: no es necesario repetir el nombre del data frame dentro de la condición (no se escribe `ChickWeight$Diet`), lo que hace el código más corto y legible, especialmente en pipelines con múltiples filtros encadenados.
+
+---
 
 ```{r res-chick2d}
 
+# El pipeline encadena dos verbos:
+# 1. filter(Chick == 4) conserva solo las filas del pollito 4.
+# 2. select(weight, Time) conserva solo las columnas de peso y tiempo.
+# El orden importa: si se invirtiera (select antes de filter), se perdería
+# la columna Chick antes de poder filtrar por ella.
+
 chick2_d <- ChickWeight %>% filter(Chick == 4) %>% select(weight, Time)
 head(chick2_d, 5)
-
 ```
 
-**b)** El pipeline encadena el filtro de pollito 4 con la selección de columnas. El resultado es equivalente al de R base, pero la secuencia de pasos es más fácil de leer en orden.
+**Interpretación:** `chick2_d` produce el mismo resultado que `chick2` de R base: el historial de peso del pollito 4 con únicamente las columnas `weight` y `Time`. La cadena de verbos expresa la intención de forma secuencial y legible: "toma `ChickWeight`, filtra el pollito 4, luego quédate con peso y tiempo". En R base, ambas operaciones se fusionan en una sola expresión de indexación `[ , ]`, lo que puede resultar menos intuitivo al leer.
+
+---
 
 ```{r res-chick3d}
 
+# filter() con el operador | conserva las filas donde Diet es 1 o Diet es 4.
+# Una alternativa equivalente y más compacta es filter(Diet %in% c(1, 4)),
+# que usa el operador de pertenencia %in% para verificar si el valor
+# de Diet está dentro del vector c(1, 4).
+
 chick3_d <- ChickWeight %>% filter(Diet == 1 | Diet == 4)
 head(chick3_d, 5)
-
 ```
 
-**c)** Mismo resultado que con R base. En `dplyr` también puede usarse `filter(Diet %in% c(1, 4))` como alternativa más compacta.
+**Interpretación:** `chick3_d` es estructuralmente idéntico a `chick3`: contiene todas las observaciones de las dietas 1 y 4 con sus cuatro columnas. El operador `%in%` mencionado en el comentario es especialmente útil cuando se necesita filtrar por más de dos valores de la misma variable, ya que evita escribir múltiples condiciones con `|`. Por ejemplo, `filter(Diet %in% c(1, 2, 4))` es más claro que `filter(Diet == 1 | Diet == 2 | Diet == 4)`.
+
+---
 
 ```{r res-chick4d}
 
+# filter(weight > 100) evalúa la condición sobre la columna weight
+# sin necesidad de usar el símbolo $ ni repetir el nombre del data frame.
+# El resultado es un subconjunto de las filas donde el peso supera los 100 g.
+
 chick4_d <- ChickWeight %>% filter(weight > 100)
 head(chick4_d, 5)
-
 ```
 
-**d)** Se obtienen los mismos pollitos con peso > 100 g. La sintaxis de `dplyr` evita usar el símbolo `$` y repite el nombre del data frame.
+**Interpretación:** `chick4_d` coincide exactamente con `chick4` de R base. Ambos devuelven las mismas filas y columnas porque la lógica del filtro es idéntica. La diferencia es únicamente estilística: `dplyr` evita el uso de `$` y hace el código más limpio. En análisis exploratorios donde se prueba rápidamente con diferentes umbrales de peso, la sintaxis de `dplyr` facilita modificar el valor 100 sin tener que localizar y editar múltiples referencias al nombre del data frame.
+
+---
 
 ```{r res-chick5d}
 
+# El pipeline encadena dos verbos:
+# 1. filter(Time == 10) conserva las filas del día de medición 10.
+# 2. select(1:3) selecciona las tres primeras columnas por posición:
+#    weight (1), Time (2) y Chick (3), descartando Diet (4).
+# select() acepta tanto nombres como posiciones numéricas.
+
 chick5_d <- ChickWeight %>% filter(Time == 10) %>% select(1:3)
 head(chick5_d, 5)
-
 ```
 
-**e)** El resultado es idéntico al de R base. `select(1:3)` funciona igual que `[ , 1:3]` pero dentro del paradigma Tidyverse.
+**Interpretación:** `chick5_d` produce el mismo resultado que `chick5` de R base: la instantánea del día 10 con las columnas `weight`, `Time` y `Chick`. En `dplyr`, `select(1:3)` funciona de manera equivalente a `[ , 1:3]`, aunque dentro del paradigma Tidyverse es preferible seleccionar por nombre (`select(weight, Time, Chick)`) para que el código sea robusto frente a cambios en el orden de las columnas.
+
+---
 
 ### `dplyr` con `iris`
 
 ```{r res-iris1d}
 
+# select(Species) en dplyr devuelve siempre un DATA FRAME de una columna,
+# no un vector como lo hace [ , "Species"] en R base.
+# Esta diferencia es importante: un data frame puede seguir recibiendo
+# verbos de dplyr encadenados, mientras que un vector no puede.
+
 iris1_d <- iris %>% select(Species)
 head(iris1_d, 5)
-
 ```
 
-**a)** A diferencia de R base, `select()` devuelve un **data frame** de una columna, no un vector. Esto es útil cuando se quiere seguir aplicando verbos de `dplyr`.
+**Interpretación:** A diferencia de `iris1` (R base), que devuelve un vector de factores, `iris1_d` es un **data frame** de 150 filas y 1 columna. R lo imprime con encabezado de columna (`Species`), mientras que el vector de R base se imprime sin encabezado y con la línea de niveles al final. Esta diferencia estructural es relevante cuando el resultado se usa en pasos posteriores: si se necesita seguir aplicando verbos de `dplyr`, el formato data frame es obligatorio.
+
+---
 
 ```{r res-iris2d}
 
+# select(-Species) excluye la columna Species por nombre.
+# Es equivalente a [ , -5] en R base pero más expresivo,
+# ya que no requiere conocer el número de posición de la columna.
+# El resultado es un data frame de 150 filas × 4 columnas numéricas.
+
 iris2_d <- iris %>% select(-Species)
 head(iris2_d, 5)
-
 ```
 
-**b)** Mismas cuatro columnas numéricas que con R base. La notación `select(-Species)` es más expresiva que `[ , -5]` porque no requiere conocer el número de columna.
+**Interpretación:** `iris2_d` es idéntico en contenido a `iris2` de R base: un data frame con las cuatro variables morfológicas numéricas y sin la columna `Species`. La ventaja de `select(-Species)` sobre `[ , -5]` es que el código es autoexplicativo (cualquier lector entiende que se elimina la especie) y no se rompe si en el futuro se reordena o añade alguna columna antes de `Species`.
+
+---
 
 ```{r res-iris3d}
 
+# filter(Sepal.Length > 5.0) evalúa la condición en todas las filas
+# y conserva aquellas donde la longitud del sépalo supera 5.0 cm.
+# En dplyr no es necesario usar $ ni which(); la condición se escribe
+# directamente con el nombre de la columna.
+
 iris3_d <- iris %>% filter(Sepal.Length > 5.0)
 head(iris3_d, 5)
-
 ```
 
-**c)** Se obtienen las mismas flores con sépalo largo > 5 cm. El número de filas resultante debe ser igual al del ejercicio correspondiente en R base.
+**Interpretación:** `iris3_d` produce el mismo subconjunto de 118 filas que `iris3` de R base. Las primeras cinco filas son idénticas en ambos casos. La equivalencia confirma que `filter()` y el indexado lógico de R base producen resultados consistentes. En `dplyr`, el código es más conciso porque omite las referencias repetidas al nombre del data frame dentro de la condición.
+
+---
 
 ```{r res-iris4d}
 
+# filter(Species == "setosa") conserva las filas cuya columna Species
+# tiene el valor "setosa". dplyr maneja internamente la comparación
+# de factores con cadenas de texto, por lo que no es necesario
+# convertir el factor a texto antes de filtrar.
+
 iris4_d <- iris %>% filter(Species == "setosa")
 head(iris4_d, 5)
-
 ```
 
-**d)** Las 50 flores de *setosa*, resultado idéntico al de `which()` en R base. `filter()` omite internamente el uso de `which()`.
+**Interpretación:** `iris4_d` contiene las mismas 50 observaciones de *setosa* que `iris4` de R base. El resultado visual es idéntico: cinco columnas, todas con `Species = setosa`. La diferencia interna es que `filter()` omite el uso de `which()`, ya que `dplyr` descarta automáticamente las filas con `NA` en la condición de filtrado. En este dataset no existen valores faltantes, por lo que ambos enfoques producen exactamente el mismo resultado.
+
+---
 
 ```{r res-iris5d}
 
+# %in% es el operador de pertenencia de R: evalúa si el valor
+# de la izquierda está contenido en el vector de la derecha.
+# Species %in% c("virginica", "versicolor") es TRUE para cualquier fila
+# cuya especie sea virginica O versicolor, excluyendo setosa.
+# Es más compacto y escalable que usar múltiples condiciones con |.
+
 iris5_d <- iris %>% filter(Species %in% c("virginica", "versicolor"))
 head(iris5_d, 5)
-
 ```
 
-**e)** El operador `%in%` es la forma más limpia de filtrar por múltiples valores de una misma columna, especialmente cuando los valores son más de dos.
+**Interpretación:** `iris5_d` contiene las mismas 100 observaciones que `iris5` de R base. El operador `%in%` es especialmente valioso cuando se necesita filtrar por más de dos valores de la misma variable: basta con añadir el valor al vector `c(...)`, sin escribir condiciones adicionales con `|`. Las primeras filas pertenecen a *versicolor*, consistente con el orden original del data frame, donde las observaciones de *versicolor* preceden a las de *virginica*.
+
+---
 
 ### Resumen estadístico por especie
 
 ```{r res-summarise}
+
+# group_by(Species) añade metadata de agrupación al data frame:
+# a partir de este punto, summarise() calculará cada estadístico
+# de forma independiente para cada uno de los tres niveles del factor.
+#
+# summarise() colapsa cada grupo en una sola fila con los estadísticos
+# especificados. mean() calcula la media aritmética de un vector numérico.
+# Cada argumento de summarise() define el nombre y el cálculo de
+# una columna del data frame de resultados.
+# El resultado final es un data frame de 3 filas × 5 columnas
+# (Species + cuatro medias).
 
 iris %>%
   group_by(Species) %>%
@@ -476,29 +740,30 @@ iris %>%
     media_largo_petalo = mean(Petal.Length),
     media_ancho_petalo = mean(Petal.Width)
   )
-  
 ```
 
-La tabla muestra los promedios de las cuatro medidas para cada especie. Se observa que *setosa* tiene los pétalos más pequeños (largo ~1.46 cm, ancho ~0.25 cm), mientras que *virginica* tiene los pétalos más grandes. *Versicolor* tiene valores intermedios en todas las variables, lo que anticipa que será la especie más difícil de separar de *virginica* en análisis multivariados.
-
-## Problemas Encontrados
-
-- La sintaxis de R base con `[filas, columnas]` resultó confusa al principio porque requiere recordar el orden (primero filas, luego columnas) y usar el signo `$` para referirse a columnas por nombre dentro de condiciones.
-- El operador `%in%` no era conocido; fue necesario buscarlo en la documentación porque al intentar combinar muchos valores con `|` el código se volvía largo y propenso a errores.
-- Hubo confusión entre `filter()` (para filas) y `select()` (para columnas) en `dplyr`; en R base ambas operaciones se hacen con `[ , ]`, lo que al principio llevó a usarlos al revés.
-- Al usar `select()` con una sola columna en R base (`[ , "Species"]`) se obtuvo un vector en lugar de un data frame, lo que causó un error al intentar aplicarle `head()` en algunas pruebas. Con `dplyr` esto no ocurre porque `select()` siempre devuelve un data frame.
-- El operador pipe `%>%` requirió práctica para entender el flujo: el objeto a la izquierda se convierte en el primer argumento de la función a la derecha. Una vez interiorizado, el código encadenado resultó mucho más legible.
+**Interpretación:** La tabla de resumen condensa 150 observaciones en tres filas, una por especie, mostrando los promedios de cada variable morfológica. Los patrones más destacados son los siguientes. *Setosa* tiene los pétalos más pequeños (largo medio ≈ 1.46 cm, ancho medio ≈ 0.25 cm), muy por debajo de las otras dos especies, lo que la hace claramente separable en análisis multivariados. *Virginica* presenta los pétalos más grandes (largo medio ≈ 5.55 cm, ancho medio ≈ 2.03 cm), lo que la diferencia bien de *setosa* pero con más solapamiento respecto a *versicolor* (largo medio ≈ 4.26 cm). En cuanto a los sépalos, *setosa* tiene el ancho medio mayor (≈ 3.43 cm) pero la longitud más corta (≈ 5.006 cm), lo que sugiere sépalos más anchos y cortos comparados con las otras dos especies. *Versicolor* y *virginica* muestran valores intermedios y similares en las variables de sépalo, lo que anticipa que serán las más difíciles de separar en un análisis discriminante basado únicamente en esas dos variables.
 
 ---
 
-# Aprendizaje
+## Problemas Encontrados
 
-- Se aprendió que R ofrece dos paradigmas equivalentes para manipular data frames: R base (más compacto pero menos legible) y `dplyr` (más expresivo y legible, especialmente en pipelines largos).
-- Se comprendió la diferencia entre seleccionar filas y columnas, y que en `dplyr` estas son operaciones distintas (`filter()` vs. `select()`), lo que obliga a pensar con más claridad qué se quiere hacer.
-- El operador `%in%` es más eficiente que encadenar múltiples condiciones con `|` cuando se quieren incluir varios valores de una misma variable.
-- `group_by()` + `summarise()` es una combinación muy poderosa para obtener estadísticas descriptivas por grupo en pocas líneas, algo que en R base requeriría un `tapply()` o un bucle.
-- Se reforzó el concepto de que en R los objetos se sobreescriben cuando se les asigna un nuevo valor, por lo que es importante nombrar los subconjuntos con nombres distintos para no perder los datos originales.
-- En general, los problemas se resolvieron consultando la documentación de `dplyr` con `?filter` y `?select`, y comparando los resultados de R base y `dplyr` para verificar que fueran idénticos.
+- La sintaxis de R base con `[filas, columnas]` resultó confusa al principio porque requiere recordar el orden (primero filas, luego columnas) y usar el signo `$` para referirse a columnas por nombre dentro de las condiciones de filtrado.
+- El operador `%in%` no era conocido; fue necesario buscarlo en la documentación porque al intentar combinar muchos valores con `|` el código se volvía largo y propenso a errores tipográficos.
+- Hubo confusión inicial entre `filter()` (para filas) y `select()` (para columnas) en `dplyr`; en R base ambas operaciones se realizan con `[ , ]`, lo que llevó en algunos intentos a usar los verbos en orden invertido.
+- Al seleccionar una sola columna en R base con `[ , "Species"]` se obtiene un vector en lugar de un data frame, lo que causó un error al intentar aplicarle directamente verbos de `dplyr` en pruebas posteriores. Con `dplyr` esto no ocurre porque `select()` siempre preserva la estructura de data frame.
+- El operador pipe `%>%` requirió práctica para interiorizar el flujo de datos: el objeto a la izquierda se convierte en el primer argumento de la función a la derecha. Una vez comprendido, los pipelines encadenados resultaron más legibles que las expresiones anidadas de R base.
+
+---
+
+## Aprendizaje
+
+- R ofrece dos paradigmas equivalentes para manipular data frames: R base (más compacto pero menos legible para operaciones complejas) y `dplyr` (más expresivo y legible, especialmente en pipelines largos con múltiples pasos encadenados).
+- En `dplyr`, `filter()` opera sobre filas y `select()` opera sobre columnas; la separación explícita de estas operaciones en verbos distintos obliga a pensar con mayor claridad qué dimensión del data frame se está modificando.
+- El operador `%in%` es más eficiente y escalable que encadenar múltiples condiciones con `|` cuando se quieren incluir varios valores de una misma variable categórica.
+- La combinación `group_by()` + `summarise()` permite obtener estadísticas descriptivas por grupo en muy pocas líneas, algo que en R base requeriría `tapply()`, `aggregate()` o un bucle explícito.
+- Se confirmó que `select()` en `dplyr` siempre devuelve un data frame, mientras que `[ , nombre]` en R base devuelve un vector cuando se selecciona una sola columna. Esta diferencia es relevante cuando el resultado se usa como entrada para funciones que requieren un data frame.
+- Los problemas se resolvieron comparando sistemáticamente los resultados de R base y `dplyr` para verificar que fueran idénticos, y consultando la documentación con `?filter`, `?select` y `?which`.
 
 ---
 
