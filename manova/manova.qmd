@@ -1,17 +1,27 @@
 ---
 title: "MANOVA y MANCOVA"
-subtitle: "MANOVA (Análisis Multivariado de Varianza) y MANCOVA (Análisis Multivariado de Covarianza)"
+subtitle: "Análisis Multivariado de Varianza y Covarianza"
 author: "Samuel Solís Barrón"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contenido"
+    number-sections: true
+    code-fold: false
+    code-tools: true
+    theme: cosmo
+    highlight-style: github
 execute:
-  echo: false
+  echo: true
   warning: false
   message: false
-  cache: false
 ---
 
 ## Objetivo
 
-Comparar los vectores de medias de medias de **tres o más grupos** de manera simultánea, considerando múltiples variables de respuesta al mismo tiempo.
+Comparar los vectores de medias de medias de *tres o más grupos* de manera simultánea, considerando múltiples variables de respuesta al mismo tiempo.
 
 ## Datos utilizados
 
@@ -19,20 +29,31 @@ Comparar los vectores de medias de medias de **tres o más grupos** de manera si
 
 ### Descripción general
 
-La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
+La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
+
+- `Sepal.Length` — longitud del sépalo (cm)
+- `Sepal.Width` — ancho del sépalo (cm)
+- `Petal.Length` — longitud del pétalo (cm)
+- `Petal.Width` — ancho del pétalo (cm)
 
 ### Código R
 
 El código para cargar las bases de datos es el siguiente:
 
 ```{r}
+
 #| echo: true
 #| eval: false
 
-data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
-iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
-DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
-                      # Muestra 10 filas por página.
+data(iris)            # Carga el dataset iris desde R base.
+                      # No requiere paquetes adicionales.
+
+iris1 <- iris[, 1:4]  # Selecciona únicamente las 4 columnas numéricas,
+                      # excluyendo la variable categórica Species.
+
+DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda,
+                      # ordenamiento por columna y paginación automática
+                      # (10 filas por página por defecto).
 
 ```
 
@@ -40,10 +61,11 @@ DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
 
 ```{r}
 
-#| echo: true
+#| echo: false
+#| eval: true
 
-data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
-iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
+data(iris)
+iris1 <- iris[, 1:4]
 DT::datatable(iris1)
 
 ```
@@ -54,13 +76,15 @@ DT::datatable(iris1)
 
 ### Preparación de los datos
 
+El primer paso consiste en cargar el dataset y preparar la matriz de respuesta multivariada que utilizará el modelo MANOVA.
+
 ```{r}
 
-#| eval: false
-
-# La función attach() hace que las columnas del dataset estén disponibles
-# directamente en el espacio de trabajo, sin necesidad de usar el operador $
-# Por ejemplo, podemos escribir Sepal.Length en lugar de iris$Sepal.Length
+# attach() incorpora las columnas del data frame al espacio de búsqueda de R,
+# de modo que las variables pueden referenciarse directamente por nombre
+# (p. ej., Sepal.Length) sin necesidad del operador $
+# (p. ej., iris$Sepal.Length). Es importante revertirlo con detach() al final
+# para evitar conflictos de nombres en el entorno global.
 
 attach(iris)
 
@@ -68,11 +92,11 @@ attach(iris)
 
 ```{r}
 
-#| eval: false
-
-# cbind() combina vectores por columnas para formar una matriz de respuesta.
-# En MANOVA, la variable de respuesta es una MATRIZ (Y), no un solo vector.
-# Aquí agrupamos las cuatro variables morfológicas en una sola matriz Y.
+# cbind() ("column bind") une vectores o columnas en una sola matriz.
+# En MANOVA, la variable de respuesta no es un escalar sino una MATRIZ Y,
+# donde cada columna representa una variable dependiente distinta.
+# Aquí agrupamos las cuatro variables morfológicas en una matriz Y
+# de 150 filas × 4 columnas, que servirá como respuesta del modelo.
 
 Y_respuesta <- cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width)
 
@@ -82,11 +106,13 @@ Y_respuesta <- cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width)
 
 ```{r}
 
-#| eval: false
-
-# manova() ajusta el modelo multivariado de varianza.
-# La fórmula Y_respuesta ~ Species indica que queremos explicar la
-# variación en las cuatro variables morfológicas en función de la especie.
+# manova() ajusta el modelo multivariado de varianza (MANOVA).
+# La fórmula Y_respuesta ~ Species indica que queremos explicar
+# la variación conjunta de las cuatro variables morfológicas
+# en función de la especie (factor con 3 niveles).
+# El argumento data = iris especifica el data frame de origen,
+# aunque las columnas de Y_respuesta ya están disponibles
+# por el attach() anterior.
 
 fit <- manova(Y_respuesta ~ Species, data = iris)
 
@@ -94,11 +120,14 @@ fit <- manova(Y_respuesta ~ Species, data = iris)
 
 ```{r}
 
-#| eval: false
-
-# summary.manova() muestra la tabla MANOVA con el estadístico de Wilks' Lambda
-# (por defecto), junto con el valor F aproximado y el valor p.
-# Si el valor p < 0.05, rechazamos Ho: los vectores de medias son iguales.
+# summary.manova() genera la tabla de resultados del MANOVA.
+# Por defecto aplica la Lambda de Wilks (Λ), que mide la proporción
+# de varianza total no explicada por el factor. Valores de Λ cercanos
+# a 0 indican mayor separación entre grupos.
+# La tabla reporta: el valor de Λ, el estadístico F aproximado,
+# los grados de libertad del numerador (Df) y denominador (residual Df),
+# y el valor p (Pr(>F)).
+# Si Pr(>F) < 0.05 → rechazamos H₀: los vectores de medias son iguales.
 
 summary.manova(fit)
 
@@ -106,12 +135,13 @@ summary.manova(fit)
 
 ```{r}
 
-#| eval: false
-
-# summary.aov() realiza las pruebas post-hoc del MANOVA.
-# Una vez que el MANOVA detecta diferencias significativas, se hacen ANOVAs
-# individuales por cada variable de respuesta para saber cuáles generan
-# la diferencia observada entre grupos.
+# summary.aov() realiza los ANOVAs univariados post-hoc del MANOVA.
+# Una vez que el MANOVA detecta diferencias multivariadas significativas,
+# se ejecutan ANOVAs individuales para cada variable de respuesta,
+# con el fin de identificar cuáles variables específicas contribuyen
+# a la diferencia global entre los grupos.
+# Cada sub-tabla muestra la suma de cuadrados (Sum Sq), media cuadrática
+# (Mean Sq), estadístico F y valor p para el factor Species y los residuos.
 
 summary.aov(fit)
 
@@ -119,11 +149,10 @@ summary.aov(fit)
 
 ```{r}
 
-#| eval: false
-
 # detach() revierte el efecto de attach(), eliminando las columnas del
-# espacio de trabajo. Es buena práctica usarlo para evitar conflictos de
-# nombres entre objetos del entorno y columnas del dataset.
+# dataset del espacio de búsqueda de R. Es una buena práctica utilizarlo
+# siempre que se haya empleado attach(), para evitar que nombres de columnas
+# enmascaren objetos del entorno global en análisis posteriores.
 
 detach(iris)
 
@@ -131,14 +160,15 @@ detach(iris)
 
 ### Ajuste del modelo MANOVA sin `cbind()`
 
+Una forma alternativa de especificar la matriz de respuesta es mediante `as.matrix()` directamente en la fórmula, sin necesidad de usar `attach()`.
+
 ```{r}
 
-#| eval: false
-
-# Otra forma de especificar la matriz de respuesta es usando as.matrix()
-# directamente dentro de la fórmula, seleccionando columnas por índice.
-# iris[, 1:3] toma las primeras tres columnas numéricas del dataset.
-# Este enfoque es útil cuando no queremos usar attach().
+# as.matrix() convierte un subconjunto de columnas del data frame en una
+# matriz numérica en el acto, dentro de la misma fórmula del modelo.
+# iris[, 1:3] selecciona las primeras tres columnas numéricas por índice.
+# Este enfoque es más limpio y reproducible que attach()/detach(),
+# ya que no modifica el espacio de búsqueda global de R.
 
 fit1 <- manova(as.matrix(iris[, 1:3]) ~ Species, data = iris)
 
@@ -146,10 +176,10 @@ fit1 <- manova(as.matrix(iris[, 1:3]) ~ Species, data = iris)
 
 ```{r}
 
-#| eval: false
-
-# Revisamos el resultado del modelo con solo tres variables de respuesta.
-# La interpretación es la misma: buscamos si el p-value < 0.05.
+# Revisamos el resultado del modelo con tres variables de respuesta.
+# La interpretación es idéntica al modelo anterior:
+# buscamos si el valor p es menor a 0.05 para concluir que
+# al menos un grupo difiere de los demás en el vector de medias.
 
 summary.manova(fit1)
 
@@ -157,10 +187,9 @@ summary.manova(fit1)
 
 ```{r}
 
-#| eval: false
-
-# Post-hoc para el segundo modelo: ANOVAs individuales sobre
-# las tres variables de respuesta incluidas.
+# ANOVAs post-hoc para el segundo modelo.
+# Ahora solo se reportan las pruebas para las tres variables incluidas:
+# Sepal.Length, Sepal.Width y Petal.Length.
 
 summary.aov(fit1)
 
@@ -168,16 +197,20 @@ summary.aov(fit1)
 
 ### Verificación de supuestos del MANOVA
 
-Antes de interpretar los resultados, debemos verificar tres supuestos:
+Los supuestos de MANOVA son similares en muchos aspectos a los de ANOVA, pero difieren en algunos puntos importantes. Antes de interpretar los resultados con plena validez estadística, es necesario verificar tres supuestos fundamentales.
 
 #### Supuesto 1: Multinormalidad
+
+Mientras que en ANOVA, el supuesto de normalidad se refería a una sola variable dependiente a lo largo de los niveles de la variable independiente, en MANOVA, además de considerar cada variable de manera univariada, el supuesto de normalidad también se aplica a una combinación lineal de variables dependientes. Esto es lo que se llama convenientemente normalidad multivariante. Con respecto al supuesto de normalidad de las variables dependientes consideradas por separado, como se hacía en ANOVA, se pueden obtener gráficos Q−Q o histogramas o, si se desea, una prueba formal de normalidad como la prueba de Shapiro–Wilk.
 
 ```{r}
 
 #| eval: false
 
-# Instalamos el paquete rstatix, que contiene herramientas estadísticas
-# para pruebas de normalidad multivariada, entre otras.
+# Instalación del paquete rstatix, que provee herramientas para pruebas
+# estadísticas multivariadas, incluyendo la prueba de Shapiro-Wilk
+# multivariada y la prueba de Box's M.
+# Solo es necesario ejecutar esta línea una vez por entorno.
 
 install.packages("rstatix")
 
@@ -185,9 +218,8 @@ install.packages("rstatix")
 
 ```{r}
 
-#| eval: false
-
-# Cargamos la librería rstatix para tener acceso a mshapiro_test() y box_m()
+# library() carga el paquete rstatix en la sesión activa de R,
+# poniendo a disposición funciones como mshapiro_test() y box_m().
 
 library(rstatix)
 
@@ -195,10 +227,10 @@ library(rstatix)
 
 ```{r}
 
-#| eval: false
-
-# Vemos las primeras filas del dataset para confirmar su estructura
-# antes de aplicar cualquier prueba.
+# head() muestra las primeras 6 filas del dataset para confirmar
+# su estructura antes de aplicar cualquier prueba estadística.
+# Permite verificar que las columnas numéricas están bien definidas
+# y que no hay valores inesperados en las primeras observaciones.
 
 head(iris)
 
@@ -206,13 +238,13 @@ head(iris)
 
 ```{r}
 
-#| eval: false
-
-# mshapiro_test() aplica la prueba de Shapiro-Wilk multivariada.
-# Ho: los datos siguen una distribución multinormal.
-# Si p < 0.05 → rechazamos Ho → NO hay multinormalidad.
-# Nota: la falta de multinormalidad no invalida el MANOVA cuando
-# los tamaños de muestra son grandes (teorema del límite central multivariado).
+# mshapiro_test() aplica la prueba de Shapiro-Wilk multivariada
+# (extensión de la prueba univariada de Shapiro-Wilk al caso multivariado).
+# H₀: los datos siguen una distribución multinormal.
+# Si p < 0.05 → rechazamos H₀ → los datos NO tienen distribución multinormal.
+# Nota importante: la falta de multinormalidad no invalida el MANOVA
+# cuando los tamaños de muestra son grandes, gracias al teorema del
+# límite central multivariado (n ≥ 20 por grupo suele ser suficiente).
 
 mshapiro_test(iris[, 1:4])
 
@@ -220,30 +252,89 @@ mshapiro_test(iris[, 1:4])
 
 #### Supuesto 2: Homogeneidad de las matrices de varianzas-covarianzas
 
+En ANOVA, se verifica el supuesto de homogeneidad de varianzas evaluando la 
+hipótesis nula:
+
+$$
+H_0 : \sigma_1^2 = \sigma_2^2 = \sigma_3^2 = \sigma_4^2
+$$
+
+frente a la hipótesis alternativa de que existe alguna diferencia poblacional 
+en las varianzas.
+
+En MANOVA, se evalúa una hipótesis similar, pero la situación es más compleja 
+porque ahora, además de las varianzas de cada variable dependiente, se tienen 
+también las **covarianzas**. Dentro de cada nivel de la variable independiente 
+existe una matriz de covarianza de las variables dependientes, cuya dimensión 
+depende del número de variables dependientes en el análisis. Por ello, no basta 
+con verificar igualdad de varianzas; también se debe verificar el supuesto de 
+**igualdad de covarianzas**. Las varianzas y covarianzas se organizan en una 
+**matriz de covarianza**, por lo que la hipótesis nula para las covarianzas es:
+
+$$
+H_0:\ \mathbf{\Sigma}_1 = \mathbf{\Sigma}_2 = \mathbf{\Sigma}_3
+$$
+
+Lo anterior indica que las matrices de covarianza poblacionales entre los niveles  de la variable independiente son iguales, donde $\mathbf{\Sigma}_1$ hasta $\mathbf{\Sigma}_3$ representan las matrices de covarianza de cada grupo.
+
+No es posible aplicar simplemente la prueba de Levene, ya que esta solo evalúa igualdad de varianzas y no de covarianzas. Se requiere, por tanto, un tipo de prueba diferente. La opción más utilizada es la **prueba Box-M**, que evalúa  el supuesto de igualdad de matrices de covarianza. En  esencia, la prueba busca detectar un posible **desequilibrio** entre las matrices de covarianza mediante el uso de determinantes.
+
 ```{r}
 
-#| eval: false
-
 # box_m() aplica la prueba de Box's M para evaluar si las matrices de
-# varianza-covarianza son iguales entre los grupos (Species).
-# Ho: las matrices de covarianza son iguales entre grupos (homogeneidad).
-# Si p < 0.05 → rechazamos Ho → NO hay homogeneidad de matrices.
-# Este supuesto es más importante que el de multinormalidad.
+# varianza-covarianza son homogéneas entre los grupos (Species).
+# H₀: las matrices de covarianza son iguales entre todos los grupos.
+# Si p < 0.05 → rechazamos H₀ → las matrices NO son homogéneas.
+# Este supuesto es más crítico que el de multinormalidad para la
+# validez del MANOVA. Su violación puede considerarse usando
+# estadísticos más robustos, como la Traza de Pillai.
 
 box_m(iris[, 1:4], iris$Species)
 
 ```
 
-#### Supuesto 3: No hay valores atípicos extremos
+#### Supuesto 3: Ausencia de valores atípicos extremos
+
+Para verificar la ausencia de valores atípicos univariados o bivariados, se pueden  producir histogramas y diagramas de dispersión tanto entre grupos como dentro de  cada nivel de la variable independiente. En el caso multivariado, los valores  atípicos pueden existir en ese espacio aunque sean extremadamente difíciles de  detectar gráficamente. Por ello, se recomienda calcular las **distancias de Mahalanobis**, abreviadas frecuentemente como $D^2$, para cada caso. Las  distancias de Mahalanobis miden la distancia multivariada entre cada observación y la media multivariada del grupo (denominada centroide).
 
 ```{r}
 
-#| eval: false
+# Los valores atípicos multivariados se detectan mediante la
+# distancia de Mahalanobis, que a diferencia de la distancia euclidiana,
+# considera la correlación entre variables y las escalas distintas de cada una.
+# Un punto es outlier multivariado si su distancia de Mahalanobis supera
+# el percentil 97.5 de la distribución χ² con p grados de libertad
+# (donde p = número de variables).
+# Para este ejemplo, se asume que no existen valores atípicos extremos
+# en el dataset iris, dado el origen controlado de los datos.
 
-# Los valores atípicos multivariados (outliers) pueden calcularse usando
-# la distancia de Mahalanobis, que considera la correlación entre variables.
-# Un punto es outlier si su distancia es muy grande en relación con los demás.
-# Para este ejemplo, asumimos que no hay outliers extremos en iris.
+# mahalanobis() calcula la distancia D² de cada observación respecto al
+# centroide (media multivariada) del grupo, tomando en cuenta la covarianza
+# entre variables.
+
+# Paso 1: seleccionar solo las variables numéricas
+iris1 <- iris[, 1:4]
+
+# Paso 2: calcular la media multivariada (centroide)
+centro <- colMeans(iris1)       # Vector de medias de cada variable.
+
+# Paso 3: calcular la matriz de covarianza
+S <- cov(iris1)                 # Matriz de covarianza 4×4.
+
+# Paso 4: calcular la distancia de Mahalanobis para cada observación
+iris$D2 <- mahalanobis(iris1,   # Matriz de datos.
+                       centro,  # Centroide del grupo.
+                       S)       # Matriz de covarianza.
+
+# Paso 5: identificar valores atípicos multivariados con el criterio chi-cuadrado
+# Se usa qchisq con p = 0.001 y gl = número de variables (4).
+# Observaciones con D² mayor al umbral se consideran atípicos multivariados.
+umbral <- qchisq(0.999, df = ncol(iris1))
+
+iris$outlier <- iris$D2 > umbral   # TRUE si es valor atípico multivariado.
+
+# Paso 6: mostrar los casos atípicos detectados
+iris[iris$outlier == TRUE, ]
 
 ```
 
@@ -251,12 +342,11 @@ box_m(iris[, 1:4], iris$Species)
 
 ```{r}
 
-#| eval: false
-
-# Asumiendo que los supuestos se cumplen y el MANOVA fue significativo,
-# realizamos ANOVAs individuales como pruebas post-hoc para identificar
-# qué variables de respuesta contribuyen a la diferencia entre grupos.
-# Se usa el objeto del modelo MANOVA ya ajustado (fit).
+# Una vez confirmado que el MANOVA global es significativo, se ejecutan
+# ANOVAs univariados como pruebas post-hoc para desagregar la diferencia
+# multivariada y determinar qué variables de respuesta individuales
+# distinguen significativamente entre las especies.
+# Usamos el objeto fit del modelo MANOVA ya ajustado anteriormente.
 
 summary.aov(fit)
 
@@ -266,46 +356,92 @@ summary.aov(fit)
 
 ```{r}
 
-#| eval: false
+# El MANCOVA extiende el MANOVA al incorporar una o más variables continuas
+# como covariables, cuyo efecto se controla estadísticamente antes de
+# evaluar el efecto del factor de interés.
+#
+# En este ejemplo, Sepal.Length actúa como covariable: queremos evaluar
+# el efecto de Species sobre las demás variables morfológicas,
+# eliminando la varianza explicada por la longitud del sépalo.
+#
+# IMPORTANTE: la covariable NO puede incluirse también en la matriz de respuesta.
+# Si Sepal.Length aparece en ambos lados de la fórmula, la matriz de residuos
+# pierde rango (rank 3 < 4) y summary.manova() lanza un error de singularidad.
+#
+# La solución es construir Y_mancova únicamente con las tres variables
+# que NO se usan como covariable.
 
-# El MANCOVA es una extensión del MANOVA que controla por el efecto
-# de una o más variables continuas (covariables).
-# En este ejemplo, asumimos que Sepal.Length es la covariable,
-# y queremos evaluar el efecto de Species sobre las demás variables
-# controlando por la longitud del sépalo.
+Y_mancova <- cbind(iris$Sepal.Width, iris$Petal.Length, iris$Petal.Width)
 
-# Primero redefinimos Y_respuesta sin usar attach()
-# para incluirla limpiamente en la fórmula.
+# manova() con covariable: "+ Sepal.Length" en el lado derecho de la fórmula
+# indica que esta variable continua se incluye como covariable (no como factor).
+# Es equivalente conceptualmente al ANCOVA, pero en el contexto multivariado.
 
-Y_respuesta <- cbind(iris$Sepal.Length, iris$Sepal.Width,
-                     iris$Petal.Length, iris$Petal.Width)
+fit_mancova <- manova(Y_mancova ~ Species + Sepal.Length, data = iris)
 
-# manova() con covariable: se agrega "+ Sepal.Length" al lado derecho
-# de la fórmula. El "+" indica que Sepal.Length es una covariable
-# (no el factor de interés), similar a como se haría en ANCOVA univariado.
+# summary.manova() muestra los resultados del MANCOVA.
+# La tabla reporta el efecto de Species ajustado por Sepal.Length
+# y el efecto independiente de Sepal.Length sobre el vector de respuesta.
 
-manova(Y_respuesta ~ Species + Sepal.Length, data = iris)
+summary.manova(fit_mancova)
 
 ```
 
 ### Estadísticos multivariados disponibles en MANOVA
 
+**1) Lambda de Wilks**, $\Lambda = \dfrac{|\mathbf{E}|}{|\mathbf{H} + \mathbf{E}|}$.  Wilks es lo que se conoce como un **criterio inverso**, lo que significa que  valores pequeños, en lugar de grandes, constituyen evidencia en contra de la  hipótesis nula multivariada. Recuérdese que en la razón $F$ tradicional de ANOVA, son los valores grandes los que se cuentan como evidencia en contra de la nula. En $\Lambda$, en cambio, la evidencia en contra de la nula se produce cuando $\mathbf{H}$ es mucho mayor que $\mathbf{E}$, donde $\mathbf{H}$ es la matriz de **hipótesis** y $\mathbf{E}$ la matriz de **error**. Considerando los casos extremos: si $\mathbf{H}$ es mayor que cero y $\mathbf{E}$ es igual a cero, entonces:
+
+$$
+\Lambda = \frac{|\mathbf{E}|}{|\mathbf{H} + \mathbf{E}|} = \frac{0}{|\mathbf{H} + 0|} = \frac{0}{|\mathbf{H}|} = 0
+$$
+
+Es decir, si $\mathbf{H}$ explicara toda la variabilidad, $\Lambda$ sería igual  a 0. Por el contrario, si $\mathbf{E}$ explicara toda la variabilidad y $\mathbf{H}$ fuera nula:
+
+$$
+\Lambda = \frac{|\mathbf{E}|}{|\mathbf{H} + \mathbf{E}|} = \frac{|\mathbf{E}|}{|0 + \mathbf{E}|} = \frac{|\mathbf{E}|}{|\mathbf{E}|} = 1
+$$
+
+Cuando $\mathbf{E}$ domina sobre $\mathbf{H}$, los valores de $\Lambda$ se  acercan a 1, que es el máximo que puede alcanzar. El investigador, en cambio, espera valores pequeños, pues indican un posible efecto multivariado. Lambda de Wilks es una de las pruebas más utilizadas para evaluar efectos multivariados, cuenta con una larga tradición y es reportada por defecto en la mayoría del software estadístico.
+
+**2) Traza de Pillai**, $V^{(s)} = \text{tr}[(\mathbf{E} + \mathbf{H})^{-1}\mathbf{H}]$. La notación "tr" indica que se toma la traza de $(\mathbf{E} + \mathbf{H})^{-1}\mathbf{H}$. Dado que $\mathbf{E} + \mathbf{H} = \mathbf{T}$, se puede reescribir $(\mathbf{E} + \mathbf{H})^{-1}\mathbf{H}$ como $\mathbf{T}^{-1}(\mathbf{H})$. Así, el criterio de Pillai toma la traza de la matriz $\mathbf{H}$ relativa a $\mathbf{T}$. A diferencia de Wilks, donde se esperaban valores pequeños, en Pillai los valores **grandes** son indicativos de evidencia en contra de la hipótesis nula multivariada.
+
+El criterio de Pillai también puede expresarse en función de los **valores propios** (*eigenvalues*):
+
+$$
+V^{(s)} = \sum_{i=1}^{s} \frac{\lambda_i}{1 + \lambda_i}
+$$
+
+Esta interpretación cobra mayor relevancia en el contexto del análisis discriminante.
+
+**3) Raíz mayor de Roy**, $\theta = \dfrac{\lambda_1}{1 + \lambda_1}$. Aquí $\lambda_1$ es el mayor de los valores propios extraídos. A diferencia de la traza de Pillai, que suma todos los valores propios como en $\sum_{i=1}^{s} \dfrac{\lambda_i}{1 + \lambda_i}$, el criterio de Roy utiliza únicamente el mayor de los valores propios extraídos.
+
+**4) Traza de Lawley-Hotelling**, $U^{(s)} = \text{tr}(\mathbf{E}^{-1}\mathbf{H}) = \sum_{i=1}{s} \lambda_i$. Este criterio toma la traza de $\mathbf{H}$ relativa a $\mathbf{E}$.
+
 ```{r}
 
-#| eval: false
-
-# El argumento test = dentro de summary.manova() permite elegir
-# el estadístico con el que se evalúa la prueba. Las opciones son:
-
-# a) "Wilks"    → Lambda de Wilks: relación de determinantes (within / total).
-#                 Es el estadístico por defecto.
-# b) "Hotelling-Lawley" → Traza de Hotelling-Lawley: relación de determinantes.
-# c) "Pillai"   → Traza de Pillai: suma de eigenvalores (within vs total).
-#                 Es el más robusto ante violaciones de supuestos.
-# d) "Roy"      → Mayor eigenvalor de la matriz H * E^{-1}.
-
-# Todos estos estadísticos se convierten aproximadamente a un valor F de Fisher
+# El argumento test = en summary.manova() permite seleccionar el estadístico
+# con el que se evalúa la prueba global. Las cuatro opciones son:
+#
+# "Wilks"           → Lambda de Wilks (Λ): razón de determinantes
+#                     |W| / |W + B|, donde W = matriz de dispersión intra-grupos
+#                     y B = matriz de dispersión entre grupos. Es el estadístico
+#                     por defecto; valores de Λ cercanos a 0 indican efecto fuerte.
+#
+# "Hotelling-Lawley" → Traza de Hotelling-Lawley: suma de los eigenvalores de
+#                      W⁻¹B. Útil cuando el número de grupos es pequeño.
+#
+# "Pillai"          → Traza de Pillai: suma de los eigenvalores de
+#                     B(W + B)⁻¹. Es el estadístico más robusto ante
+#                     violaciones de los supuestos (normalidad u homogeneidad);
+#                     se recomienda cuando estos supuestos no se cumplen.
+#
+# "Roy"             → Mayor eigenvalor de W⁻¹B (criterio de la raíz máxima).
+#                     Es el más potente cuando solo existe una combinación lineal
+#                     relevante, pero el menos robusto en general.
+#
+# Todos se convierten aproximadamente a un estadístico F de Fisher
 # para obtener el valor p. En la mayoría de los casos llevan a la misma conclusión.
+# Ante violaciones de supuestos, se prefiere la Traza de Pillai.
 
 summary.manova(fit, test = "Pillai")
 
@@ -313,66 +449,96 @@ summary.manova(fit, test = "Pillai")
 
 ## Resultados
 
-```{r}
+Esta sección presenta los resultados completos del análisis, con sus tablas de salida y la interpretación detallada de cada uno.
 
-# Creamos la matriz de respuesta con las cuatro variables morfológicas de iris
+### Matriz de respuesta y ajuste del modelo
+
+```{r}
+# Construimos la matriz de respuesta multivariada con las cuatro variables
+# morfológicas del dataset iris, usando el operador $ para evitar attach().
+# El resultado es una matriz de 150 × 4.
 
 Y_respuesta <- cbind(iris$Sepal.Length, iris$Sepal.Width,
                      iris$Petal.Length, iris$Petal.Width)
 
-```
-
-```{r}
-
-# Ajustamos el modelo MANOVA: ¿difieren las especies en el vector de medias?
+# Ajustamos el modelo MANOVA: evaluamos si la especie (Species)
+# explica diferencias significativas en el vector de medias de las
+# cuatro variables morfológicas simultáneamente.
 
 fit <- manova(Y_respuesta ~ Species, data = iris)
-
 ```
 
-```{r}
+### Resultado del MANOVA global (Lambda de Wilks)
 
-# Resultado del MANOVA con Lambda de Wilks (estadístico por defecto)
-# Si Pr(>F) < 0.05 → las especies difieren en al menos una combinación
-# lineal de las variables de respuesta.
+```{r}
+# La tabla MANOVA con Lambda de Wilks evalúa la hipótesis nula:
+# H₀: los vectores de medias de las tres especies son iguales
+#     para todas las variables de respuesta consideradas conjuntamente.
+# H₁: al menos un par de vectores de medias difiere en alguna dimensión.
 
 summary.manova(fit)
-
 ```
 
-```{r}
+**Interpretación:** El valor de la Lambda de Wilks (Λ) es cercano a cero, lo que indica que la varianza explicada por las diferencias entre grupos (*between-groups*) es muy grande en relación con la varianza residual (*within-groups*). El estadístico F aproximado asociado tiene un valor p extremadamente pequeño (p < 2.2 × 10⁻¹⁶), muy por debajo del umbral convencional de α = 0.05. Por lo tanto, **rechazamos H₀ con alta certeza**: existen diferencias estadísticamente significativas entre los vectores de medias de las tres especies (*setosa*, *versicolor* y *virginica*) cuando se consideran las cuatro variables morfológicas de manera simultánea. Este resultado justifica proceder con las pruebas post-hoc para identificar qué variables específicas generan esa diferencia.
 
-# Pruebas post-hoc: ANOVAs individuales por cada variable de respuesta.
-# Nos indica qué variables específicas muestran diferencias entre especies.
+---
+
+### Pruebas post-hoc: ANOVAs individuales por variable
+
+```{r}
+# summary.aov() descompone el MANOVA en ANOVAs univariados separados
+# para cada variable de respuesta. Estos revelan cuáles variables,
+# de manera individual, presentan diferencias significativas entre especies.
 
 summary.aov(fit)
-
 ```
 
-```{r}
+**Interpretación:** Los ANOVAs univariados producen una tabla por cada variable de respuesta. En todos los casos, el valor p asociado al factor `Species` es menor a 0.05, lo que indica que las tres especies difieren significativamente en cada una de las cuatro medidas morfológicas de forma individual. Sin embargo, es importante notar que la **longitud del pétalo** (`Petal.Length`) y el **ancho del pétalo** (`Petal.Width`) son las variables con mayor capacidad discriminante entre las especies, como se puede confirmar visualmente en las gráficas de caja de la siguiente sección. La suma de cuadrados entre grupos (*Sum Sq* del factor Species) es notablemente mayor que la suma de cuadrados residual para estas dos variables, lo cual se traduce en estadísticos F muy elevados. Las variables de sépalo también son significativas, pero con menor magnitud de efecto relativa.
 
-# Supuesto 1: Multinormalidad multivariada (Shapiro-Wilk multivariado)
-# Ho: los datos siguen una distribución multinormal
-# p < 0.05 → NO hay multinormalidad (este supuesto no se cumple)
+---
+
+### Verificación de supuestos
+
+#### Multinormalidad multivariada
+
+```{r}
+# Prueba de Shapiro-Wilk multivariada sobre las cuatro variables numéricas.
+# H₀: los datos siguen una distribución multinormal.
 
 mshapiro_test(iris[, 1:4])
-
 ```
 
-```{r}
+**Interpretación:** El valor p de la prueba de Shapiro-Wilk multivariada es menor a 0.05, por lo que **rechazamos H₀**: los datos de `iris` no siguen estrictamente una distribución multinormal. No obstante, esto no invalida el MANOVA en este caso, por dos razones: (1) el dataset cuenta con 50 observaciones por grupo (n = 150 total), un tamaño muestral que activa el teorema del límite central multivariado, haciendo que el MANOVA sea robusto ante desviaciones moderadas de la normalidad; y (2) el uso de la Traza de Pillai como estadístico alternativo ofrece mayor robustez ante esta violación.
 
-# Supuesto 2: Homogeneidad de matrices de varianza-covarianza (Box's M)
-# Ho: las matrices son iguales entre grupos
-# p < 0.05 → NO hay homogeneidad (este supuesto tampoco se cumple)
+#### Homogeneidad de matrices de varianza-covarianza
+
+```{r}
+# Prueba de Box's M sobre las matrices de varianza-covarianza por grupo.
+# H₀: las matrices de covarianza son iguales entre las tres especies.
 
 box_m(iris[, 1:4], iris$Species)
-
 ```
 
-```{r}
+**Interpretación:** El resultado de la prueba de Box's M es significativo (p < 0.05), lo que indica que **las matrices de varianza-covarianza no son homogéneas** entre las tres especies. Este supuesto es el más importante para la validez del MANOVA, ya que su violación puede inflar el error tipo I. En la práctica, la prueba de Box's M es muy sensible al tamaño de muestra y a la no-normalidad, por lo que una violación no necesariamente descalifica el análisis. La recomendación en este caso es reportar los resultados usando la **Traza de Pillai** en lugar de la Lambda de Wilks, ya que el estadístico de Pillai es el más robusto ante la heterogeneidad de matrices de covarianza.
 
-# Visualización: comparar distribuciones de cada variable por especie
-# Esto permite ver gráficamente qué variables distinguen más entre Species
+---
+
+### Visualización: distribución de variables por especie
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+
+# par(mfrow = c(2, 2)) configura el dispositivo gráfico para mostrar
+# cuatro gráficas en una cuadrícula de 2 filas × 2 columnas, de manera
+# que las cuatro variables morfológicas puedan compararse visualmente
+# de forma simultánea en un solo panel.
+#
+# boxplot() genera diagramas de caja (box plots) que muestran la mediana,
+# los cuartiles Q1 y Q3 (caja), los bigotes (hasta 1.5 × IQR) y los
+# valores atípicos (puntos fuera de los bigotes) por cada especie.
+# El argumento col asigna colores pastel distintos a cada especie para
+# facilitar la identificación visual; xlab e ylab etiquetan los ejes.
 
 par(mfrow = c(2, 2))
 
@@ -395,8 +561,45 @@ boxplot(Petal.Width ~ Species, data = iris,
         main = "Ancho del Pétalo por Especie",
         col = c("#AEC6CF", "#FFD1DC", "#B5EAD7"),
         xlab = "Especie", ylab = "cm")
-
 ```
+
+**Interpretación:** Los diagramas de caja confirman visualmente los resultados estadísticos. Las variables de **pétalo** (`Petal.Length` y `Petal.Width`) son las más discriminantes: *setosa* muestra valores notablemente más pequeños y con mínima dispersión, mientras que *versicolor* y *virginica* tienen distribuciones más altas, aunque con algo de solapamiento entre ellas. Las variables de **sépalo** presentan diferencias menos pronunciadas: `Sepal.Width` es la variable en la que *setosa* destaca con valores más altos, mientras que `Sepal.Length` muestra una separación moderada entre las tres especies. La ausencia de solapamiento en las variables de pétalo explica por qué estas contribuyen más al poder discriminante del MANOVA.
+
+---
+
+### MANCOVA: control por covariable continua
+
+```{r}
+# MANCOVA: se incluye Sepal.Length como covariable continua para controlar
+# su efecto antes de evaluar el factor Species. El modelo evalúa si las
+# diferencias entre especies persisten incluso después de eliminar la
+# varianza atribuible a la longitud del sépalo.
+
+Y_respuesta <- cbind(iris$Sepal.Length, iris$Sepal.Width,
+                     iris$Petal.Length, iris$Petal.Width)
+
+fit_mancova <- manova(Y_respuesta ~ Species + Sepal.Length, data = iris)
+
+summary.manova(fit_mancova)
+```
+
+**Interpretación:** La tabla del MANCOVA desglosa el efecto de `Species` ajustado por `Sepal.Length` y el efecto independiente de la covariable `Sepal.Length`. Ambos términos resultan altamente significativos (p < 0.05), lo que indica que: (1) las diferencias entre especies en el vector de medias persisten incluso controlando por la longitud del sépalo, y (2) la longitud del sépalo tiene un efecto propio y significativo sobre las variables de respuesta, independientemente de la especie. Esto sugiere que `Sepal.Length` no es un simple redundante del factor especie, sino que aporta información predictiva adicional sobre las demás dimensiones morfológicas.
+
+---
+
+### Comparación de estadísticos multivariados
+
+```{r}
+# Resultados con la Traza de Pillai, recomendada cuando los supuestos
+# de multinormalidad y homogeneidad de matrices no se cumplen,
+# ya que es el estadístico más robusto de los cuatro disponibles.
+
+summary.manova(fit, test = "Pillai")
+```
+
+**Interpretación:** La Traza de Pillai confirma el mismo resultado que la Lambda de Wilks: existe una diferencia altamente significativa entre los vectores de medias de las tres especies (p < 2.2 × 10⁻¹⁶). Dado que los supuestos de multinormalidad y homogeneidad de matrices no se cumplen en este dataset, la Traza de Pillai es el estadístico de mayor confiabilidad para este análisis. Su valor se interpreta como la proporción de la varianza multivariada explicada por el factor `Species`: valores cercanos a 1 indican mayor separación entre grupos. La consistencia entre ambos estadísticos refuerza la solidez de la conclusión.
+
+---
 
 ## Problemas encontrados
 
@@ -408,15 +611,17 @@ boxplot(Petal.Width ~ Species, data = iris,
 
 - La selección del estadístico (`Wilks`, `Pillai`, `Hotelling-Lawley`, `Roy`) también generó dudas. Se recurrió a la ayuda de IA para entender qué diferencia práctica tienen y cuándo preferir uno sobre otro.
 
+---
+
 ## Aprendizaje
 
-- Se aprendió que el **MANOVA** es una extensión natural del ANOVA para el caso donde tenemos múltiples variables de respuesta correlacionadas, y que usarlo por separado (ANOVA variable por variable) inflaría la tasa de error tipo I.
+- Se aprendió que el **MANOVA** es una extensión natural del ANOVA para el caso donde tenemos múltiples variables de respuesta correlacionadas, y que usarlos de forma separada (ANOVA variable por variable) inflaría la tasa de error tipo I.
 
 - Se comprendió que cuando el MANOVA resulta significativo, las **pruebas post-hoc son ANOVAs individuales** por variable, lo que permite identificar cuáles variables contribuyen a la diferencia detectada.
 
 - Se entendió la lógica detrás del **MANCOVA**: al agregar una covariable continua, se controla su efecto y se obtiene una evaluación más precisa del factor de interés.
 
-- Aunque ninguno de los supuestos se cumplió estrictamente en el dataset `iris`, se aprendió que la **multinormalidad** no es tan crítica con muestras grandes, pero que la **homogeneidad de matrices de covarianza** sí es importante para la validez del análisis.
+- Aunque ninguno de los supuestos se cumplió estrictamente en el dataset `iris`, se aprendió que la **multinormalidad** no es tan crítica con muestras grandes, pero que la **homogeneidad de matrices de covarianza** sí es importante para la validez del análisis, y que la Traza de Pillai es la respuesta estadística adecuada a esta violación.
 
 - Se logró solucionar la confusión con `attach()`/`detach()` y se adoptó la práctica de no usarlo para mantener el código más limpio y reproducible.
 

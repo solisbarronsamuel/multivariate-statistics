@@ -25,6 +25,7 @@ La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de
 El código para cargar las bases de datos es el siguiente:
 
 ```{r}
+
 #| echo: true
 #| eval: false
 
@@ -39,7 +40,8 @@ DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
 
 ```{r}
 
-#| echo: true
+#| echo: false
+#| eval: true
 
 data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
