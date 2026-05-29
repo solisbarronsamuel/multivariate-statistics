@@ -449,11 +449,10 @@ summary.manova(fit, test = "Pillai")
 
 ## Resultados
 
-Esta sección presenta los resultados completos del análisis, con sus tablas de salida y la interpretación detallada de cada uno.
-
 ### Matriz de respuesta y ajuste del modelo
 
 ```{r}
+
 # Construimos la matriz de respuesta multivariada con las cuatro variables
 # morfológicas del dataset iris, usando el operador $ para evitar attach().
 # El resultado es una matriz de 150 × 4.
@@ -466,66 +465,70 @@ Y_respuesta <- cbind(iris$Sepal.Length, iris$Sepal.Width,
 # cuatro variables morfológicas simultáneamente.
 
 fit <- manova(Y_respuesta ~ Species, data = iris)
+
 ```
 
 ### Resultado del MANOVA global (Lambda de Wilks)
 
 ```{r}
+
 # La tabla MANOVA con Lambda de Wilks evalúa la hipótesis nula:
 # H₀: los vectores de medias de las tres especies son iguales
 #     para todas las variables de respuesta consideradas conjuntamente.
 # H₁: al menos un par de vectores de medias difiere en alguna dimensión.
 
 summary.manova(fit)
+
 ```
 
-**Interpretación:** El valor de la Lambda de Wilks (Λ) es cercano a cero, lo que indica que la varianza explicada por las diferencias entre grupos (*between-groups*) es muy grande en relación con la varianza residual (*within-groups*). El estadístico F aproximado asociado tiene un valor p extremadamente pequeño (p < 2.2 × 10⁻¹⁶), muy por debajo del umbral convencional de α = 0.05. Por lo tanto, **rechazamos H₀ con alta certeza**: existen diferencias estadísticamente significativas entre los vectores de medias de las tres especies (*setosa*, *versicolor* y *virginica*) cuando se consideran las cuatro variables morfológicas de manera simultánea. Este resultado justifica proceder con las pruebas post-hoc para identificar qué variables específicas generan esa diferencia.
-
----
+**Interpretación:** El valor de la Lambda de Wilks (Λ) es de 1.1919 lo que indica que la varianza explicada por las diferencias entre grupos (*between-groups*) es muy grande en relación con la varianza residual (*within-groups*). El estadístico F aproximado asociado tiene un valor p pequeño (p < 2.2 × 10⁻¹⁶), por debajo del umbral convencional de α = 0.05. Por lo tanto, **rechazamos H₀**, esto significa que existen diferencias estadísticamente significativas entre los vectores de medias de las tres especies (*setosa*, *versicolor* y *virginica*) cuando se consideran las cuatro variables morfológicas de manera simultánea. Este resultado justifica proceder con las pruebas post-hoc para identificar qué variables específicas generan esa diferencia.
 
 ### Pruebas post-hoc: ANOVAs individuales por variable
 
 ```{r}
+
 # summary.aov() descompone el MANOVA en ANOVAs univariados separados
 # para cada variable de respuesta. Estos revelan cuáles variables,
 # de manera individual, presentan diferencias significativas entre especies.
 
 summary.aov(fit)
+
 ```
 
-**Interpretación:** Los ANOVAs univariados producen una tabla por cada variable de respuesta. En todos los casos, el valor p asociado al factor `Species` es menor a 0.05, lo que indica que las tres especies difieren significativamente en cada una de las cuatro medidas morfológicas de forma individual. Sin embargo, es importante notar que la **longitud del pétalo** (`Petal.Length`) y el **ancho del pétalo** (`Petal.Width`) son las variables con mayor capacidad discriminante entre las especies, como se puede confirmar visualmente en las gráficas de caja de la siguiente sección. La suma de cuadrados entre grupos (*Sum Sq* del factor Species) es notablemente mayor que la suma de cuadrados residual para estas dos variables, lo cual se traduce en estadísticos F muy elevados. Las variables de sépalo también son significativas, pero con menor magnitud de efecto relativa.
-
----
+**Interpretación:** Los ANOVAs univariados producen una tabla por cada variable de respuesta. En todos los casos, el valor p asociado al factor `Species` es pequeño (p < 2.2 × 10⁻¹⁶), por debajo del umbral convencional de α = 0.05, lo que indica que las tres especies difieren significativamente en cada una de las cuatro medidas morfológicas de forma individual. Sin embargo, es importante notar que la **longitud del pétalo** (`Petal.Length`) y el **ancho del pétalo** (`Petal.Width`) son las variables con mayor capacidad discriminante entre las especies, como se puede confirmar visualmente en las gráficas de caja de la siguiente sección. La suma de cuadrados entre grupos (*Sum Sq* del factor Species) es notablemente mayor que la suma de cuadrados residual para estas dos variables, lo cual se traduce en estadísticos F muy elevados. Las variables de sépalo también son significativas, pero con menor magnitud de efecto relativa.
 
 ### Verificación de supuestos
 
 #### Multinormalidad multivariada
 
 ```{r}
+
 # Prueba de Shapiro-Wilk multivariada sobre las cuatro variables numéricas.
 # H₀: los datos siguen una distribución multinormal.
 
 mshapiro_test(iris[, 1:4])
+
 ```
 
-**Interpretación:** El valor p de la prueba de Shapiro-Wilk multivariada es menor a 0.05, por lo que **rechazamos H₀**: los datos de `iris` no siguen estrictamente una distribución multinormal. No obstante, esto no invalida el MANOVA en este caso, por dos razones: (1) el dataset cuenta con 50 observaciones por grupo (n = 150 total), un tamaño muestral que activa el teorema del límite central multivariado, haciendo que el MANOVA sea robusto ante desviaciones moderadas de la normalidad; y (2) el uso de la Traza de Pillai como estadístico alternativo ofrece mayor robustez ante esta violación.
+**Interpretación:** El valor p de la prueba de Shapiro-Wilk multivariada es menor a 0.05, por lo que **rechazamos H₀**, los datos de `iris` no siguen estrictamente una distribución multinormal. No obstante, esto no invalida el MANOVA por dos razones: (1) el dataset cuenta con 50 observaciones por grupo (n = 150 total), un tamaño muestral que activa el teorema del límite central multivariado, haciendo que el MANOVA sea robusto ante desviaciones moderadas de la normalidad; y (2) el uso de la Traza de Pillai como estadístico alternativo ofrece mayor robustez ante esta violación.
 
 #### Homogeneidad de matrices de varianza-covarianza
 
 ```{r}
+
 # Prueba de Box's M sobre las matrices de varianza-covarianza por grupo.
 # H₀: las matrices de covarianza son iguales entre las tres especies.
 
 box_m(iris[, 1:4], iris$Species)
+
 ```
 
-**Interpretación:** El resultado de la prueba de Box's M es significativo (p < 0.05), lo que indica que **las matrices de varianza-covarianza no son homogéneas** entre las tres especies. Este supuesto es el más importante para la validez del MANOVA, ya que su violación puede inflar el error tipo I. En la práctica, la prueba de Box's M es muy sensible al tamaño de muestra y a la no-normalidad, por lo que una violación no necesariamente descalifica el análisis. La recomendación en este caso es reportar los resultados usando la **Traza de Pillai** en lugar de la Lambda de Wilks, ya que el estadístico de Pillai es el más robusto ante la heterogeneidad de matrices de covarianza.
-
----
+**Interpretación:** El resultado de la prueba de Box's M es significativo (p < 0.05), lo que indica que **las matrices de varianza-covarianza no son homogéneas** entre las tres especies. Este supuesto es el más importante para la validez del MANOVA, porque su violación puede inflar el error tipo I. En la práctica, la prueba de Box's M es muy sensible al tamaño de muestra y a la no-normalidad, por lo que una violación no necesariamente descalifica el análisis. La recomendación en este caso es reportar los resultados usando la **Traza de Pillai** en lugar de la Lambda de Wilks, ya que el estadístico de Pillai es el más robusto ante la heterogeneidad de matrices de covarianza.
 
 ### Visualización: distribución de variables por especie
 
 ```{r}
+
 #| fig-width: 9
 #| fig-height: 7
 
@@ -537,6 +540,7 @@ box_m(iris[, 1:4], iris$Species)
 # boxplot() genera diagramas de caja (box plots) que muestran la mediana,
 # los cuartiles Q1 y Q3 (caja), los bigotes (hasta 1.5 × IQR) y los
 # valores atípicos (puntos fuera de los bigotes) por cada especie.
+#
 # El argumento col asigna colores pastel distintos a cada especie para
 # facilitar la identificación visual; xlab e ylab etiquetan los ejes.
 
@@ -546,6 +550,7 @@ boxplot(Sepal.Length ~ Species, data = iris,
         main = "Longitud del Sépalo por Especie",
         col = c("#AEC6CF", "#FFD1DC", "#B5EAD7"),
         xlab = "Especie", ylab = "cm")
+
 
 boxplot(Sepal.Width ~ Species, data = iris,
         main = "Ancho del Sépalo por Especie",
@@ -565,53 +570,48 @@ boxplot(Petal.Width ~ Species, data = iris,
 
 **Interpretación:** Los diagramas de caja confirman visualmente los resultados estadísticos. Las variables de **pétalo** (`Petal.Length` y `Petal.Width`) son las más discriminantes: *setosa* muestra valores notablemente más pequeños y con mínima dispersión, mientras que *versicolor* y *virginica* tienen distribuciones más altas, aunque con algo de solapamiento entre ellas. Las variables de **sépalo** presentan diferencias menos pronunciadas: `Sepal.Width` es la variable en la que *setosa* destaca con valores más altos, mientras que `Sepal.Length` muestra una separación moderada entre las tres especies. La ausencia de solapamiento en las variables de pétalo explica por qué estas contribuyen más al poder discriminante del MANOVA.
 
----
-
 ### MANCOVA: control por covariable continua
 
 ```{r}
+
 # MANCOVA: se incluye Sepal.Length como covariable continua para controlar
 # su efecto antes de evaluar el factor Species. El modelo evalúa si las
 # diferencias entre especies persisten incluso después de eliminar la
 # varianza atribuible a la longitud del sépalo.
 
-Y_respuesta <- cbind(iris$Sepal.Length, iris$Sepal.Width,
-                     iris$Petal.Length, iris$Petal.Width)
+Y_mancova <- cbind(iris$Sepal.Width, iris$Petal.Length, iris$Petal.Width)
 
-fit_mancova <- manova(Y_respuesta ~ Species + Sepal.Length, data = iris)
+fit_mancova <- manova(Y_mancova ~ Species + Sepal.Length, data = iris)
 
 summary.manova(fit_mancova)
+
 ```
 
-**Interpretación:** La tabla del MANCOVA desglosa el efecto de `Species` ajustado por `Sepal.Length` y el efecto independiente de la covariable `Sepal.Length`. Ambos términos resultan altamente significativos (p < 0.05), lo que indica que: (1) las diferencias entre especies en el vector de medias persisten incluso controlando por la longitud del sépalo, y (2) la longitud del sépalo tiene un efecto propio y significativo sobre las variables de respuesta, independientemente de la especie. Esto sugiere que `Sepal.Length` no es un simple redundante del factor especie, sino que aporta información predictiva adicional sobre las demás dimensiones morfológicas.
-
----
+**Interpretación:** La tabla del MANCOVA desglosa el efecto de `Species` ajustado por `Sepal.Length` y el efecto independiente de la covariable `Sepal.Length`. Ambos términos resultan significativos (p < 0.05), lo que indica que: (1) las diferencias entre especies en el vector de medias persisten incluso controlando por la longitud del sépalo, y (2) la longitud del sépalo tiene un efecto propio y significativo sobre las variables de respuesta, independientemente de la especie. Esto sugiere que `Sepal.Length` no es un simple redundante del factor especie, sino que aporta información predictiva adicional sobre las demás dimensiones morfológicas.
 
 ### Comparación de estadísticos multivariados
 
 ```{r}
+
 # Resultados con la Traza de Pillai, recomendada cuando los supuestos
 # de multinormalidad y homogeneidad de matrices no se cumplen,
 # ya que es el estadístico más robusto de los cuatro disponibles.
 
 summary.manova(fit, test = "Pillai")
+
 ```
 
-**Interpretación:** La Traza de Pillai confirma el mismo resultado que la Lambda de Wilks: existe una diferencia altamente significativa entre los vectores de medias de las tres especies (p < 2.2 × 10⁻¹⁶). Dado que los supuestos de multinormalidad y homogeneidad de matrices no se cumplen en este dataset, la Traza de Pillai es el estadístico de mayor confiabilidad para este análisis. Su valor se interpreta como la proporción de la varianza multivariada explicada por el factor `Species`: valores cercanos a 1 indican mayor separación entre grupos. La consistencia entre ambos estadísticos refuerza la solidez de la conclusión.
-
----
+**Interpretación:** La Traza de Pillai confirma el mismo resultado que la Lambda de Wilks, existe una diferencia significativa entre los vectores de medias de las tres especies (p < 2.2 × 10⁻¹⁶). Dado que los supuestos de multinormalidad y homogeneidad de matrices no se cumplen en este dataset, la Traza de Pillai es el estadístico para este análisis. Su valor se interpreta como la proporción de la varianza multivariada explicada por el factor `Species`: valores cercanos a 1 indican mayor separación entre grupos. La consistencia entre ambos estadísticos refuerza la solidez de la conclusión.
 
 ## Problemas encontrados
 
 - La mayor dificultad fue entender la diferencia entre usar `cbind()` con `attach()` y usar `as.matrix()` directamente en la fórmula. Ambos producen el mismo modelo, pero la segunda forma es más limpia y evita posibles conflictos de nombres en el entorno.
 
-- La interpretación de los supuestos fue confusa al inicio, especialmente la prueba de Box's M: en este caso la hipótesis nula es que **las matrices son iguales**, lo cual es lo que **queremos** que se cumpla, por lo que se busca **no rechazar** H₀ (es decir, p > 0.05).
+- La interpretación de los supuestos fue confusa, especialmente la prueba de Box's M: en este caso la hipótesis nula es que **las matrices son iguales**, lo cual es lo que **queremos** que se cumpla, por lo que se busca **no rechazar** H₀ (es decir, p > 0.05).
 
 - Fue necesario repasar la diferencia entre ANOVA (univariado) y MANOVA (multivariado) para entender cuándo usar cada uno y por qué el MANOVA es preferible cuando las variables están correlacionadas.
 
 - La selección del estadístico (`Wilks`, `Pillai`, `Hotelling-Lawley`, `Roy`) también generó dudas. Se recurrió a la ayuda de IA para entender qué diferencia práctica tienen y cuándo preferir uno sobre otro.
-
----
 
 ## Aprendizaje
 
