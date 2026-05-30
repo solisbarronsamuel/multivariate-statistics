@@ -1,5 +1,5 @@
 ---
-title: "Visualización de Datos Multivariados"
+title: "Visualización de Datos"
 subtitle: "Matrices de Dispersión, Mapas de Calor y Caras de Chernoff"
 author: "Samuel Solís Barrón"
 format:
@@ -80,6 +80,7 @@ La base de datos `datos-multivariada`. Proviene de las mediciones generadas dura
 ## código R
 
 ```{r}
+
 #| echo: true
 #| eval: false
 
@@ -91,7 +92,7 @@ data(iris)
 iris1 <- iris[, 1:4]
 
 
-# Datos propios
+# datos propios
 datos <- read.csv(
   here("data", "datos-multivariada.csv"),
   dec = ",",
@@ -103,36 +104,43 @@ datos <- read.csv(
 ## mtcars
 
 ```{r}
+
 #| echo: false
 #| eval: true
 
 data(mtcars)
 DT::datatable(mtcars)
+
 ```
 
 ## iris
 
 ```{r}
+
 #| echo: false
 #| eval: true
 
 data(iris)
 iris1 <- iris[, 1:4]
 DT::datatable(iris1)
+
 ```
 
 ## datos propios
 
 ```{r}
+
 #| echo: false
 #| eval: true
 
 datos <- read.csv(
   here("data", "datos-multivariada.csv"),
   dec = ",",
-  sep = ";"
+  sep = ";",
+  stringsAsFactors = FALSE
 )
 DT::datatable(datos, options = list(pageLength = 10))
+
 ```
 
 :::
