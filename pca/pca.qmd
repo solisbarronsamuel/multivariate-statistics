@@ -28,13 +28,14 @@ Aprender a reducir la dimensionalidad de datos multivariados mediante un Anális
 
 ::: {.panel-tabset}
 
-## Paquetes
+## paquetes
 
-#### Instalación de paquetes
+### instalación de paquetes
 
 ```{r instalar-paquetes}
 
 #| eval: false
+#| echo: true
 
 # install.packages() descarga e instala paquetes desde el repositorio CRAN.
 # Solo debe ejecutarse una vez por entorno de trabajo.
@@ -57,6 +58,8 @@ install.packages("GGally")
 
 ```
 
+### instalación de librerías
+
 ```{r cargar-paquetes}
 
 #| eval: true
@@ -73,7 +76,7 @@ library(GGally)       # ggpairs() para matrices de dispersión
 
 ```
 
-## Descripción general
+## descripción general
 
 La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
 

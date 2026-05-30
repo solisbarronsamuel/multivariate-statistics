@@ -1,0 +1,602 @@
+---
+title: "PCoA"
+subtitle: "Análisis de Coordenadas Principales (PCoA)"
+author: "Samuel Solís Barrón"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-float: true
+    number-sections: true
+    theme: flatly
+    highlight-style: tango
+    code-fold: false
+execute:
+  warning: false
+  message: false
+---
+
+## Objetivo
+
+- Aprender a realizar un Análisis de Coordenadas Principales (PCoA) a partir de una **matriz de distancias o disimilaridades** entre individuos, lo que permite usar cualquier métrica de distancia y no solo la euclidiana.
+- Calcular una **matriz de disimilaridades** entre individuos usando la métrica de Bray-Curtis, adecuada para datos de abundancias o medidas morfométricas no negativas.
+- Reducir la dimensionalidad de esa matriz a dos coordenadas principales que capturen la mayor variación posible entre individuos.
+- Visualizar los resultados en un diagrama de dispersión bidimensional.
+
+## Datos Utilizados
+
+::: {.panel-tabset}
+
+## paquetes
+
+### instalación de paquetes
+
+```{r instalar-paquetes}
+
+# Abre un chunk de código R con el nombre/etiqueta "instalar-paquetes"
+
+#| eval: false
+# Opción de chunk: NO ejecuta este código al renderizar el documento
+
+#| echo: true
+# Opción de chunk: SÍ muestra el código fuente en el documento final
+
+install.packages("vegan")
+install.packages("here")
+
+# Descarga e instala el paquete "vegan" desde CRAN en el sistema.
+# Solo se necesita ejecutar una vez. Por eso eval: false (no se corre al renderizar).
+
+```
+
+### instalación de librerías
+
+```{r cargar-paquetes}
+
+# Abre un chunk de código R con el nombre "cargar-paquetes"
+
+#| eval: true
+# Opción de chunk: SÍ ejecuta este código al renderizar
+
+#| echo: true
+# Opción de chunk: SÍ muestra el código en el documento final
+
+library(vegan)
+library(here)
+
+# Carga el paquete "vegan" en la sesión activa de R para poder usar sus funciones.
+# Requiere que el paquete ya esté instalado previamente.
+
+# ── library(vegan) ────────────────────────────────────────────────────────────
+# vegan (Vegetation Analysis) es el paquete de R más usado para análisis
+# multivariados en ecología y morfometría. Provee:
+#   - vegdist(): matrices de disimilaridad con múltiples métricas.
+#   - cmdscale(): escalamiento multidimensional (PCoA).
+#   - anosim(), adonis2(): pruebas de hipótesis multivariadas.
+#   - ordplot(), ordiellipse(): herramientas de visualización de ordenaciones.
+
+```
+
+## descripción general
+
+La base de datos `datos-multivariada`. Proviene de las mediciones generadas durante el curso con variables morfométricas medidas en el grupo e incluye las mediciones de otras generaciones. Contiene una columna de identificador (columna 1), una columna de sexo (columna 2) y variables numéricas en las columnas restantes.
+
+
+## código R
+
+```{r datos}
+
+#| echo: true
+# SÍ muestra el código en el documento
+
+#| eval: false
+# NO ejecuta el código al renderizar (solo se muestra como referencia/ejemplo)
+
+datos <- read.csv(
+# Lee un archivo CSV y guarda el resultado en el objeto llamado "datos"
+
+  here("data", "datos-multivariada.csv"),
+# here() construye la ruta al archivo de forma relativa al proyecto.
+# Busca el archivo "datos-multivariada.csv" dentro de la carpeta "data/"
+
+  dec = ",",
+# Indica que el separador decimal en el CSV es la coma (formato europeo/latino)
+
+  sep = ";",
+# Indica que las columnas del CSV están separadas por punto y coma
+
+  stringsAsFactors = FALSE
+# Evita que las columnas de texto se conviertan automáticamente en factores.
+# Útil para mantener control sobre los tipos de datos al importar.
+)
+
+```
+
+## datos propios
+
+```{r}
+
+# Abre un chunk sin nombre/etiqueta
+
+#| echo: false
+# NO muestra el código fuente en el documento (solo se ve el resultado)
+
+#| eval: true
+# SÍ ejecuta el código al renderizar
+
+datos <- read.csv(
+# Lee el mismo archivo CSV (esta vez sí se ejecuta realmente al renderizar)
+
+  here("data", "datos-multivariada.csv"),
+# Ruta relativa al archivo usando here()
+
+  dec = ",",
+# Separador decimal: coma
+
+  sep = ";",
+# Separador de columnas: punto y coma
+
+  stringsAsFactors = FALSE
+# No convierte texto a factores automáticamente
+)
+
+DT::datatable(datos, options = list(pageLength = 10))
+# DT::datatable() genera una tabla HTML interactiva con el contenido de "datos".
+# options = list(pageLength = 10) configura que se muestren 10 filas por página.
+# El prefijo DT:: indica que la función pertenece al paquete DT (no necesita library(DT) si se llama así).
+
+```
+
+:::
+
+## Procedimiento
+
+>En esta sección se muestra el código completo con explicaciones detalladas en cada chunk. Ningún resultado ni gráfica aparece aquí; todos los resultados están en la sección siguiente.
+
+
+La métrica de **Bray-Curtis** es apropiada aquí porque trabaja exclusivamente con valores no negativos y mide diferencias relativas (proporcionales) entre perfiles de individuos, no diferencias absolutas. Su fórmula es:
+
+$$d_{BC}(i,j) = \frac{\sum_k |x_{ik} - x_{jk}|}{\sum_k (x_{ik} + x_{jk})}$$
+
+donde $x_{ik}$ es el valor de la variable $k$ para el individuo $i$. El resultado siempre está entre 0 (individuos idénticos) y 1 (sin ninguna variable en común).
+
+```{r}
+#| label: setup
+#| include: false
+
+
+# ── Matrices de distancia y PCoA (datos completos) ───────────────────────────
+datos      <- datos_2026[, 3:16]
+dist_datos <- vegdist(datos, method = "bray")
+pcoa_datos <- cmdscale(dist_datos, 2)
+x          <- pcoa_datos[, 1]
+y          <- pcoa_datos[, 2]
+
+# ── Matrices de distancia y PCoA (sin outlier) ───────────────────────────────
+dist_datos1 <- vegdist(datos1[, 3:16], method = "bray")
+pcoa_datos1 <- cmdscale(dist_datos1, 2)
+x1          <- pcoa_datos1[, 1]
+y1          <- pcoa_datos1[, 2]
+
+# ── Etiquetas y colores ───────────────────────────────────────────────────────
+etiquetas_sexo    <- datos1$sexo
+etiquetas_nombres <- datos1$id
+
+colores_sexo <- function(variable) {
+  if (length(grep("mujer", variable))) "deeppink" else "royalblue"
+}
+
+etiquetas_colores_sexo    <- unlist(lapply(etiquetas_sexo, colores_sexo))
+etiquetas_nombres_colores <- unlist(lapply(datos1$sexo,    colores_sexo))
+```
+
+
+## Eliminar la observación atípica (renglón 41)
+
+```{r}
+#| label: proc-outlier
+#| echo: true
+#| output: false
+
+# ── Indexación con signo negativo ─────────────────────────────────────────────
+# En R, datos_2026[-41, ] significa:
+#   - Filas: seleccionar TODAS excepto la fila 41 (el signo menos excluye).
+#   - Columnas: dejar en blanco conserva todas las columnas.
+# Esta es la forma más directa de eliminar una fila por posición.
+# El resultado se guarda en datos1 para no sobreescribir los datos originales,
+# lo que permitiría regresar a datos_2026 si fuera necesario.
+datos1 <- datos_2026[-41, ]
+```
+
+## Calcular la matriz de disimilaridades
+
+```{r}
+#| label: proc-distancia
+#| echo: true
+#| output: false
+
+# ── Seleccionar solo columnas numéricas ───────────────────────────────────────
+# datos1[, 3:16] extrae las columnas 3 a 16 (las 14 variables morfométricas).
+# Se excluyen las columnas 1 (id) y 2 (sexo) porque son texto: vegdist()
+# solo acepta matrices o data frames completamente numéricos y lanzaría
+# un error si se incluyen columnas de caracteres.
+datos2 <- datos1[, 3:16]
+
+# ── vegdist() ─────────────────────────────────────────────────────────────────
+# Calcula la disimilaridad entre TODOS los pares de filas (individuos).
+# Para n individuos, el resultado es una matriz triangular inferior de
+# dimensión n×n, aunque R la almacena internamente como un objeto "dist"
+# (no como una matriz cuadrada) para ahorrar memoria.
+# Argumentos:
+#   datos2        : el data frame numérico sobre el que calcular distancias.
+#   method = "bray": especifica la métrica Bray-Curtis. Otras opciones
+#                    disponibles: "euclidean", "jaccard", "manhattan",
+#                    "gower", "horn", entre otras.
+dist_datos <- vegdist(datos2, method = "bray")
+```
+
+## Calcular el PCoA
+
+```{r}
+#| label: proc-pcoa
+#| echo: true
+#| output: false
+
+# ── cmdscale() ────────────────────────────────────────────────────────────────
+# Aplica el escalamiento multidimensional clásico (PCoA) a la matriz de
+# distancias. El método descompone la matriz de distancias mediante
+# eigendecomposición para encontrar las coordenadas cartesianas de los
+# individuos en un espacio de menor dimensión que preserve, en la medida
+# de lo posible, las distancias originales.
+# Argumentos:
+#   dist_datos : el objeto "dist" calculado con vegdist().
+#   2          : número de dimensiones a retener. Con k = 2 obtenemos
+#                las dos coordenadas principales (las dos que explican
+#                la mayor proporción de variación).
+# El resultado es una matriz de n filas (individuos) × 2 columnas
+# (coordenadas). La columna 1 es el eje que explica más variación.
+pcoa_datos <- cmdscale(dist_datos, 2)
+
+# ── Extraer coordenadas ───────────────────────────────────────────────────────
+# Se separan las dos columnas en vectores x e y para facilitar su uso
+# como argumentos en plot(). pcoa_datos[, 1] extrae la primera columna
+# (coordenada principal 1, eje horizontal) y pcoa_datos[, 2] la segunda.
+x <- pcoa_datos[, 1]
+y <- pcoa_datos[, 2]
+```
+
+## Recalcular el PCoA sin la observación atípica
+
+```{r}
+#| label: proc-pcoa-limpio
+#| echo: true
+#| output: false
+
+# Se repite exactamente el proceso de los dos chunks anteriores,
+# pero ahora sobre datos1 (sin el renglón 41).
+# Es necesario recalcular desde la matriz de distancias porque la
+# eliminación de un individuo cambia todas las distancias relativas;
+# no basta con quitar una fila del resultado de pcoa_datos.
+
+# Nueva matriz de disimilaridades sin el outlier.
+dist_datos1 <- vegdist(datos1[, 3:16], method = "bray")
+
+# Nuevo PCoA con la matriz depurada.
+pcoa_datos1 <- cmdscale(dist_datos1, 2)
+
+# Extraer las dos coordenadas principales en vectores separados.
+# Se usan los nombres x1 e y1 (con sufijo 1) para distinguirlos de
+# x e y que corresponden al PCoA con todos los datos.
+x1 <- pcoa_datos1[, 1]
+y1 <- pcoa_datos1[, 2]
+```
+
+---
+
+## Gráficas personalizadas
+
+### a) Gráfica con colores por sexo
+
+```{r}
+#| label: proc-colores-sexo
+#| echo: true
+#| output: false
+
+# ── Paso 1: Extraer etiquetas de sexo ─────────────────────────────────────────
+# datos1$sexo extrae la columna "sexo" de datos1 como un vector de
+# caracteres. Cada posición del vector corresponde a un individuo
+# (en el mismo orden que las filas de datos1).
+etiquetas_sexo <- datos1$sexo
+
+# ── Paso 2: Definir la función colores_sexo ───────────────────────────────────
+# Se escribe una función propia porque plot() necesita un vector de
+# colores (uno por punto), no una sola regla; hay que aplicar la lógica
+# individualmente a cada etiqueta.
+#
+# La función recibe un elemento del vector (una cadena de texto, p.ej.
+# "mujer" o "hombre") y devuelve el nombre del color correspondiente.
+#
+# Detalle de la lógica interna:
+#   grep("mujer", variable) busca la cadena "mujer" dentro de 'variable'
+#     y devuelve un vector con las posiciones donde la encontró.
+#     Si no la encuentra, devuelve un vector vacío: integer(0).
+#   length(...) cuenta cuántos elementos tiene ese vector.
+#     Si encontró "mujer" -> length > 0 -> la condición if es TRUE.
+#     Si no encontró    -> length = 0 -> la condición if es FALSE.
+#   En consecuencia, la función retorna "deeppink" para mujeres
+#     y "royalblue" para cualquier otro valor (hombres).
+colores_sexo <- function(variable) {
+  if (length(grep("mujer", variable))) {
+    "deeppink"
+  } else {
+    "royalblue"
+  }
+}
+
+# ── Paso 3: Aplicar la función a cada elemento ───────────────────────────────
+# lapply(etiquetas_sexo, colores_sexo) aplica la función colores_sexo
+# a cada elemento de etiquetas_sexo de forma individual (iterativa).
+# El resultado de lapply() es siempre una LISTA, no un vector.
+# unlist() convierte esa lista en un vector de caracteres simple, que
+# es el formato que acepta el argumento col de plot().
+etiquetas_colores_sexo <- unlist(lapply(etiquetas_sexo, colores_sexo))
+
+# ── Paso 4: Graficar con col = etiquetas_colores_sexo ────────────────────────
+# Al pasar el vector de colores al argumento col, R asigna el color
+# de la posición i al punto de la posición i. Como el orden de
+# etiquetas_colores_sexo coincide con el orden de x1 e y1 (todos
+# derivados de datos1), la asignación es correcta.
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     main = "con colores por sexo",
+     col  = etiquetas_colores_sexo,
+     pch  = 1)
+```
+
+### b) Gráfica con nombres (un solo color)
+
+```{r}
+#| label: proc-nombres
+#| echo: true
+#| output: false
+
+# ── Extraer la columna de identificadores ────────────────────────────────────
+# datos1$id contiene el nombre o código único de cada persona.
+# Se guarda en etiquetas_nombres para usarlo como etiqueta de texto.
+etiquetas_nombres <- datos1$id
+
+# ── plot() con type = "n" ─────────────────────────────────────────────────────
+# type = "n" (de "nothing") crea el área de la gráfica (ejes, título,
+# márgenes) pero NO dibuja ningún símbolo ni línea. Esto es el primer
+# paso de un patrón de dos etapas:
+#   1. Establecer el espacio con plot(..., type = "n").
+#   2. Agregar elementos gráficos encima con text(), points(), lines(), etc.
+# Si se omitiera type = "n" y se llamara directamente a text(), los puntos
+# (pch por defecto) y las etiquetas de texto aparecerían superpuestos.
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     type = "n",
+     main = "con nombres")
+
+# ── text() ────────────────────────────────────────────────────────────────────
+# Dibuja una cadena de texto en las coordenadas (x, y) especificadas.
+# Argumentos:
+#   x1, y1        : coordenadas donde se coloca cada etiqueta.
+#   labels        : vector de texto a dibujar (uno por par de coordenadas).
+#   cex = 0.8     : factor de escala del texto. 1 = tamaño por defecto.
+#                   0.8 reduce el tamaño al 80% para disminuir la
+#                   superposición entre etiquetas cercanas.
+text(x1, y1,
+     labels = etiquetas_nombres,
+     cex    = 0.8)
+```
+
+### c) Gráfica con nombres y colores por sexo
+
+```{r}
+#| label: proc-nombres-colores
+#| echo: true
+#| output: false
+
+# Se reutiliza la función colores_sexo (definida en el inciso a) para
+# generar el vector de colores a partir de datos1$sexo.
+# Nótese que aquí se pasa datos1$sexo directamente a lapply() en lugar
+# de usar el objeto etiquetas_sexo creado antes: ambas expresiones son
+# equivalentes porque contienen exactamente los mismos datos.
+etiquetas_nombres_colores <- unlist(lapply(datos1$sexo, colores_sexo))
+
+# Gráfica vacía: establece los ejes sin dibujar ningún símbolo.
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     type = "n",
+     main = "con nombres y colores")
+
+# text() con el argumento col asigna un color diferente a cada etiqueta
+# según el sexo de la persona, usando el vector etiquetas_nombres_colores.
+text(x1, y1,
+     labels = etiquetas_nombres,
+     col    = etiquetas_nombres_colores,
+     cex    = 0.8)
+```
+
+### d) Gráfica con nombres, colores y leyenda
+
+```{r}
+#| label: proc-leyenda
+#| echo: true
+#| output: false
+
+# La gráfica base es idéntica al inciso c); se agrega únicamente legend().
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     type = "n",
+     main = "con nombres, colores y leyenda")
+
+text(x1, y1,
+     labels = etiquetas_nombres,
+     col    = etiquetas_nombres_colores,
+     cex    = 0.8)
+
+# ── legend() ──────────────────────────────────────────────────────────────────
+# Agrega una caja de leyenda sobre la gráfica activa (la más recientemente
+# generada con plot()). Argumentos:
+#   "bottomright" : posición de la leyenda. R acepta palabras clave como
+#                   "topleft", "topright", "bottomleft", "bottomright",
+#                   "center", o coordenadas numéricas exactas (x, y).
+#   legend        : vector de etiquetas de texto que describen cada categoría.
+#   col           : vector de colores asignado a cada etiqueta (mismo orden).
+#   pch = 1       : símbolo que aparece junto a la etiqueta en la leyenda.
+#                   pch = 1 es un círculo vacío, igual al símbolo por defecto
+#                   de plot(). Debe coincidir con el pch usado en la gráfica
+#                   para que la leyenda sea coherente visualmente.
+#   cex = 1       : tamaño del texto de la leyenda (tamaño por defecto).
+legend("bottomright",
+       legend = c("mujer", "hombre"),
+       col    = c("deeppink", "royalblue"),
+       pch    = 1,
+       cex    = 1)
+```
+
+---
+
+# Resultados
+
+> En esta sección se presentan las cinco gráficas generadas durante el análisis con su interpretación detallada. No se muestra código.
+
+## Gráfica 1 — PCoA con todos los datos (incluyendo el outlier)
+
+```{r}
+#| label: res-inicial
+#| echo: false
+#| output: true
+#| fig-cap: "PCoA calculado sobre las 14 variables morfométricas de todos los individuos del semestre 2026, incluyendo la observación atípica del renglón 41."
+
+plot(x, y,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     main = "data = datos multivariada 2026",
+     pch  = 1)
+```
+
+Esta primera gráfica revela un patrón diagnóstico importante: la gran mayoría de los individuos se agrupan en la zona derecha del diagrama (Coordenada 1 entre aproximadamente −0.05 y 0.05), mientras que existe un punto completamente aislado en el extremo izquierdo (Coordenada 1 ≈ −0.22). Esta separación extrema indica que ese individuo —correspondiente al renglón 41 de la base de datos— tiene un perfil de medidas morfométricas muy diferente al del resto del grupo.
+
+El efecto de este valor atípico es doble. Primero, **distorsiona la escala del eje X**: para acomodar ese punto, el eje abarca un rango de casi 0.28 unidades, lo que comprime toda la variación del grupo principal en apenas un tercio del espacio visual. Segundo, **afecta el cálculo de las propias coordenadas principales**: `cmdscale()` busca los ejes que mejor preservan las distancias entre todos los pares de individuos, incluyendo al outlier; su presencia redirige parte de la varianza explicada hacia el eje que lo separa del grupo, restando información sobre las diferencias internas del conjunto principal. Por estas razones es indispensable eliminar esa observación antes de interpretar el PCoA.
+
+---
+
+## Gráfica 2 — PCoA sin la observación atípica
+
+```{r}
+#| label: res-sin-outlier
+#| echo: false
+#| output: true
+#| fig-cap: "PCoA recalculado desde cero (nueva matriz de distancias) tras eliminar el renglón 41."
+
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     main = "datos 2026 sin la observación rara",
+     pch  = 1)
+```
+
+Una vez eliminado el renglón 41 y recalculado el PCoA desde la matriz de distancias (no simplemente quitando una fila de la gráfica anterior), la estructura del grupo se hace visible con mucha mayor claridad. Los rangos de ambos ejes se han reducido a aproximadamente −0.06 a 0.06 en la Coordenada 1 y −0.02 a 0.04 en la Coordenada 2.
+
+La nube de puntos no forma clusters perfectamente separados, sino una distribución relativamente continua con mayor densidad en la zona central y algunos puntos en la periferia. Esto es consistente con datos morfométricos humanos de un mismo grupo de clase: se espera variación continua entre individuos en lugar de grupos discretos. La **Coordenada 1** capta la dirección de mayor variación entre personas; individuos que difieren más en sus medidas morfométricas quedan más separados horizontalmente. La **Coordenada 2** capta la segunda dirección de variación, ortogonal (independiente) a la primera. Juntas, estas dos coordenadas representan la proyección de mayor fidelidad posible del espacio de 14 dimensiones original en un plano bidimensional.
+
+---
+
+## Gráfica 3 — PCoA con colores por sexo
+
+```{r}
+#| label: res-colores
+#| echo: false
+#| output: true
+#| fig-cap: "Misma proyección PCoA, con los puntos coloreados según el sexo: rosa (deeppink) = mujer, azul (royalblue) = hombre."
+
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     main = "con colores por sexo",
+     col  = etiquetas_colores_sexo,
+     pch  = 1)
+```
+
+La adición de color transforma la gráfica de una exploración puramente geométrica a una herramienta de comparación entre grupos. Varios patrones son visibles. Los puntos rosas (mujeres) tienden a aparecer con mayor frecuencia en la mitad izquierda del eje X, mientras que los puntos azules (hombres) tienden a concentrarse más hacia la derecha; esta separación parcial a lo largo de la Coordenada 1 sugiere que esa dirección captura, al menos en parte, diferencias morfométricas sistemáticas entre sexos.
+
+Sin embargo, existe una región de alta densidad alrededor del origen donde ambos colores se mezclan, lo que indica que una parte sustancial del grupo tiene perfiles morfométricos similares independientemente del sexo. En el eje Y (Coordenada 2), los puntos de ambos sexos se distribuyen de forma parecida, lo que sugiere que la segunda dimensión de variación no está relacionada con el sexo de manera tan clara como la primera. Este gráfico constituye la exploración visual preliminar antes de aplicar pruebas estadísticas formales como ANOSIM o PERMANOVA.
+
+---
+
+## Gráfica 4 — PCoA con nombres (un solo color)
+
+```{r}
+#| label: res-nombres
+#| echo: false
+#| output: true
+#| fig-cap: "Misma proyección PCoA, con los identificadores de cada persona en lugar de puntos."
+
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     type = "n",
+     main = "con nombres")
+text(x1, y1, labels = etiquetas_nombres, cex = 0.8)
+```
+
+Esta versión sacrifica la distinción visual por sexo para ganar **trazabilidad individual**: cada posición en el diagrama puede asociarse a una persona específica. Las personas que aparecen en los bordes del diagrama son aquellas cuyo perfil morfométrico es más diferente al del grupo, y su identificación permite revisar si se trata de variación biológica genuina o de posibles errores de medición. Cuando dos nombres se sobreimprimen o quedan muy juntos, significa que esas personas tienen medidas morfométricas muy parecidas entre sí en las 14 variables. Este solapamiento de etiquetas es una característica inherente del PCoA con datos humanos y no puede evitarse sin herramientas interactivas.
+
+---
+
+## Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)
+
+```{r}
+#| label: res-final
+#| echo: false
+#| output: true
+#| fig-cap: "Versión final: nombres individuales coloreados por sexo (rosa = mujer, azul = hombre) con leyenda en la esquina inferior derecha."
+
+plot(x1, y1,
+     xlab = "Coordenada 1",
+     ylab = "Coordenada 2",
+     type = "n",
+     main = "con nombres, colores y leyenda")
+text(x1, y1,
+     labels = etiquetas_nombres,
+     col    = etiquetas_nombres_colores,
+     cex    = 0.8)
+legend("bottomright",
+       legend = c("mujer", "hombre"),
+       col    = c("deeppink", "royalblue"),
+       pch    = 1,
+       cex    = 1)
+```
+
+Esta es la visualización más informativa de las cinco y la que se reportaría en un trabajo o presentación. Integra tres niveles de información simultáneamente: la posición de cada nombre en el plano refleja la similitud morfométrica global entre individuos; cada nombre permite relacionar la posición con el individuo real y con sus datos originales; y el color permite reconocer de inmediato la categoría de sexo sin necesidad de consultar otra tabla. La leyenda fue colocada en la esquina inferior derecha porque esa zona tiene menor densidad de etiquetas, minimizando la interferencia visual.
+
+La interpretación integradora confirma el patrón descrito en la Gráfica 3: los nombres rosas (mujeres) se concentran relativamente más hacia la izquierda (Coordenada 1 negativa), mientras que muchos nombres azules (hombres) aparecen hacia la derecha (Coordenada 1 positiva), con un amplio traslape en la zona central. Esto es consistente con la existencia de **diferencias morfométricas estadísticamente significativas entre sexos** —que se confirmarán en el tema de Pruebas de Hipótesis Multivariadas— pero también con una **variación intra-grupo considerable**, especialmente entre las mujeres, cuyo rango en la Coordenada 1 es amplio.
+
+---
+
+# Problemas Encontrados
+
+- Al principio no quedaba claro por qué era necesario separar las columnas de texto antes de calcular la matriz de distancias. La función `vegdist()` produce un error si se incluyen columnas no numéricas, lo que obligó a revisar la estructura del data frame con `str()` antes de continuar.
+- La lógica de la función `colores_sexo` resultó confusa inicialmente. Usar `grep()` dentro de `if()` no es la forma más intuitiva de hacer una condicional; en un primer intento se trató de usar `== "mujer"` directamente, pero `if()` espera un escalar lógico y al aplicarlo sobre un vector genera una advertencia. Fue necesario entender que `length(grep(...)) > 0` es la forma segura de preguntar "¿encontré este patrón en este texto?".
+- La combinación `lapply()` + `unlist()` no era familiar. Se tuvo que revisar que `lapply()` siempre devuelve una lista (aunque cada elemento sea un solo carácter) y que `plot()` necesita un vector, lo que justifica el paso de conversión con `unlist()`.
+- El uso de `type = "n"` en `plot()` para generar una gráfica vacía y luego superponer texto con `text()` no era evidente; en el primer intento se omitió este argumento y el texto apareció encima de los círculos en lugar de reemplazarlos, produciendo una gráfica ilegible.
+- Identificar que la observación atípica era específicamente el renglón 41 requirió imprimir el objeto `pcoa_datos` completo y buscar manualmente cuál fila tenía la Coordenada 1 más negativa. Una forma más eficiente habría sido usar `which.min(pcoa_datos[,1])`.
+- El error más frecuente en el documento `.qmd` fue el conflicto entre las opciones globales del bloque `execute:` del YAML y las llamadas a `knitr::opts_chunk$set()` dentro del documento. En Quarto, las opciones por chunk con `#| echo:` y `#| output:` siempre tienen prioridad y son la forma recomendada para controlar el comportamiento de cada chunk individualmente, evitando comportamientos inesperados.
+
+---
+
+# Aprendizaje
+
+- Se aprendió qué es el PCoA y en qué se diferencia del PCA: el PCA descompone la varianza de la matriz de datos original; el PCoA descompone una matriz de distancias, lo que lo hace aplicable a cualquier tipo de datos siempre que se pueda calcular una disimilaridad entre pares de individuos.
+- Se comprendió por qué la métrica de Bray-Curtis es preferible a la distancia euclidiana para datos morfométricos: la euclidiana es sensible a la escala absoluta de las variables, mientras que Bray-Curtis trabaja con diferencias relativas y está acotada entre 0 y 1, lo que la hace comparable entre estudios y conjuntos de datos con distintas unidades.
+- Se aprendió a escribir funciones propias en R con `function()` y a aplicarlas vectorialmente con `lapply()` + `unlist()`, un patrón central en R base para transformar vectores elemento a elemento sin usar bucles `for`.
+- Se entendió el flujo de tres pasos para gráficas personalizadas en R base: (1) `plot(..., type = "n")` establece el espacio de coordenadas, (2) `text()` o `points()` agregan los elementos visuales, y (3) `legend()` documenta la codificación de colores o símbolos.
+- Se reforzó la importancia de explorar los datos antes de analizar: la gráfica inicial con el outlier habría llevado a conclusiones incorrectas sobre la estructura morfométrica del grupo si no se hubiera detectado y eliminado antes de interpretar.
+- Se aprendió que en Quarto la forma correcta de controlar la visibilidad de código y resultados es usar `#| echo:` y `#| output:` directamente en cada chunk, en lugar de `knitr::opts_chunk$set()`, cuya interacción con el bloque `execute:` del YAML puede producir comportamientos inesperados al renderizar.

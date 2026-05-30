@@ -11,6 +11,7 @@ book:
     - data-frame/data-frame.qmd
     - data-visualization/data-visualization.qmd
     - manova/manova.qmd
+    - pca/pca.qmd
     - references.qmd
 
 bibliography: references.bib
