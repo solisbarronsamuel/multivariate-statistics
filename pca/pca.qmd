@@ -545,7 +545,7 @@ plot(fit2, type = "l")
 
 ```
 
-### PCA con `FactoMineR`
+#### PCA con `FactoMineR`
 
 `PCA()` de FactoMineR realiza el mismo análisis que `prcomp()` pero devuelve un objeto más rico en información, directamente compatible con las funciones de visualización de `factoextra`.
 
@@ -592,18 +592,26 @@ pcaIris$eig
 
 ```
 
-### Visualización de variables
+#### Visualización de variables
 
 Las funciones `fviz_*()` de `factoextra` generan gráficos basados en `ggplot2`, que pueden personalizarse con `labs()`, `theme()` y otras capas.
 
-```{r fviz-variables}
+```{r fviz-variables-1}
+
 #| eval: false
 
 # fviz_screeplot() genera el screeplot con barras y una línea acumulada.
 # A diferencia de screeplot() base, muestra el porcentaje de varianza explicada
 # en el eje Y, con etiquetas numéricas sobre cada barra.
 # Visualmente más informativo para decidir cuántos componentes retener.
+
 fviz_screeplot(pcaIris)
+
+```
+
+```{r fviz-variables-2}
+
+#| eval: false
 
 # fviz_pca_var() dibuja el círculo de correlaciones (variable factor map).
 # Cada variable se representa como un vector desde el origen.
@@ -613,6 +621,7 @@ fviz_screeplot(pcaIris)
 #   vectores apuntando al mismo lado están positivamente correlacionados.
 # col.var = "contrib" colorea los vectores según la contribución de cada
 # variable al plano principal: gradiente azul (bajo) → rojo (alto).
+
 fviz_pca_var(pcaIris, col.var = "contrib") +
   labs(
     x      = "Componente Principal 1",
@@ -620,24 +629,40 @@ fviz_pca_var(pcaIris, col.var = "contrib") +
     colour = "Contribución"
   )
 
+```
+
+```{r fviz-variables-3}
+
+#| eval: false
+
 # fviz_contrib() muestra un gráfico de barras con la contribución de cada
 # variable al componente especificado.
 # choice = "var": analiza variables (no individuos).
 # axes = 1: muestra contribuciones al primer componente (PC1).
 # La línea roja horizontal marca la contribución esperada bajo igualdad de
 # aporte (100/p %). Variables que superen esa línea son las que definen el PC.
+
 fviz_contrib(pcaIris, choice = "var", axes = 1) +
   labs(y = "Contribución PC1 (%)")
 
-# Mismo análisis para el segundo componente.
-# axes = 2 → PC2. Permite identificar qué variables definen PC2 por separado.
-fviz_contrib(pcaIris, choice = "var", axes = 2) +
-  labs(y = "Contribución PC2 (%)")
 ```
 
-### Visualización de individuos
+```{r fviz-variables-4}
 
-```{r fviz-individuos}
+#| eval: false
+
+# Mismo análisis para el segundo componente.
+# axes = 2 → PC2. Permite identificar qué variables definen PC2 por separado.
+
+fviz_contrib(pcaIris, choice = "var", axes = 2) +
+  labs(y = "Contribución PC2 (%)")
+
+```
+
+#### Visualización de individuos
+
+```{r fviz-individuos-1}
+
 #| eval: false
 
 # head() muestra las primeras 6 filas de la matriz de coordenadas de los
@@ -645,14 +670,28 @@ fviz_contrib(pcaIris, choice = "var", axes = 2) +
 # resultados de individuos; $coord contiene las posiciones (scores) de
 # cada observación en el sistema de referencia Dim.1, Dim.2, etc.
 # Estas coordenadas son los valores proyectados sobre cada PC.
+
 head(pcaIris$ind$coord)
+
+```
+
+```{r fviz-individuos-2}
+
+#| eval: false
 
 # fviz_pca_ind() grafica cada observación como un punto en el plano PC1–PC2.
 # col.ind = "contrib" colorea cada punto según su contribución a la
 # construcción del plano principal. Individuos alejados del origen tienen
 # mayor influencia sobre los componentes.
+
 fviz_pca_ind(pcaIris, col.ind = "contrib") +
   labs(x = "PC1", y = "PC2", colour = "Contribución")
+
+```
+
+```{r fviz-individuos-3}
+
+#| eval: false
 
 # Segunda versión coloreada por especie para evaluar la separación natural.
 # habillage = iris$Species usa la columna Species del dataset original
@@ -662,6 +701,7 @@ fviz_pca_ind(pcaIris, col.ind = "contrib") +
 # Si las elipses no se solapan, los grupos están bien separados en el PCA.
 # geom = "point" dibuja solo puntos, sin etiquetas numéricas, evitando
 # saturar la gráfica con las 150 observaciones.
+
 fviz_pca_ind(
   pcaIris,
   habillage   = iris$Species,
@@ -669,27 +709,39 @@ fviz_pca_ind(
   geom        = "point"
 ) +
   labs(x = "PC1", y = "PC2", color = "Especie")
+
 ```
 
-### Contribución de individuos por componente
+#### Contribución de individuos por componente
 
-```{r contrib-individuos}
+```{r contrib-individuos-1}
+
 #| eval: false
 
 # fviz_contrib() con choice = "ind" muestra la contribución de cada individuo
 # (observación) al componente indicado.
 # axes = 1 → contribuciones a PC1. Útil para identificar observaciones
 # atípicas o muy influyentes que determinan la dirección del primer componente.
+
 fviz_contrib(pcaIris, choice = "ind", axes = 1)
+
+```
+
+```{r contrib-individuos-2}
+
+#| eval: false
 
 # Para PC2, top = 20 limita el gráfico a las 20 observaciones con mayor
 # contribución, evitando saturar el eje X con las 150 etiquetas del dataset.
+
 fviz_contrib(pcaIris, choice = "ind", axes = 2, top = 20)
+
 ```
 
-### Matriz de correlación y exploración visual
+#### Matriz de correlación y exploración visual
 
-```{r correlacion-ggpairs}
+```{r correlacion-ggpairs-1}
+
 #| eval: false
 
 # cor() calcula la matriz de correlación de Pearson entre todas las pares
@@ -700,7 +752,14 @@ fviz_contrib(pcaIris, choice = "ind", axes = 2, top = 20)
 # El PCA trabaja sobre esta estructura cuando scale. = TRUE, por lo que
 # entenderla es clave para interpretar qué variables "empujan juntas"
 # dentro del mismo componente.
+
 cor(iris1)
+
+```
+
+```{r correlacion-ggpairs-2}
+
+#| eval: false
 
 # ggpairs() genera una matriz de gráficos multivariada de 4×4:
 #   Diagonal:          curva de densidad de cada variable individual.
@@ -710,10 +769,12 @@ cor(iris1)
 #                       que indican el nivel de significancia estadística.
 # Esta visualización complementa a cor() mostrando no solo la magnitud
 # sino la forma y el patrón de cada relación bivariada.
+
 ggpairs(iris1)
+
 ```
 
-### Biplot
+#### Biplot
 
 El biplot combina en una sola gráfica el mapa de variables (círculo de correlaciones) y el mapa de individuos (puntos por especie), y es la visualización más completa del PCA.
 
