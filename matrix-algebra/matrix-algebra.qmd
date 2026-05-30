@@ -258,18 +258,21 @@ mvarcov
 ```{r}
 
 mdis_eucl <- dist(iris1, method = "euclidean")
+mdis_eucl
 
 ```
 
 ```{r}
 
 mdis_canb <- dist(iris1, method = "canberra")
+mdis_canb
 
 ```
 
 ```{r}
 
 mdis_manh <- dist(iris1, method = "manhattan")
+mdis_manh
 
 ```
 

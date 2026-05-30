@@ -1,0 +1,811 @@
+---
+title: "Visualización de Datos"
+subtitle: "Matrices de Dispersión, Mapas de Calor y Caras de Chernoff"
+author: "Samuel Solís Barrón"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Contenido"
+    number-sections: true
+    code-fold: false
+    code-tools: true
+    theme: cosmo
+    highlight-style: github
+    fig-align: center
+execute:
+  echo: true
+  warning: false
+  message: false
+  cache: false
+---
+
+## Objetivos
+
+- Explorar un conjunto de datos multivariados de forma visual.
+- Identificar la distribución y las relaciones entre variables morfométricas mediante matrices de dispersión (*scatter plot matrices*) con `ggpairs()`.
+- Detectar valores atípicos (*outliers*) y patrones de agrupamiento.
+- Representar la similitud entre observaciones y variables mediante mapas de calor (*heatmaps*) con `heatmap()` y `pheatmap()`.
+- Resumir diferencias entre grupos (por especie o por sexo) usando las **Caras de Chernoff**, donde cada rasgo facial codifica una variable numérica distinta.
+
+## Datos utilizados
+
+::: {.panel-tabset}
+
+## Paquetes
+
+```{r cargar-paquetes}
+
+#| eval: true
+#| echo: true
+
+library(ggplot2)   # Visualización de datos (gramática de gráficos)
+library(GGally)    # Extensión de ggplot2; matriz de gráficas con ggpairs()
+library(pheatmap)  # Mapas de calor con clustering jerárquico
+library(aplpack)   # Gráficas especializadas, incluyendo Caras de Chernoff
+library(dplyr)     # Manipulación de datos (filtrar, agrupar, resumir, etc.)
+library(here)      # Rutas de archivos reproducibles desde la raíz del proyecto
+
+```
+
+## Descripción general
+
+La base de datos **`mtcars`** incluida en R base. Proviene de la revista *Motor Trend* (1974) y contiene datos de pruebas de rendimiento para 32 automóviles. No tiene una variable categórica principal, aunque `cyl` (cilindros: 4, 6 u 8) suele usarse como factor de agrupación. Las variables utilizadas en el heatmap son:
+
+- `mpg` — consumo de combustible (millas por galón).
+- `cyl` — número de cilindros.
+- `disp` — desplazamiento del motor (pulgadas cúbicas).
+- `hp` — potencia (caballos de fuerza).
+- `wt` — peso del vehículo (miles de libras).
+- `qsec` — tiempo en cuarto de milla (segundos).
+
+La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
+
+- `Sepal.Length` — longitud del sépalo (cm).
+- `Sepal.Width` — ancho del sépalo (cm).
+- `Petal.Length` — longitud del pétalo (cm).
+- `Petal.Width` — ancho del pétalo (cm).
+
+URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
+
+La base de datos `datos-multivariada`. Proviene de las mediciones generadas durante el curso con variables morfométricas medidas en el grupo e incluye las mediciones de otras generaciones. Contiene una columna de identificador (columna 1), una columna de sexo (columna 2) y variables numéricas en las columnas restantes.
+
+## Código R
+
+```{r}
+
+#| echo: true
+#| eval: false
+
+# mtcars
+data(mtcars)
+
+# iris
+data(iris)
+iris1 <- iris[, 1:4]
+
+
+# datos propios
+datos <- read.csv(
+  here("data", "datos-multivariada.csv"),
+  dec = ",",
+  sep = ",",
+  stringsAsFactors = FALSE
+)
+
+```
+
+## mtcars
+
+```{r}
+
+#| echo: false
+#| eval: true
+
+data(mtcars)
+DT::datatable(mtcars)
+
+```
+
+## iris
+
+```{r}
+
+#| echo: false
+#| eval: true
+
+data(iris)
+iris1 <- iris[, 1:4]
+DT::datatable(iris1)
+
+```
+
+## datos propios
+
+```{r}
+
+#| echo: false
+#| eval: true
+
+datos <- read.csv(
+  here("data", "datos-multivariada.csv"),
+  dec = ",",
+  sep = ";",
+  stringsAsFactors = FALSE
+)
+DT::datatable(datos, options = list(pageLength = 10))
+
+```
+
+:::
+
+## Procedimiento
+
+### Parte 1 — Matrices de dispersión con `ggpairs()`
+
+#### Carga de datos
+
+```{r cargar-datos}
+
+# read.csv() importa un archivo de valores separados por comas como data frame.
+#
+#   file             — ruta al archivo. Se usa una ruta relativa ("datos_multivariada.csv")
+#                      para que el documento sea reproducible en cualquier máquina,
+#                      siempre que el CSV esté en la misma carpeta que el .qmd.
+#   dec = ","        — indica que el separador decimal es la coma (convención en español).
+#                      Sin este argumento, R interpretaría "1,5" como texto, no como 1.5.
+#   sep = ","        — especifica que las columnas están separadas por comas.
+#   stringsAsFactors = FALSE — conserva las columnas de texto como tipo character en lugar
+#                      de convertirlas automáticamente a factor. Esto evita comportamientos
+#                      inesperados al filtrar o comparar cadenas de texto.
+
+datos <- read.csv(
+   here("data", "datos-multivariada.csv"),
+  dec    = ",",
+  sep    = ",",
+   stringsAsFactors = FALSE
+)
+
+# datos[, -c(1, 2)] usa índices negativos para excluir las columnas 1 y 2
+# (identificador y sexo), conservando únicamente las variables numéricas.
+# Este subconjunto se usará en los pasos que requieren solo datos numéricos
+# (heatmaps y Caras de Chernoff), donde las columnas de texto causarían errores.
+
+datos_sin <- datos[, -c(1, 2)]
+
+# head() muestra las primeras n filas (por defecto 6).
+# Se usa para verificar que la carga fue correcta: nombres de columnas,
+# tipos de datos y ausencia de errores evidentes en las primeras observaciones.
+
+head(datos_sin)
+
+```
+
+#### Ejemplo con la base de datos `flea` (GGally)
+
+```{r ejemplo-flea}
+
+# Antes de aplicar ggpairs() a los datos propios, se explora el ejemplo
+# incluido en la documentación de GGally usando la base de datos `flea`
+# (mediciones morfométricas de pulgas de tres especies).
+# Este paso sirve para comprender los parámetros de ggpairs() antes
+# de adaptarlos al dataset del semestre.
+#
+# data() carga un dataset incluido en un paquete ya instalado.
+# ggpairs() genera una matriz de gráficos por pares con tres regiones:
+#   - Diagonal:          densidad o histograma de cada variable individual.
+#   - Triángulo inferior: diagramas de dispersión entre cada par de variables.
+#   - Triángulo superior: estadístico de correlación u otro resumen.
+#
+# columns = 2:4 selecciona solo las columnas 2, 3 y 4 del data frame flea.
+# ggplot2::aes(colour = species) asigna un color distinto a cada especie,
+# permitiendo evaluar visualmente si las distribuciones difieren entre grupos.
+
+data(flea)
+ggpairs(flea, columns = 2:4, ggplot2::aes(colour = species))
+
+```
+
+#### Matriz de dispersión — datos propios (sin color por grupo)
+
+```{r ggpairs-sin-color}
+
+# ggpairs() de GGally crea la matriz completa de gráficos por pares.
+# Se asigna a un objeto (pairs_plot) para poder modificarlo con capas
+# adicionales de ggplot2 (theme_bw(), theme()) antes de imprimirlo.
+#
+# columns = 3:16    — selecciona las columnas 3 a 16, que corresponden a
+#                     las variables morfométricas numéricas del dataset.
+# title             — título que aparece en la parte superior de la figura.
+#
+# upper = list(continuous = wrap("cor", size = 1.5))
+#   — en el triángulo SUPERIOR muestra el coeficiente de correlación de Pearson.
+#     wrap() encapsula la función con argumentos adicionales; size controla
+#     el tamaño del texto del coeficiente. Valores altos (cercanos a 1 o -1)
+#     indican relación lineal fuerte; cercanos a 0, relación débil o nula.
+#
+# lower = list(continuous = wrap("points", alpha = 0.3, size = 0.3))
+#   — en el triángulo INFERIOR muestra diagramas de dispersión (nube de puntos).
+#     alpha = 0.3 da transparencia a los puntos para que el solapamiento
+#     no oculte la densidad de observaciones en zonas de alta concentración.
+#     size = 0.3 reduce el tamaño de cada punto para evitar saturación visual.
+#
+# diag = list(continuous = wrap("densityDiag"))
+#   — en la DIAGONAL muestra la curva de densidad de Kernel de cada variable,
+#     lo que permite evaluar su distribución (simetría, bimodalidad, colas).
+#
+# theme_bw() aplica un fondo blanco con rejilla gris, limpio para publicación.
+# theme() ajusta el tamaño del título y de las etiquetas de ejes.
+# hjust = 0.5 centra el título horizontalmente.
+# axis.text = element_text(size = 6) reduce el texto de los ejes para que
+# no se solapen cuando hay muchas variables en la matriz.
+
+datos_num <- datos[, sapply(datos, is.numeric)]
+
+pairs_plot <- ggpairs(
+  datos_num,
+  title = "Relaciones entre Variables Morfométricas",
+  upper = list(continuous = wrap("cor",    size = 1.5)),
+  lower = list(continuous = wrap("points", alpha = 0.3, size = 0.3)),
+  diag  = list(continuous = wrap("densityDiag"))
+) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    axis.text  = element_text(size = 6)
+  )
+
+# print() fuerza la renderización del objeto ggplot dentro de un bloque
+# de código. Cuando el objeto se crea dentro de un bloque y luego se llama
+# en otro, print() garantiza que se dibuje correctamente en el documento.
+
+print(pairs_plot)
+
+```
+
+#### Matriz de dispersión por sexo
+
+```{r ggpairs-por-sexo}
+
+# Se repite la llamada a ggpairs() añadiendo la estética aes(color = sexo).
+# Esto asigna un color distinto a cada nivel de la variable sexo
+# (hombre / mujer), permitiendo evaluar si los dos grupos se separan
+# o se solapan en cada par de variables morfométricas.
+#
+# alpha = 0.5 dentro de aes() hace que todos los elementos gráficos
+# (puntos, densidades, correlaciones) se dibujen con 50% de transparencia,
+# lo que facilita comparar las distribuciones superpuestas de ambos grupos.
+#
+# Este gráfico es una exploración previa a pruebas formales como la
+# T² de Hotelling, que evalúa si los vectores de medias difieren
+# significativamente entre dos grupos multivariados.
+
+pairs_plot_sexo <- ggpairs(
+  datos,
+  columns = 3:16,
+  aes(color = sexo, alpha = 0.5),
+  title   = "Relaciones entre Variables Morfométricas por Sexo",
+  upper   = list(continuous = wrap("cor",    size = 1.5)),
+  lower   = list(continuous = wrap("points", alpha = 0.3, size = 0.3)),
+  diag    = list(continuous = wrap("densityDiag"))
+)
+
+print(pairs_plot_sexo)
+
+```
+
+### Parte 2 — Heatmaps (Mapas de Calor)
+
+Un heatmap representa los valores de una matriz mediante una escala de colores continua. Es especialmente útil para detectar patrones de similitud entre observaciones (filas) o entre variables (columnas) de forma simultánea, sin necesidad de examinar cada celda numéricamente.
+
+#### Ejemplo con `mtcars`
+
+```{r heatmap-mtcars-1}
+
+# as.matrix() convierte el data frame mtcars a una matriz numérica pura.
+# La función heatmap() de R base requiere este formato: no puede operar
+# directamente sobre data frames porque necesita garantizar que todos
+# los valores sean numéricos y estén en la misma estructura de memoria.
+
+data_mtcars <- as.matrix(mtcars)
+
+# heatmap() dibuja el mapa de calor con sus valores por defecto:
+#   - Las filas (modelos de automóviles) y columnas (variables) se reordenan
+#     automáticamente mediante agrupamiento jerárquico (dendrograma),
+#     de modo que los modelos similares quedan adyacentes.
+#   - La escala de colores va de amarillo (valores bajos) a rojo (valores altos)
+#     usando la paleta heat.colors() por defecto.
+#   - Sin escalar, las variables con mayor magnitud (como hp o disp, que tienen
+#     cientos de unidades) dominan visualmente sobre variables pequeñas (como cyl).
+
+heatmap(data_mtcars, main = "Heatmap – mtcars (sin escalar)")
+
+```
+
+```{r heatmap-mtcars-2}
+
+# scale = "column" estandariza cada variable (columna) de forma independiente:
+#   valor_estandarizado = (x - media_columna) / desviación_columna
+# Esto hace que todas las variables tengan media 0 y desviación estándar 1,
+# permitiendo comparar en la misma escala de color variables con unidades y
+# magnitudes completamente distintas (por ejemplo, rpm vs. millas por galón).
+# El resultado revela qué modelos de automóviles son inusualmente altos o bajos
+# en cada característica, independientemente de la escala original.
+
+heatmap(data_mtcars, scale = "column",
+        main = "Heatmap – mtcars (escalado por columna)")
+
+```
+
+#### Heatmap básico — datos propios
+
+```{r heatmap-basico-1}
+
+# datos_sin ya contiene solo las columnas numéricas (columnas 1 y 2 excluidas).
+# as.matrix() lo convierte a matriz numérica para poder pasarlo a heatmap().
+# head() verifica las primeras 10 filas de la matriz antes de graficar,
+# confirmando que no hay valores NA ni columnas de texto.
+
+datos_matrix <- as.matrix(datos_sin)
+head(datos_matrix, 10)
+
+```
+
+```{r heatmap-basico-2}
+
+# heatmap() con los parámetros por defecto:
+#   - Aplica agrupamiento jerárquico sobre filas y columnas (dendrograma).
+#   - Los datos NO están escalados, por lo que variables con mayor magnitud
+#     (como peso o talla en cm) dominarán el rango de colores.
+# Este primer gráfico sirve para tener una vista exploratoria sin transformaciones.
+
+heatmap(datos_matrix, main = "Heatmap – Datos del semestre")
+
+```
+
+#### Heatmap sin dendrograma
+
+```{r heatmap-sin-dendrograma}
+
+# Se construye la matriz a partir de las columnas 3 a 16 del data frame
+# original, seleccionando por posición numérica. A diferencia de datos_sin
+# (que se construyó excluyendo las columnas 1 y 2 con índice negativo),
+# aquí se seleccionan explícitamente las columnas deseadas para mayor claridad.
+
+numeric_matrix <- as.matrix(datos[, 3:16])
+
+# Colv = NA desactiva el dendrograma de columnas (agrupamiento jerárquico
+#            entre variables), conservando el orden original de las columnas.
+# Rowv = NA desactiva el dendrograma de filas (agrupamiento entre individuos),
+#            conservando el orden original de aparición en el dataset.
+# scale = "column" estandariza cada variable para comparar en la misma escala.
+#
+# Este heatmap es útil cuando el orden de los individuos o las variables tiene
+# significado (por ejemplo, si están ordenados por fecha o número de muestra)
+# y no queremos que el algoritmo de clustering lo altere.
+
+heatmap(numeric_matrix,
+        Colv  = NA,
+        Rowv  = NA,
+        scale = "column",
+        main  = "Heatmap – sin dendrograma")
+
+```
+
+#### Heatmap con identificadores y escala de color personalizada
+
+```{r heatmap-con-nombres}
+
+# Se extrae el subconjunto numérico y se convierte a matriz.
+
+numeric_data   <- datos[, 3:16]
+numeric_matrix <- as.matrix(numeric_data)
+
+# rownames() asigna etiquetas a las filas de la matriz.
+# datos[, 1] contiene los identificadores de cada persona (columna 1 del CSV).
+# Al asignarlos como nombres de fila, el heatmap mostrará esos identificadores
+# en el eje vertical, facilitando la identificación de individuos atípicos.
+
+rownames(numeric_matrix) <- datos[, 1]
+
+# colorRampPalette() crea una función interpoladora de colores a partir de
+# un vector de colores ancla (aquí: azul → blanco → rojo).
+# Al llamar a esa función con el argumento 100, genera un vector de 100
+# colores graduales que cubren toda la escala de valores de la matriz.
+# La convención azul–blanco–rojo es intuitiva:
+#   azul  → valores bajos (por debajo de la media)
+#   blanco → valores cercanos a la media
+#   rojo  → valores altos (por encima de la media)
+
+my_colors <- colorRampPalette(c("blue", "white", "red"))(100)
+
+# margins = c(6, 8) controla el espacio reservado para las etiquetas:
+#   el primer valor (6) es el margen inferior (etiquetas de columnas),
+#   el segundo valor (8) es el margen derecho (etiquetas de filas).
+# cexRow = 0.6 reduce el tamaño de las etiquetas de fila al 60% del normal,
+#   evitando que los nombres de los individuos se solapen cuando hay muchas filas.
+
+heatmap(numeric_matrix,
+        Colv    = NA,
+        Rowv    = NA,
+        scale   = "column",
+        col     = my_colors,
+        margins = c(6, 8),
+        cexRow  = 0.6,
+        main    = "Heatmap con nombres e identificadores")
+
+```
+
+#### Heatmap con `pheatmap`
+
+```{r pheatmap}
+
+# pheatmap() ("pretty heatmap") es una alternativa a heatmap() de R base
+# que ofrece varias mejoras automáticas:
+#   - Añade una leyenda de color con la escala numérica en el margen derecho.
+#   - Permite anotaciones de filas y columnas con barras de color.
+#   - Produce un diseño más limpio sin necesidad de ajustes manuales de márgenes.
+#
+# Los argumentos utilizados:
+#   numeric_matrix   — la misma matriz con nombres de fila asignados.
+#   scale = "column" — estandarización por columna (igual que en heatmap()).
+#   color            — paleta azul–blanco–rojo de 100 tonos, definida antes.
+#   cluster_rows = FALSE — desactiva el agrupamiento jerárquico de filas,
+#                          conservando el orden original de individuos.
+#   cluster_cols = FALSE — desactiva el agrupamiento de columnas, conservando
+#                          el orden original de las variables.
+#   fontsize_row = 2.5   — tamaño de fuente para los identificadores de fila.
+#                          Se reduce porque hay muchas filas en el dataset.
+#   main             — título de la figura.
+
+pheatmap(
+  numeric_matrix,
+  scale        = "column",
+  color        = colorRampPalette(c("blue", "white", "red"))(100),
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  fontsize_row = 5.5,
+  main         = "Heatmap de Mediciones del Semestre (pheatmap)"
+)
+
+```
+
+### Parte 3 — Caras de Chernoff
+
+Las Caras de Chernoff son una técnica de visualización multivariada propuesta por Herman Chernoff (1973) en la que cada rasgo facial (tamaño de la boca, ancho de los ojos, curvatura de las cejas, forma de la cara, etc.) codifica el valor de una variable numérica distinta. Esto permite comparar objetos o grupos multivariados de forma intuitiva, aprovechando la capacidad humana para discriminar expresiones faciales.
+
+La función `faces()` del paquete `aplpack` acepta hasta 15 variables numéricas. Si se incluyen columnas de texto, la función produce un error; por eso es necesario eliminar previamente las columnas categóricas.
+
+#### Ejemplo con `iris` — todas las observaciones
+
+```{r chernoff-iris-todas}
+
+# iris[, -5] excluye la quinta columna (Species, que es un factor de texto)
+# y conserva las cuatro variables numéricas: Sepal.Length, Sepal.Width,
+# Petal.Length y Petal.Width.
+# Con 150 observaciones, el gráfico resultante es visualmente denso, pero
+# permite apreciar la variación individual dentro del dataset completo.
+
+iris1 <- iris[, -5]
+
+# par(mar = ...) ajusta los márgenes del dispositivo gráfico de R base.
+# Los cuatro valores corresponden a: c(abajo, izquierda, arriba, derecha).
+# Se reducen a 0.1 en todos los lados para aprovechar al máximo el área
+# disponible, ya que faces() dibuja muchas caras pequeñas en una cuadrícula.
+
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+
+# faces() asigna las columnas de iris1 a rasgos faciales en el siguiente orden:
+#   columna 1 (Sepal.Length) → ancho de la cara
+#   columna 2 (Sepal.Width)  → forma de la cara (redonda/alargada)
+#   columna 3 (Petal.Length) → longitud de la nariz
+#   columna 4 (Petal.Width)  → ancho de la nariz
+# (el mapeo exacto depende de la versión de aplpack y puede variar levemente)
+
+faces(iris1, main = "Caras de Chernoff – Iris (todas las observaciones)")
+
+```
+
+#### Ejemplo con `iris` — promedios por especie
+
+```{r chernoff-iris-promedios}
+
+# En lugar de graficar 150 observaciones individuales, se construye una
+# cara representativa por especie calculando el promedio de cada variable.
+# Esto produce un resumen más legible: una cara por grupo.
+
+# Paso 1: subset() filtra las filas de iris que corresponden a cada especie.
+# El primer argumento es el data frame; el segundo es la condición de filtrado.
+
+setosa     <- subset(iris, Species == "setosa")
+versicolor <- subset(iris, Species == "versicolor")
+virginica  <- subset(iris, Species == "virginica")
+
+# Paso 2: Se conservan solo las columnas numéricas (1 a 4) para cada subconjunto,
+# excluyendo la columna Species que no puede pasarse a faces().
+
+setosa1     <- setosa[, 1:4]
+versicolor1 <- versicolor[, 1:4]
+virginica1  <- virginica[, 1:4]
+
+# Paso 3: lapply() aplica la función mean() a cada columna del data frame
+# de forma independiente, devolviendo una lista con el promedio de cada variable.
+# data.frame() convierte esa lista en un data frame de una sola fila,
+# donde cada columna contiene la media de la variable correspondiente.
+
+setosa2     <- data.frame(lapply(setosa1,     mean))
+versicolor2 <- data.frame(lapply(versicolor1, mean))
+virginica2  <- data.frame(lapply(virginica1,  mean))
+
+# Paso 4: rbind() ("row bind") une los tres data frames de una fila cada uno
+# en un único data frame de 3 filas × 4 columnas (una fila por especie).
+# rownames() asigna los nombres de las especies como etiquetas de fila,
+# que faces() usará como leyenda debajo de cada cara.
+
+base <- rbind(setosa2, versicolor2, virginica2)
+rownames(base) <- c("setosa", "versicolor", "virginica")
+
+# Paso 5: faces() genera una cara por fila del data frame.
+# labels = rownames(base) asigna el nombre de cada especie como etiqueta visual.
+
+faces(base,
+      labels = rownames(base),
+      main   = "Caras de Chernoff – Promedios por Especie (iris)")
+
+```
+
+#### Alternativa con `dplyr` — promedios por especie
+
+```{r chernoff-iris-dplyr}
+
+# Esta sección reproduce el cálculo del bloque anterior usando el paradigma
+# Tidyverse, que resulta más conciso y legible para calcular resúmenes por grupo.
+#
+# group_by(Species) añade metadata de agrupación: todas las operaciones
+# posteriores en el pipeline se ejecutarán de forma independiente
+# para cada nivel del factor Species.
+#
+# summarise(across(...)) es la forma moderna (dplyr >= 1.0.0) de aplicar
+# una función a múltiples columnas de forma simultánea:
+#   vars(Sepal.Length, ...) especifica las columnas a las que se aplica la función.
+#   mean                    es la función que se aplica a cada columna seleccionada.
+# El resultado es un data frame de 3 filas × 5 columnas (Species + 4 medias).
+#
+# Nota: summarise_at() fue la sintaxis previa a dplyr 1.0.0 y está formalmente
+# deprecada desde esa versión. Se reemplaza por summarise(across()) para
+# garantizar compatibilidad con versiones actuales de dplyr.
+
+por_especies <- iris %>%
+  group_by(Species) %>%
+  summarise(across(
+    c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width),
+    mean
+  ))
+
+por_especies
+
+# por_especies[, -1] excluye la primera columna (Species, tipo character/factor)
+# para que el data frame pasado a faces() contenga solo valores numéricos.
+
+x_especie <- por_especies[, -1]
+
+# faces() usa los valores de las cuatro columnas para mapearlos a rasgos faciales.
+# labels = por_especies$Species recupera los nombres de las especies desde
+# el data frame original para usarlos como etiqueta de cada cara.
+
+faces(x_especie,
+      labels = por_especies$Species,
+      main   = "Caras de Chernoff – Promedios por Especie (dplyr)")
+
+```
+
+**Interpretación de los rasgos faciales en `iris`:**
+
+Los rasgos faciales se asignan en el orden en que aparecen las columnas en el data frame. Con cuatro variables, la asignación aproximada es la siguiente:
+
+- `Sepal.Length` → ancho de la cara
+- `Sepal.Width` → altura de la cara
+- `Petal.Length` → tamaño de la nariz / boca
+- `Petal.Width` → ancho de los ojos
+
+Las diferencias visuales entre las tres caras reflejan las diferencias reales en los promedios de cada especie: *setosa* tiene pétalos mucho más pequeños, lo que se traduce en rasgos faciales notablemente distintos de *versicolor* y *virginica*.
+
+#### Caras de Chernoff — datos propios por sexo
+
+```{r chernoff-sexo}
+
+# Se recarga la base de datos del semestre con la misma configuración
+# que en la sección de matrices de dispersión. La ruta relativa garantiza
+# que el documento sea reproducible en cualquier máquina con el archivo presente.
+
+datos <- read.csv(
+   here("data", "datos-multivariada.csv"),
+  dec    = ",",
+  sep    = ",",
+   stringsAsFactors = FALSE
+)
+
+
+# datos[, -1] elimina solo la columna 1 (identificador) pero conserva la
+# columna 2 (sexo), ya que necesitamos esa variable para separar los grupos.
+
+datos_sin <- datos[, -1]
+head(datos_sin, 10)
+
+# subset() filtra las filas por el valor de la columna sexo.
+# IMPORTANTE: los valores "hombre" y "mujer" deben coincidir exactamente
+# con los que aparecen en el CSV (mayúsculas, tildes, espacios).
+# Si el CSV usa "Hombre" o "HOMBRE", la condición no encontrará coincidencias
+# y el subconjunto quedará vacío. En ese caso, usar unique(datos$sexo) para
+# verificar los valores exactos antes de filtrar.
+
+hombre <- subset(datos_sin, sexo == "hombre")
+mujer  <- subset(datos_sin, sexo == "mujer")
+
+# Se seleccionan las columnas numéricas por posición (2 a 13 después de
+# eliminar el identificador). Estas corresponden a las mediciones morfométricas.
+# Si el CSV cambia de estructura, se recomienda usar dplyr::select(where(is.numeric))
+# para seleccionar columnas numéricas de forma dinámica y robusta.
+
+hombre1 <- hombre[, 2:13]
+mujer1  <- mujer[, 2:13]
+
+# lapply() aplica mean() a cada columna y data.frame() convierte el resultado
+# en un data frame de una fila. Este patrón es equivalente al usado en el
+# ejemplo de iris: produce la "cara promedio" de cada grupo de sexo.
+
+hombre2 <- data.frame(lapply(hombre1, mean))
+mujer2  <- data.frame(lapply(mujer1,  mean))
+
+# rbind() une las dos filas en un data frame de 2 filas × n columnas.
+# rownames() asigna las etiquetas "hombre" y "mujer" para identificar
+# cada cara en el gráfico de Chernoff.
+
+base <- rbind(hombre2, mujer2)
+rownames(base) <- c("hombre", "mujer")
+
+# scale() estandariza cada columna de la matriz:
+#   valor_estandarizado = (x - media_columna) / desviación_columna
+# Se recomienda estandarizar cuando las variables tienen distintas unidades
+# o escalas (por ejemplo, talla en cm vs. peso en kg), para que ninguna
+# variable domine la representación facial por tener mayor magnitud absoluta.
+# Sin esta estandarización, una variable con valores en cientos dominaría
+# el mapeo de rasgos faciales sobre una variable con valores en decenas.
+
+base_scaled <- scale(base)
+
+# faces() genera una cara por fila (una para hombre y una para mujer).
+# labels = rownames(base_scaled) etiqueta cada cara con el nombre del grupo.
+# Las diferencias visuales entre ambas caras reflejan las diferencias
+# en los promedios estandarizados de cada variable morfométrica entre sexos.
+
+faces(base_scaled,
+      labels = rownames(base_scaled),
+      main   = "Caras de Chernoff – Promedios por Sexo")
+
+```
+
+---
+
+## Resultados
+
+### Matrices de dispersión (`ggpairs`)
+
+#### Ejemplo con `flea` (reproducible)
+
+```{r res-flea}
+
+# Se reproduce el ejemplo con flea para mostrar la estructura de la salida
+# de ggpairs() con un dataset integrado en R, garantizando que este bloque
+# se ejecute correctamente en cualquier entorno sin depender del CSV externo.
+#
+# La diagonal muestra la densidad de cada variable coloreada por especie.
+# El triángulo inferior muestra diagramas de dispersión: los puntos de colores
+# distintos permiten evaluar si los grupos se separan en el espacio bivariado.
+# El triángulo superior muestra el coeficiente de correlación global y por grupo.
+
+data(flea)
+ggpairs(
+  flea,
+  columns = 2:4,
+  ggplot2::aes(colour = species),
+  upper = list(continuous = wrap("cor", size = 2.5)),
+  lower = list(continuous = wrap("points", alpha = 0.4, size = 0.8)),
+  diag  = list(continuous = wrap("densityDiag")),
+  title = "Matriz de dispersión – flea (ejemplo GGally)"
+) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+**Interpretación:** La matriz de dispersión del dataset `flea` ilustra el funcionamiento de `ggpairs()` con datos de tres grupos distinguibles por color. En la diagonal se observan las distribuciones de densidad de cada variable; algunas muestran distribuciones bimodales o multimodales que reflejan la presencia de tres especies con características morfológicas distintas. En el triángulo inferior, los diagramas de dispersión revelan patrones de separación entre especies: en algunos pares de variables los grupos forman nubes claramente separadas, mientras que en otros se solapan. El triángulo superior muestra el coeficiente de correlación de Pearson global; valores elevados (mayores a 0.7 en valor absoluto) indican que las dos variables comparten gran parte de su variación, lo que es relevante para análisis posteriores como componentes principales o análisis discriminante.
+
+---
+
+### Heatmaps
+
+#### Ejemplo reproducible con `mtcars`
+
+```{r res-heatmap-mtcars}
+
+# Se reproduce el heatmap escalado de mtcars como ejemplo completamente
+# reproducible. Este bloque muestra el resultado final más informativo:
+# el heatmap estandarizado por columna con la paleta azul–blanco–rojo.
+
+data_mtcars <- as.matrix(mtcars)
+
+my_colors_ex <- colorRampPalette(c("blue", "white", "red"))(100)
+
+# Se usa heatmap() con scale = "column" y la paleta personalizada para
+# que los valores bajos (azul), medios (blanco) y altos (rojo) sean
+# fácilmente distinguibles. margins ajusta el espacio para las etiquetas
+# de filas (modelos de auto) y columnas (variables técnicas).
+
+heatmap(data_mtcars,
+        scale   = "column",
+        col     = my_colors_ex,
+        margins = c(6, 8),
+        main    = "Heatmap – mtcars (escalado, paleta personalizada)")
+```
+
+**Interpretación:** El heatmap escalado de `mtcars` permite comparar 32 modelos de automóviles en 11 variables técnicas simultáneamente. Las celdas en rojo indican valores inusualmente altos para esa variable (por encima de la media), y las celdas en azul indican valores bajos. El dendrograma en los ejes agrupa automáticamente los modelos más similares entre sí: los automóviles de alto rendimiento (como Maserati Bora o Ferrari Dino) se agrupan en un clúster con alta potencia (`hp`) y bajo rendimiento en millas por galón (`mpg`), mientras que los autos compactos se agrupan con valores opuestos. Las variables que muestran mayor contraste de color entre filas son las más discriminantes entre modelos. Este mismo principio de lectura se aplica directamente al heatmap de los datos propios del semestre.
+
+---
+
+### Caras de Chernoff — `iris` (reproducible)
+
+```{r res-chernoff-iris}
+
+# Se reproduce la cara promedio por especie de iris para ilustrar la
+# interpretación del gráfico en un contexto con grupos claramente distintos.
+# Este bloque es completamente reproducible sin necesidad del CSV externo.
+
+# Cálculo de promedios por especie usando dplyr::summarise(across())
+promedios_iris <- iris %>%
+  group_by(Species) %>%
+  summarise(across(c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width), mean))
+
+# Se elimina la columna Species para que faces() reciba solo datos numéricos.
+caras_iris <- as.data.frame(promedios_iris[, -1])
+
+# faces() genera tres caras: una por especie.
+# Se establecen márgenes reducidos para que las tres caras quepan holgadamente.
+par(mar = c(1, 1, 2, 1))
+faces(caras_iris,
+      labels = promedios_iris$Species,
+      main   = "Caras de Chernoff – Promedios por Especie (iris)")
+```
+
+**Interpretación:** Las tres caras de Chernoff para las especies de iris ilustran de forma intuitiva las diferencias multivariadas entre grupos. *Setosa* presenta una cara visualmente muy distinta de las otras dos especies: sus pétalos son significativamente más pequeños (Petal.Length ≈ 1.46 cm, Petal.Width ≈ 0.25 cm), lo que se codifica en rasgos faciales notablemente diferentes (nariz más pequeña, ojos de distinto tamaño). *Versicolor* y *virginica* son más similares entre sí, pero sus caras aún presentan diferencias perceptibles en los rasgos correspondientes a las variables de pétalo, donde *virginica* tiene valores más altos.
+
+Las Caras de Chernoff son especialmente útiles como herramienta exploratoria porque permiten detectar rápidamente si existe heterogeneidad entre grupos antes de aplicar pruebas formales. Su limitación principal es que el mapeo de variables a rasgos faciales es arbitrario: la misma tabla de datos produce caras de aspecto muy diferente si se reordenan las columnas, por lo que la interpretación debe complementarse siempre con los valores numéricos de los promedios.
+
+## Problemas Encontrados
+
+- Al intentar guardar el heatmap de R base con `ggsave()`, el archivo resultaba en blanco. Esto ocurre porque `ggsave()` solo funciona con objetos de clase `ggplot`; los gráficos de R base deben guardarse con `png()` / `pdf()` antes de la llamada a `heatmap()`, y cerrar el dispositivo con `dev.off()` al terminar. Opción eliminada del script.
+
+- En el código original de las Caras de Chernoff por sexo, los subconjuntos estaban invertidos: la variable `hombre` recibía el filtro `sexo == "mujer"` y viceversa. El error se detectó comparando las caras resultantes con estadísticos descriptivos conocidos de los grupos.
+
+- La función `faces()` genera un error si recibe columnas de texto. Fue necesario eliminar las columnas `ID` y `sexo` antes de llamarla.
+
+- `summarise_at()` produce una advertencia de deprecación en versiones recientes de `dplyr`. Se reemplazó por `summarise(across(...))` para mantener compatibilidad con dplyr ≥ 1.0.0.
+
+- La ruta absoluta original (`/home/samuel/Documents/...`) en `read.csv()` impedía la reproducibilidad del documento en otros equipos. Se reemplazó con direccionar la carpeta del archivo utilizando el paquete `here`.
+
+
+## Aprendizaje
+
+- `ggpairs()` permite explorar simultáneamente distribuciones, correlaciones y agrupamientos en una sola figura, lo que la convierte en la herramienta de exploración multivariada más completa para un primer acercamiento a un dataset.
+
+- La diferencia entre un heatmap sin estandarizar, las variables de mayor magnitud dominan el rango de colores y ocultan los patrones de las variables más pequeñas. `scale = "column"` resuelve este problema colocando todas las variables en la misma escala de desviaciones estándar.
+
+- `pheatmap()` es preferible a `heatmap()` cuando se necesita una leyenda de color automática, anotaciones de filas o columnas, o mayor control sobre el diseño visual.
+
+- Las Caras de Chernoff son una herramienta de exploración cualitativa que permiten detectar diferencias entre grupos de forma intuitiva, pero no reemplazan las pruebas estadísticas formales.
+
+- `lapply()` + `data.frame()` es un patrón eficiente para calcular el promedio de todas las columnas de un data frame en una sola línea.
+
+---
+
+*Bitácora de Cómputo — Data Visualization en R*
+
