@@ -120,25 +120,37 @@ $$
 
 # Se extrae la variable Sepal.Length como vector para los cálculos.
 # El operador $ accede a una columna de un data frame por nombre.
+
 x      <- iris$Sepal.Length
+
+```
+
+```{r}
 
 # mean() calcula la media aritmética del vector: suma todos los elementos
 # y divide entre n. En este caso, el promedio de las 150 longitudes de sépalo.
+
 mean_x <- mean(x)
 mean_x   # 5.843333 cm
+
+```
+
+```{r}
 
 # La suma de cuadrados se calcula en tres pasos encadenados:
 # 1. (x - mean_x)  → vector de desviaciones respecto a la media
 # 2. (...)^2        → cuadrado de cada desviación (todos los términos positivos)
 # 3. sum(...)       → suma total de los cuadrados
+
 ss <- sum((x - mean_x)^2)
 ss       # 102.1683
+
 ```
 
 El resultado indica que la variabilidad total en `Sepal.Length`, medida como la suma de las desviaciones cuadráticas respecto a la media, es aproximadamente 102.17.
 
 ::: {.callout-warning}
-### Sensibilidad a Valores Atípicos
+## Sensibilidad a Valores Atípicos
 
 La suma de cuadrados es sensible a los valores extremos. Dado que cada desviación se eleva al cuadrado, una sola observación alejada de la media puede inflar considerablemente la SC. El PCA hereda y amplifica esta característica — los individuos alejados del centro ejercen mayor influencia en la dirección de los componentes principales.
 :::

@@ -386,7 +386,7 @@ fit1
 
 **Interpretación integradora.** Aunque el porcentaje de variación explicado es alto (61.3 %), el modelo no alcanza significancia estadística estricta. Esto se debe principalmente a dos factores que actúan en conjunto: el tamaño de muestra es muy pequeño (n = 20 sitios) y el modelo con interacción consume muchos grados de libertad (10 de los 19 disponibles), dejando solo 9 grados de libertad residuales para estimar el error. Con tan pocos grados de libertad, el test tiene poco poder estadístico. Una posible estrategia para mejorar el análisis sería probar modelos más parsimoniosos, comenzando por los efectos principales (`Management + Use`) sin interacción, y evaluar si la interacción es realmente necesaria mediante comparación de modelos.
 
-# Problemas Encontrados
+## Problemas Encontrados
 
 - Ambas pruebas usan matrices de distancias y permutaciones, ANOSIM solo acepta un factor de agrupamiento y produce un único estadístico R, mientras que PERMANOVA puede incluir múltiples predictores e interacciones y descompone la variación de forma análoga a un ANOVA.
 
@@ -395,13 +395,11 @@ fit1
 - Las pruebas de permutación varíen ligeramente entre ejecuciones generó desconcierto hasta aprender a usar `set.seed()` para fijar la semilla y garantizar la reproducibilidad.
 
 
-# Aprendizaje
+## Aprendizaje
 
-- El aprendizaje más importante fue entender la lógica de las **pruebas de permutación**: en lugar de comparar un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.
+- Las **pruebas de permutación** compara un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.
 
-- También quedó claro que un **p-valor marginal** (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza. La distinción entre significancia estadística y relevancia práctica (R² = 61 %) fue un punto clave de reflexión.
-
-- Por último, se aprendió que en Quarto la forma correcta de controlar la visibilidad del código y los resultados es usar las opciones nativas `#| echo:` y `#| output:` en cada chunk individualmente, en lugar de depender de `knitr::opts_chunk$set()`, cuya interacción con el bloque `execute:` del YAML puede producir comportamientos inesperados.
+- El **p-valor marginal** (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza.
 
 ---
 
