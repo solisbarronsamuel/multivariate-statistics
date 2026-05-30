@@ -1,5 +1,6 @@
 project:
-  type: book
+    type: book
+    output-dir: _book
 
 book:
   title: "Estadística Multivariada con R"
@@ -12,6 +13,7 @@ book:
     - data-visualization/data-visualization.qmd
     - manova/manova.qmd
     - pca/pca.qmd
+    - pcoa/pcoa.qmd
     - references.qmd
 
 bibliography: references.bib
@@ -21,9 +23,7 @@ format:
     theme:
       - cosmo
       - brand
+    toc: true
     css: styles.css
-  pdf:
-    documentclass: scrreprt
 
 editor: source
-
