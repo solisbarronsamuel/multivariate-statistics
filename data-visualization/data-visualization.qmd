@@ -130,7 +130,7 @@ DT::datatable(iris1)
 datos <- read.csv(
   here("data", "datos-multivariada.csv"),
   dec = ",",
-  sep = ";",
+  sep = ",",
   stringsAsFactors = FALSE
 )
 DT::datatable(datos, options = list(pageLength = 10))
