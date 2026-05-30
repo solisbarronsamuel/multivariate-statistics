@@ -177,6 +177,7 @@ dist_datos2 <- vegdist(datos2, method = "bray")
 ```
 
 ```{r}
+
 #| label: proc-anosim-prueba
 #| echo: true
 #| output: false
@@ -186,19 +187,23 @@ dist_datos2 <- vegdist(datos2, method = "bray")
 # ─────────────────────────────────────────────────────────────────────────────
 
 # set.seed() ──────────────────────────────────────────────────────────────────
+
 # Fija la semilla del generador de números pseudoaleatorios. Las pruebas de
 # permutación implican aleatorización, por lo que sin esta instrucción el
 # p-valor podría diferir levemente entre ejecuciones. Con set.seed() el
 # resultado es perfectamente reproducible en cualquier máquina.
+
 set.seed(42)
 
 # anosim() ────────────────────────────────────────────────────────────────────
+
 # Realiza el Análisis de Similitud (ANOSIM).
 # La lógica de la prueba es: si los grupos son realmente distintos,
 # la disimilaridad promedio ENTRE grupos debería ser mayor que la
 # disimilaridad promedio DENTRO de cada grupo.
 #
 # El estadístico R cuantifica esta diferencia en una escala de -1 a 1:
+#
 #   R = 1  → separación perfecta entre grupos.
 #   R = 0  → no hay diferencia entre la variación inter e intra-grupal.
 #   R < 0  → los individuos dentro del mismo grupo son MÁS distintos
@@ -216,14 +221,17 @@ set.seed(42)
 #                  Se usa la columna 2 del data frame (sexo).
 #   permutations = número de permutaciones. 999 es el estándar;
 #                  el p-valor mínimo posible con 999 permutaciones es 0.001.
+
 fit <- anosim(dist_datos2, datos1[, 2], permutations = 999)
+
 ```
 
-## b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones
+### b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones
 
 El PERMANOVA (Permutational Multivariate Analysis of Variance, implementado como `adonis2()` en vegan) es una generalización del ANOVA que opera sobre una matriz de distancias o disimilaridades en lugar de sobre una variable de respuesta única. Al igual que el ANOSIM, utiliza permutaciones para construir la distribución nula, pero a diferencia de él puede incluir múltiples variables explicativas e interacciones, descomponiendo la variación total de forma análoga a un ANOVA balanceado. El estadístico central es R², que expresa qué proporción de la variación total en la matriz de disimilaridades es explicada por cada término del modelo.
 
 ```{r}
+
 #| label: proc-permanova-datos
 #| echo: true
 #| output: false
@@ -248,11 +256,14 @@ El PERMANOVA (Permutational Multivariate Analysis of Variance, implementado como
 #                         NM = sin manejo, SF = estándar de pradera).
 #           - Use       : uso del sitio (Hayfield, Haypastu, Pasture).
 #           - Manure    : nivel de abono aplicado (factor ordinal, 0-4).
+
 data(dune)
 data(dune.env)
+
 ```
 
 ```{r}
+
 #| label: proc-permanova-distancia
 #| echo: true
 #| output: false
@@ -266,10 +277,13 @@ data(dune.env)
 # que dos sitios comparten pocas especies en abundancias similares;
 # valores bajos indican comunidades muy parecidas en composición.
 # El resultado es un objeto "dist" de 20 × 20 elementos.
+
 dist_dune <- vegdist(dune, method = "bray")
+
 ```
 
 ```{r}
+
 #| label: proc-permanova-prueba
 #| echo: true
 #| output: false
@@ -280,9 +294,11 @@ dist_dune <- vegdist(dune, method = "bray")
 
 # set.seed() garantiza la reproducibilidad de las permutaciones,
 # tal como se hizo en el ANOSIM.
+
 set.seed(42)
 
 # adonis2() ───────────────────────────────────────────────────────────────────
+
 # Realiza el PERMANOVA (Permutational Multivariate Analysis of Variance).
 # A diferencia del ANOSIM, que solo acepta un factor de agrupamiento,
 # adonis2() admite modelos con múltiples variables explicativas e
@@ -307,53 +323,56 @@ set.seed(42)
 #                  listadas en la fórmula (aquí, dune.env).
 #   permutations = número de permutaciones para estimar la distribución
 #                  nula de cada estadístico F. Con 999 el p-valor mínimo
+
 #                  posible es 0.001.
 fit1 <- adonis2(dist_dune ~ Management * Use,
                 data         = dune.env,
                 permutations = 999)
+
 ```
 
----
 
-# Resultados
+## Resultados
 
-> En esta sección se presentan las tablas de salida de cada prueba y su interpretación detallada. El código no es visible aquí porque el enfoque es analítico, no técnico.
-
-## Resultado del ANOSIM
+### Resultado del ANOSIM
 
 ```{r}
+
 #| label: res-anosim
 #| echo: false
 #| output: true
 
 # Imprime el resumen completo del objeto ANOSIM: estadístico R,
 # p-valor por permutación y número de permutaciones realizadas.
+
 fit
+
 ```
 
-La salida del ANOSIM reporta los siguientes elementos, que se interpretan en conjunto.
+**Interpretación:** La salida del ANOSIM reporta los siguientes elementos, que se interpretan en conjunto.
 
-**Estadístico R.** El estadístico R de ANOSIM cuantifica la diferencia normalizada entre el rango promedio de las disimilaridades entre grupos y el rango promedio de las disimilaridades dentro de grupos. Su escala va de −1 a 1. Un valor de R cercano a 1 indica que los grupos son morfométricamente discretos; un valor cercano a 0 indica que no hay separación entre ellos. Como referencia orientativa, valores de R > 0.75 se consideran separación buena; entre 0.50 y 0.75, separación moderada pero biológicamente relevante; entre 0.25 y 0.50, separación débil con traslape considerable.
+**Estadístico R.** El estadístico R de ANOSIM cuantifica la diferencia normalizada entre el rango promedio de las disimilaridades entre grupos y el rango promedio de las disimilaridades dentro de grupos. Su escala va de −1 a 1. Un valor de R cercano a 1 indica que los grupos son morfométricamente discretos; un valor cercano a 0 indica que no hay separación entre ellos. Como referencia orientativa, valores de R > 0.75 se consideran separación buena; entre 0.50 y 0.75, separación moderada pero biológicamente relevante; entre 0.25 y 0.50, separación débil.
 
 **Significancia por permutación.** El p-valor reportado indica en qué proporción de las 999 permutaciones aleatorias de las etiquetas de sexo se obtuvo un R igual o mayor al observado. Un p-valor bajo (por convención, < 0.05) conduce a **rechazar la hipótesis nula** (H₀: la distancia entre grupos es igual a la distancia dentro de grupos). En términos sustantivos, la hipótesis nula es que el sexo no estructura la variación morfométrica del grupo; rechazarla significa que las diferencias morfométricas entre hombres y mujeres son estadísticamente improbables bajo un escenario de ausencia de efecto del sexo.
 
 **Consistencia con el PCoA.** Este resultado es coherente con la separación visual observada en la gráfica de PCoA con colores por sexo de la bitácora anterior: si los grupos se separaban visualmente en el espacio de ordenamiento, era de esperar que una prueba formal sobre la misma matriz de disimilaridades confirmara esa separación.
 
----
-
 ## Resultado del PERMANOVA
 
 ```{r}
+
 #| label: res-permanova
 #| echo: false
 #| output: true
 
 # Imprime la tabla ANOVA-style del PERMANOVA, con una fila por término del
 # modelo, una fila de residuos y una de totales.
+
 fit1
+
 ```
 
-La tabla del PERMANOVA tiene el formato de una tabla ANOVA con una fila por término del modelo, una fila de residuos y una de totales. El significado de cada columna es el siguiente.
+**Interpretación:** La tabla del PERMANOVA tiene el formato de una tabla ANOVA con una fila por término del modelo, una fila de residuos y una de totales. El significado de cada columna es el siguiente.
 
 **`Df`** indica los grados de libertad consumidos por ese término. El modelo completo (`Management * Use`) usa 10 grados de libertad: 3 para Management (4 niveles − 1), 2 para Use (3 niveles − 1), y 6 para la interacción (3 × 2). Los 9 grados de libertad residuales son los que quedan para estimar el error con n = 20 sitios.
 
@@ -367,27 +386,22 @@ La tabla del PERMANOVA tiene el formato de una tabla ANOVA con una fila por tér
 
 **Interpretación integradora.** Aunque el porcentaje de variación explicado es alto (61.3 %), el modelo no alcanza significancia estadística estricta. Esto se debe principalmente a dos factores que actúan en conjunto: el tamaño de muestra es muy pequeño (n = 20 sitios) y el modelo con interacción consume muchos grados de libertad (10 de los 19 disponibles), dejando solo 9 grados de libertad residuales para estimar el error. Con tan pocos grados de libertad, el test tiene poco poder estadístico. Una posible estrategia para mejorar el análisis sería probar modelos más parsimoniosos, comenzando por los efectos principales (`Management + Use`) sin interacción, y evaluar si la interacción es realmente necesaria mediante comparación de modelos.
 
----
-
 # Problemas Encontrados
 
-El principal desafío conceptual fue distinguir entre ANOSIM y PERMANOVA. Ambas pruebas usan matrices de distancias y permutaciones, lo que inicialmente llevó a pensar que eran intercambiables. Fue necesario revisar la documentación para entender que ANOSIM solo acepta un factor de agrupamiento y produce un único estadístico R, mientras que PERMANOVA puede incluir múltiples predictores e interacciones y descompone la variación de forma análoga a un ANOVA.
+- Ambas pruebas usan matrices de distancias y permutaciones, ANOSIM solo acepta un factor de agrupamiento y produce un único estadístico R, mientras que PERMANOVA puede incluir múltiples predictores e interacciones y descompone la variación de forma análoga a un ANOVA.
 
-La fórmula del modelo en `adonis2()` también resultó confusa porque la variable de respuesta es una matriz de distancias y no una columna de números. En un primer intento se utilizó el data frame `dune` directamente como respuesta, lo que generó un error. Fue necesario entender que `dist_dune` ya encapsula toda la información de disimilaridad y que `adonis2()` sabe cómo descomponerla.
+- El operador `*` en la fórmula causó confusión adicional: no es una multiplicación sino un operador de modelo que expande automáticamente a efectos principales más interacción. En una primera versión se usó `+` (solo efectos principales), lo que produjo resultados distintos y llevó a revisar la documentación de fórmulas en R.
 
-El operador `*` en la fórmula causó confusión adicional: no es una multiplicación sino un operador de modelo que expande automáticamente a efectos principales más interacción. En una primera versión se usó `+` (solo efectos principales), lo que produjo resultados distintos y llevó a revisar la documentación de fórmulas en R.
+- Las pruebas de permutación varíen ligeramente entre ejecuciones generó desconcierto hasta aprender a usar `set.seed()` para fijar la semilla y garantizar la reproducibilidad.
 
-Finalmente, el hecho de que los resultados de las pruebas de permutación varíen ligeramente entre ejecuciones generó desconcierto hasta aprender a usar `set.seed()` para fijar la semilla y garantizar la reproducibilidad.
-
----
 
 # Aprendizaje
 
-El aprendizaje más importante fue entender la lógica de las **pruebas de permutación**: en lugar de comparar un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.
+- El aprendizaje más importante fue entender la lógica de las **pruebas de permutación**: en lugar de comparar un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.
 
-También quedó claro que un **p-valor marginal** (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza. La distinción entre significancia estadística y relevancia práctica (R² = 61 %) fue un punto clave de reflexión.
+- También quedó claro que un **p-valor marginal** (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza. La distinción entre significancia estadística y relevancia práctica (R² = 61 %) fue un punto clave de reflexión.
 
-Por último, se aprendió que en Quarto la forma correcta de controlar la visibilidad del código y los resultados es usar las opciones nativas `#| echo:` y `#| output:` en cada chunk individualmente, en lugar de depender de `knitr::opts_chunk$set()`, cuya interacción con el bloque `execute:` del YAML puede producir comportamientos inesperados.
+- Por último, se aprendió que en Quarto la forma correcta de controlar la visibilidad del código y los resultados es usar las opciones nativas `#| echo:` y `#| output:` en cada chunk individualmente, en lugar de depender de `knitr::opts_chunk$set()`, cuya interacción con el bloque `execute:` del YAML puede producir comportamientos inesperados.
 
 ---
 

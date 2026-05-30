@@ -28,42 +28,13 @@ Aprender a reducir la dimensionalidad de datos multivariados mediante un Anális
 
 ::: {.panel-tabset}
 
-## paquetes
-
-### instalación de paquetes
-
-```{r instalar-paquetes}
-
-#| eval: true
-#| echo: true
-
-# install.packages() descarga e instala paquetes desde el repositorio CRAN.
-# Solo debe ejecutarse una vez por entorno de trabajo.
-#
-# Se instalan tres paquetes:
-#
-#   FactoMineR — implementa PCA y otros métodos de análisis multivariado
-#                (Análisis de Correspondencias, MFA, etc.). Su función PCA()
-#                devuelve un objeto rico en información directamente compatible
-#                con factoextra.
-#   factoextra — extensión de ggplot2 especializada en visualizar resultados
-#                de análisis multivariados. Provee las funciones fviz_*()
-#                para screeplots, círculos de correlaciones, biplots, etc.
-#   GGally     — extensión de ggplot2 que añade ggpairs() para matrices de
-#                gráficos con correlaciones y distribuciones integradas.
-
-install.packages("FactoMineR")
-install.packages("factoextra")
-install.packages("GGally")
-
-```
-
-### instalación de librerías
+## Paquetes
 
 ```{r cargar-paquetes}
 
 #| eval: true
 #| echo: true
+
 
 # library() carga el paquete en la sesión activa de R, poniendo a disposición
 # todas sus funciones. Debe ejecutarse al inicio de cada sesión nueva.
@@ -76,7 +47,8 @@ library(GGally)       # ggpairs() para matrices de dispersión
 
 ```
 
-## descripción general
+## Descripción general
+
 
 La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
 
@@ -85,7 +57,9 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 - `Petal.Length` — longitud del pétalo (cm).
 - `Petal.Width` — ancho del pétalo (cm).
 
-## código R
+URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
+
+## Código R
 
 ```{r datos-iris}
 
