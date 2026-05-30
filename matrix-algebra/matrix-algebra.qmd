@@ -19,7 +19,12 @@ Elaborar matrices a partir de vectores, acceder a elementos mediante índices y 
 
 ### Descripción general
 
-La base de datos utilizó `iris` incluida en R. Proviene de las observaciones de Ronal Fisher (1936) del género *Iris*. La variable categórica es la `Species` (setosa, versicolor y virginica) y la variable de repsuesta contiene `Sepal.Length` (longitud de sépalo), `Sepal.Width` (ancho de sépalo),  `Petal.Length` (longitud de pétalo) y `Petal.Width` (ancho de pétalo).
+La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
+
+- `Sepal.Length` — longitud del sépalo (cm).
+- `Sepal.Width` — ancho del sépalo (cm).
+- `Petal.Length` — longitud del pétalo (cm).
+- `Petal.Width` — ancho del pétalo (cm).
 
 ### Código R
 
@@ -32,8 +37,7 @@ El código para cargar las bases de datos es el siguiente:
 
 data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
-DT::datatable(iris1)  # Tabla interactiva con búsqueda, orden y paginación.
-                      # Muestra 10 filas por página.
+
 
 ```
 

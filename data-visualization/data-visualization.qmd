@@ -96,7 +96,8 @@ iris1 <- iris[, 1:4]
 datos <- read.csv(
   here("data", "datos-multivariada.csv"),
   dec = ",",
-  sep = ","
+  sep = ";",
+  stringsAsFactors = FALSE
 )
 
 ```
