@@ -27,6 +27,22 @@ Comparar los vectores de medias de medias de *tres o más grupos* de manera simu
 
 ::: {.panel-tabset}
 
+## Paquetes
+
+```{r cargar-paquetes}
+
+#| eval: true
+#| echo: true
+
+# Instalación del paquete rstatix, que provee herramientas para pruebas
+# estadísticas multivariadas, incluyendo la prueba de Shapiro-Wilk
+# multivariada y la prueba de Box's M.
+
+library(rstatix)
+
+```
+
+
 ## Descripción general
 
 La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
@@ -35,6 +51,8 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 - `Sepal.Width` — ancho del sépalo (cm).
 - `Petal.Length` — longitud del pétalo (cm).
 - `Petal.Width` — ancho del pétalo (cm).
+
+URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
 
 ## Código R
 
@@ -198,28 +216,6 @@ Los supuestos de MANOVA son similares en muchos aspectos a los de ANOVA, pero di
 #### Supuesto 1: Multinormalidad
 
 Mientras que en ANOVA, el supuesto de normalidad se refería a una sola variable dependiente a lo largo de los niveles de la variable independiente, en MANOVA, además de considerar cada variable de manera univariada, el supuesto de normalidad también se aplica a una combinación lineal de variables dependientes. Esto es lo que se llama convenientemente normalidad multivariante. Con respecto al supuesto de normalidad de las variables dependientes consideradas por separado, como se hacía en ANOVA, se pueden obtener gráficos Q−Q o histogramas o, si se desea, una prueba formal de normalidad como la prueba de Shapiro–Wilk.
-
-```{r}
-
-#| eval: false
-
-# Instalación del paquete rstatix, que provee herramientas para pruebas
-# estadísticas multivariadas, incluyendo la prueba de Shapiro-Wilk
-# multivariada y la prueba de Box's M.
-# Solo es necesario ejecutar esta línea una vez por entorno.
-
-install.packages("rstatix")
-
-```
-
-```{r}
-
-# library() carga el paquete rstatix en la sesión activa de R,
-# poniendo a disposición funciones como mshapiro_test() y box_m().
-
-library(rstatix)
-
-```
 
 ```{r}
 

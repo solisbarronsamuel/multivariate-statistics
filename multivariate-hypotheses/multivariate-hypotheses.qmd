@@ -67,9 +67,9 @@ Para el **PERMANOVA** se usaron los conjuntos `dune` y `dune.env`, incluidos en 
 #             lo que da mayor control sobre el tratamiento de variables categóricas.
 
 data <- read.csv(
-  here("data", "multivariate-data.csv"),
+  here("data", "datos-multivariada.csv"),
   dec              = ",",
-  sep              = ";",
+  sep              = ",",
   stringsAsFactors = FALSE
 )
 
@@ -127,20 +127,26 @@ El ANOSIM (Analysis of Similarities) es una prueba no paramétrica que evalúa s
 
 El estadístico R se define formalmente como:
 
-$$R = \frac{\bar{r}_B - \bar{r}_W}{M/2}$$
+$$
+R = \frac{\bar{r}_B - \bar{r}_W}{M/2}
+$$
 
 donde $\bar{r}_B$ es el rango promedio de las disimilaridades **entre** grupos, $\bar{r}_W$ es el rango promedio de las disimilaridades **dentro** de cada grupo, y $M = n(n-1)/2$ es el número total de pares de observaciones. Un valor de R cercano a 1 indica separación perfecta entre grupos; R cercano a 0 indica que no hay diferencia estructural entre la variación inter e intra-grupal.
 
 ```{r}
+
 #| label: proc-anosim-distancia
 #| echo: true
 #| output: false
+
 # Eliminar la observación atípica ─────────────────────────────────────────────
+
 # Se elimina el renglón 41, identificado en el análisis de PCoA como un
 # valor atípico extremo. La notación [-41, ] conserva todas las filas
 # excepto la 41; dejar la columna en blanco conserva todas las columnas.
-datos1 <- datos_2026[-41, ]
-```
+
+datos1 <- data[-41, ]
+
 # ─────────────────────────────────────────────────────────────────────────────
 # PASO 1: SELECCIÓN DE COLUMNAS NUMÉRICAS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -150,6 +156,7 @@ datos1 <- datos_2026[-41, ]
 # si se intentara incluirlas en el cálculo de la matriz de distancias.
 # El uso de ncol(datos1) en lugar de un número fijo hace el código robusto
 # ante cambios en el número de columnas del archivo.
+
 datos2 <- datos1[, 3:ncol(datos1)]
 
 # ─────────────────────────────────────────────────────────────────────────────
