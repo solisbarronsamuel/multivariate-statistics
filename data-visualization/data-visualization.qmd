@@ -776,43 +776,26 @@ faces(caras_iris,
       main   = "Caras de Chernoff – Promedios por Especie (iris)")
 ```
 
-**Interpretación:** Las tres caras de Chernoff para las especies de iris ilustran de forma intuitiva las diferencias multivariadas entre grupos. *Setosa* presenta una cara visualmente muy distinta de las otras dos especies: sus pétalos son significativamente más pequeños (Petal.Length ≈ 1.46 cm, Petal.Width ≈ 0.25 cm), lo que se codifica en rasgos faciales notablemente diferentes (nariz más pequeña, ojos de distinto tamaño). *Versicolor* y *virginica* son más similares entre sí, pero sus caras aún presentan diferencias perceptibles en los rasgos correspondientes a las variables de pétalo, donde *virginica* tiene valores más altos. Este resultado es consistente con los resultados del MANOVA presentado en el capítulo anterior: las tres especies difieren significativamente en el vector de medias, y la mayor separación se concentra en las variables de pétalo.
+**Interpretación:** Las tres caras de Chernoff para las especies de iris ilustran de forma intuitiva las diferencias multivariadas entre grupos. *Setosa* presenta una cara visualmente muy distinta de las otras dos especies: sus pétalos son significativamente más pequeños (Petal.Length ≈ 1.46 cm, Petal.Width ≈ 0.25 cm), lo que se codifica en rasgos faciales notablemente diferentes (nariz más pequeña, ojos de distinto tamaño). *Versicolor* y *virginica* son más similares entre sí, pero sus caras aún presentan diferencias perceptibles en los rasgos correspondientes a las variables de pétalo, donde *virginica* tiene valores más altos.
 
 Las Caras de Chernoff son especialmente útiles como herramienta exploratoria porque permiten detectar rápidamente si existe heterogeneidad entre grupos antes de aplicar pruebas formales. Su limitación principal es que el mapeo de variables a rasgos faciales es arbitrario: la misma tabla de datos produce caras de aspecto muy diferente si se reordenan las columnas, por lo que la interpretación debe complementarse siempre con los valores numéricos de los promedios.
 
----
-
-### Resumen comparativo de técnicas
-
-| Técnica | Función principal | Ventaja principal | Limitación |
-|---------|------------------|-------------------|------------|
-| Matriz de dispersión | `ggpairs()` | Muestra distribuciones y correlaciones simultáneamente | Se vuelve ilegible con más de 10–12 variables |
-| Heatmap base | `heatmap()` | Agrupamiento jerárquico automático | Sin leyenda de color; paleta poco informativa |
-| Heatmap mejorado | `pheatmap()` | Leyenda automática, anotaciones, mayor control | Requiere paquete adicional |
-| Caras de Chernoff | `faces()` | Comparación intuitiva de perfiles multivariados | Mapeo arbitrario; difícil de interpretar sin los valores |
-
----
-
 ## Problemas Encontrados
 
-- La función `heatmap()` de R base no genera leyenda de color automática, lo que dificultó la interpretación inicial. Se resolvió usando `pheatmap()`, que la incluye de forma nativa.
-- Al intentar guardar el heatmap de R base con `ggsave()`, el archivo resultaba en blanco. Esto ocurre porque `ggsave()` solo funciona con objetos de clase `ggplot`; los gráficos de R base deben guardarse con `png()` / `pdf()` antes de la llamada a `heatmap()`, y cerrar el dispositivo con `dev.off()` al terminar.
+- Al intentar guardar el heatmap de R base con `ggsave()`, el archivo resultaba en blanco. Esto ocurre porque `ggsave()` solo funciona con objetos de clase `ggplot`; los gráficos de R base deben guardarse con `png()` / `pdf()` antes de la llamada a `heatmap()`, y cerrar el dispositivo con `dev.off()` al terminar. Opción eliminada del script.
 - En el código original de las Caras de Chernoff por sexo, los subconjuntos estaban invertidos: la variable `hombre` recibía el filtro `sexo == "mujer"` y viceversa. El error se detectó comparando las caras resultantes con estadísticos descriptivos conocidos de los grupos.
 - La función `faces()` genera un error si recibe columnas de texto. Fue necesario eliminar las columnas `ID` y `sexo` antes de llamarla.
 - `summarise_at()` produce una advertencia de deprecación en versiones recientes de `dplyr`. Se reemplazó por `summarise(across(...))` para mantener compatibilidad con dplyr ≥ 1.0.0.
-- La ruta absoluta original (`/home/samuel/Documents/...`) en `read.csv()` impedía la reproducibilidad del documento en otros equipos. Se reemplazó por una ruta relativa con una nota de instrucciones al inicio del capítulo.
-- Los tamaños de texto en `ggpairs()` con 14 variables se solapaban en los ejes. Se resolvió reduciendo `axis.text` a `size = 6` dentro de `theme()`.
+- La ruta absoluta original (`/home/samuel/Documents/...`) en `read.csv()` impedía la reproducibilidad del documento en otros equipos. Se reemplazó con direccionar la carpeta del archivo utilizando el paquete `here`.
 
----
 
 ## Aprendizaje
 
 - `ggpairs()` permite explorar simultáneamente distribuciones, correlaciones y agrupamientos en una sola figura, lo que la convierte en la herramienta de exploración multivariada más completa para un primer acercamiento a un dataset.
-- La diferencia entre un heatmap sin escalar y uno estandarizado por columna es fundamental: sin estandarizar, las variables de mayor magnitud dominan el rango de colores y ocultan los patrones de las variables más pequeñas. `scale = "column"` resuelve este problema colocando todas las variables en la misma escala de desviaciones estándar.
+- La diferencia entre un heatmap sin estandarizar, las variables de mayor magnitud dominan el rango de colores y ocultan los patrones de las variables más pequeñas. `scale = "column"` resuelve este problema colocando todas las variables en la misma escala de desviaciones estándar.
 - `pheatmap()` es preferible a `heatmap()` cuando se necesita una leyenda de color automática, anotaciones de filas o columnas, o mayor control sobre el diseño visual.
-- Las Caras de Chernoff son una herramienta de exploración cualitativa: permiten detectar diferencias entre grupos de forma intuitiva, pero no reemplazan las pruebas estadísticas formales. Su utilidad principal es comunicar patrones multivariados a audiencias no especializadas.
-- `lapply()` + `data.frame()` es un patrón eficiente para calcular el promedio de todas las columnas de un data frame en una sola línea. La alternativa moderna con `dplyr::summarise(across(...))` es más legible y escalable para pipelines complejos.
-- `ggsave()` y los gráficos de R base son incompatibles. Los gráficos de R base se guardan abriendo un dispositivo gráfico con `png()` o `pdf()`, ejecutando el gráfico, y cerrando el dispositivo con `dev.off()`.
+- Las Caras de Chernoff son una herramienta de exploración cualitativa que permiten detectar diferencias entre grupos de forma intuitiva, pero no reemplazan las pruebas estadísticas formales.
+- `lapply()` + `data.frame()` es un patrón eficiente para calcular el promedio de todas las columnas de un data frame en una sola línea.
 
 ---
 

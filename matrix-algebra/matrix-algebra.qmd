@@ -17,7 +17,7 @@ Elaborar matrices a partir de vectores, acceder a elementos mediante índices y 
 
 ::: {.panel-tabset}
 
-### Descripción general
+## Descripción general
 
 La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
 
@@ -28,7 +28,7 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 
 URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
 
-### Código R
+## Código R
 
 El código para cargar las bases de datos es el siguiente:
 

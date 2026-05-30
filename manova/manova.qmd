@@ -42,15 +42,14 @@ El código para cargar las bases de datos es el siguiente:
 
 ```{r}
 
-#| echo: false
+#| echo: true
+#| eval: false
+
 
 data(iris)            # Carga el dataset iris desde R base.
                       # No requiere paquetes adicionales.
 iris1 <- iris[, 1:4]  # Selecciona únicamente las 4 columnas numéricas,
                       # excluyendo la variable categórica Species.
-DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda,
-                      # ordenamiento por columna y paginación automática
-                      # (10 filas por página por defecto).
 
 ```
 

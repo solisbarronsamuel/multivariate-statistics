@@ -14,9 +14,7 @@ book:
     - manova/manova.qmd
     - pca/pca.qmd
     - pcoa/pcoa.qmd
-    - references.qmd
-
-bibliography: references.bib
+    - multivariate-hypotheses/multivariate-hypotheses.qmd
 
 format:
   html:

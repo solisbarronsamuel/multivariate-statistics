@@ -35,9 +35,7 @@ Extraer subconjuntos de un data frame de dos maneras distintas: usando la sintax
 #| eval: true   
 #| echo: true    
 
-# Cargar el paquete dplyr para usar en el análisis
-
-library(dplyr)
+library(dplyr)     # Manipulación de datos (filtrar, agrupar, resumir, etc.)
 
 ```
 
