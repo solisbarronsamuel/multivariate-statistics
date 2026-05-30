@@ -8,7 +8,7 @@
 
 <meta name="author" content="Samuel Solís Barrón">
 
-<title>7&nbsp; Pruebas de Hipótesis Multivariadas – Bitácora de Estadística Multivariada con R</title>
+<title>8&nbsp; Pruebas de Hipótesis Multivariadas – Bitácora de Estadística Multivariada con R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -170,7 +170,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../multivariate-hypotheses/multivariate-hypotheses.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../multivariate-hypotheses/multivariate-hypotheses.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -198,49 +198,49 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Prefacio</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../matrix-algebra/matrix-algebra.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../data-frame/data-frame.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Frame</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../data-visualization/data-visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Visualización de Datos</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visualización de Datos</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../manova/manova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pca/pca.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">PCA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pcoa/pcoa.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCoA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../multivariate-hypotheses/multivariate-hypotheses.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></span></a>
   </div>
 </li>
     </ul>
@@ -253,21 +253,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">7.1</span> Objetivo</a></li>
-  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">8</span> Datos Utilizados</a>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">8.1</span> Objetivo</a></li>
+  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">9</span> Datos Utilizados</a>
   <ul class="collapse">
-  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">8.1</span> Procedimiento</a>
+  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">9.1</span> Procedimiento</a>
   <ul class="collapse">
-  <li><a href="#a-anosim-análisis-de-similitud" id="toc-a-anosim-análisis-de-similitud" class="nav-link" data-scroll-target="#a-anosim-análisis-de-similitud"><span class="header-section-number">8.1.1</span> a) ANOSIM — Análisis de Similitud</a></li>
-  <li><a href="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones" id="toc-b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="nav-link" data-scroll-target="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">8.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</a></li>
+  <li><a href="#a-anosim-análisis-de-similitud" id="toc-a-anosim-análisis-de-similitud" class="nav-link" data-scroll-target="#a-anosim-análisis-de-similitud"><span class="header-section-number">9.1.1</span> a) ANOSIM — Análisis de Similitud</a></li>
+  <li><a href="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones" id="toc-b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="nav-link" data-scroll-target="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">9.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</a></li>
   </ul></li>
-  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">8.2</span> Resultados</a>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">9.2</span> Resultados</a>
   <ul class="collapse">
-  <li><a href="#resultado-del-anosim" id="toc-resultado-del-anosim" class="nav-link" data-scroll-target="#resultado-del-anosim"><span class="header-section-number">8.2.1</span> Resultado del ANOSIM</a></li>
+  <li><a href="#resultado-del-anosim" id="toc-resultado-del-anosim" class="nav-link" data-scroll-target="#resultado-del-anosim"><span class="header-section-number">9.2.1</span> Resultado del ANOSIM</a></li>
   </ul></li>
-  <li><a href="#resultado-del-permanova" id="toc-resultado-del-permanova" class="nav-link" data-scroll-target="#resultado-del-permanova"><span class="header-section-number">8.3</span> Resultado del PERMANOVA</a></li>
-  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">8.4</span> Problemas Encontrados</a></li>
-  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">8.5</span> Aprendizaje</a></li>
+  <li><a href="#resultado-del-permanova" id="toc-resultado-del-permanova" class="nav-link" data-scroll-target="#resultado-del-permanova"><span class="header-section-number">9.3</span> Resultado del PERMANOVA</a></li>
+  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">9.4</span> Problemas Encontrados</a></li>
+  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">9.5</span> Aprendizaje</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -277,7 +277,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></h1>
 <p class="subtitle lead">Pruebas de Hipótesis con Datos Multivariados: ANOSIM y PERMANOVA</p>
 </div>
 
@@ -301,16 +301,16 @@ window.Quarto = {
 </header>
 
 
-<section id="objetivo" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">7.1</span> Objetivo</h2>
+<section id="objetivo" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">8.1</span> Objetivo</h2>
 <ul>
 <li>Comprender las <strong>pruebas de permutación</strong> como alternativa no paramétrica a las pruebas clásicas (ANOVA, MANOVA) cuando no se cumplen los supuestos de normalidad multivariada.</li>
 <li>Aprender a usar <strong>ANOSIM</strong> para comparar la disimilaridad entre grupos con la disimilaridad dentro de grupos.</li>
 <li>Aprender a usar <strong>PERMANOVA</strong> para probar si una o más variables explicativas tienen efecto sobre la composición multivariada.</li>
 </ul>
 </section>
-<section id="datos-utilizados" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Datos Utilizados</h1>
+<section id="datos-utilizados" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Datos Utilizados</h1>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Descripción general</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Código R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Datos propios</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">dune</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">dune.env</a></li></ul>
 <div class="tab-content">
@@ -390,10 +390,10 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="procedimiento" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">8.1</span> Procedimiento</h2>
-<section id="a-anosim-análisis-de-similitud" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="a-anosim-análisis-de-similitud"><span class="header-section-number">8.1.1</span> a) ANOSIM — Análisis de Similitud</h3>
+<section id="procedimiento" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">9.1</span> Procedimiento</h2>
+<section id="a-anosim-análisis-de-similitud" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="a-anosim-análisis-de-similitud"><span class="header-section-number">9.1.1</span> a) ANOSIM — Análisis de Similitud</h3>
 <p>El ANOSIM (Analysis of Similarities) es una prueba no paramétrica que evalúa si la disimilaridad entre grupos es significativamente mayor que la disimilaridad dentro de cada grupo. En lugar de suponer una distribución teórica, construye una distribución nula del estadístico R reordenando (permutando) aleatoriamente las etiquetas de grupo y recalculando el estadístico en cada permutación. El p-valor resulta de la proporción de permutaciones en las que el R aleatorio iguala o supera al R observado.</p>
 <p>El estadístico R se define formalmente como:</p>
 <p><span class="math display">\[
@@ -488,8 +488,8 @@ R = \frac{\bar{r}_B - \bar{r}_W}{M/2}
 <span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">anosim</span>(dist_datos2, datos1[, <span class="dv">2</span>], <span class="at">permutations =</span> <span class="dv">999</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">8.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</h3>
+<section id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="level3" data-number="9.1.2">
+<h3 data-number="9.1.2" class="anchored" data-anchor-id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">9.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</h3>
 <p>El PERMANOVA (Permutational Multivariate Analysis of Variance, implementado como <code>adonis2()</code> en vegan) es una generalización del ANOVA que opera sobre una matriz de distancias o disimilaridades en lugar de sobre una variable de respuesta única. Al igual que el ANOSIM, utiliza permutaciones para construir la distribución nula, pero a diferencia de él puede incluir múltiples variables explicativas e interacciones, descomponiendo la variación total de forma análoga a un ANOVA balanceado. El estadístico central es R², que expresa qué proporción de la variación total en la matriz de disimilaridades es explicada por cada término del modelo.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-permanova-datos</span></span>
@@ -585,10 +585,10 @@ R = \frac{\bar{r}_B - \bar{r}_W}{M/2}
 </div>
 </section>
 </section>
-<section id="resultados" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="resultados"><span class="header-section-number">8.2</span> Resultados</h2>
-<section id="resultado-del-anosim" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="resultado-del-anosim"><span class="header-section-number">8.2.1</span> Resultado del ANOSIM</h3>
+<section id="resultados" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="resultados"><span class="header-section-number">9.2</span> Resultados</h2>
+<section id="resultado-del-anosim" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="resultado-del-anosim"><span class="header-section-number">9.2.1</span> Resultado del ANOSIM</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-anosim</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -617,8 +617,8 @@ Number of permutations: 999</code></pre>
 <p><strong>Consistencia con el PCoA.</strong> Este resultado es coherente con la separación visual observada en la gráfica de PCoA con colores por sexo de la bitácora anterior: si los grupos se separaban visualmente en el espacio de ordenamiento, era de esperar que una prueba formal sobre la misma matriz de disimilaridades confirmara esa separación.</p>
 </section>
 </section>
-<section id="resultado-del-permanova" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="resultado-del-permanova"><span class="header-section-number">8.3</span> Resultado del PERMANOVA</h2>
+<section id="resultado-del-permanova" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="resultado-del-permanova"><span class="header-section-number">9.3</span> Resultado del PERMANOVA</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-permanova</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -650,16 +650,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p><strong><code>Pr(&gt;F)</code></strong> es el p-valor obtenido por permutación. El valor de <strong>0.071</strong> supera el umbral convencional de α = 0.05, por lo que formalmente <strong>no se rechaza</strong> la hipótesis nula al nivel del 5 %. El punto (<code>.</code>) junto al valor indica una tendencia marginal según los códigos de significancia de R.</p>
 <p><strong>Interpretación integradora.</strong> Aunque el porcentaje de variación explicado es alto (61.3 %), el modelo no alcanza significancia estadística estricta. Esto se debe principalmente a dos factores que actúan en conjunto: el tamaño de muestra es muy pequeño (n = 20 sitios) y el modelo con interacción consume muchos grados de libertad (10 de los 19 disponibles), dejando solo 9 grados de libertad residuales para estimar el error. Con tan pocos grados de libertad, el test tiene poco poder estadístico. Una posible estrategia para mejorar el análisis sería probar modelos más parsimoniosos, comenzando por los efectos principales (<code>Management + Use</code>) sin interacción, y evaluar si la interacción es realmente necesaria mediante comparación de modelos.</p>
 </section>
-<section id="problemas-encontrados" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">8.4</span> Problemas Encontrados</h2>
+<section id="problemas-encontrados" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">9.4</span> Problemas Encontrados</h2>
 <ul>
 <li><p>Ambas pruebas usan matrices de distancias y permutaciones, ANOSIM solo acepta un factor de agrupamiento y produce un único estadístico R, mientras que PERMANOVA puede incluir múltiples predictores e interacciones y descompone la variación de forma análoga a un ANOVA.</p></li>
 <li><p>El operador <code>*</code> en la fórmula causó confusión adicional: no es una multiplicación sino un operador de modelo que expande automáticamente a efectos principales más interacción. En una primera versión se usó <code>+</code> (solo efectos principales), lo que produjo resultados distintos y llevó a revisar la documentación de fórmulas en R.</p></li>
 <li><p>Las pruebas de permutación varíen ligeramente entre ejecuciones generó desconcierto hasta aprender a usar <code>set.seed()</code> para fijar la semilla y garantizar la reproducibilidad.</p></li>
 </ul>
 </section>
-<section id="aprendizaje" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">8.5</span> Aprendizaje</h2>
+<section id="aprendizaje" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">9.5</span> Aprendizaje</h2>
 <ul>
 <li><p>Las <strong>pruebas de permutación</strong> compara un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.</p></li>
 <li><p>El <strong>p-valor marginal</strong> (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza.</p></li>
@@ -1075,7 +1075,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../pcoa/pcoa.html" class="pagination-link" aria-label="PCoA">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCoA</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -8,7 +8,7 @@
 
 <meta name="author" content="Samuel Solís Barrón">
 
-<title>6&nbsp; PCoA – Bitácora de Estadística Multivariada con R</title>
+<title>7&nbsp; PCoA – Bitácora de Estadística Multivariada con R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
+<link href="../multivariate-hypotheses/multivariate-hypotheses.html" rel="next">
 <link href="../pca/pca.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -142,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pcoa/pcoa.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCoA</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pcoa/pcoa.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,49 +170,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Prefacio</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../matrix-algebra/matrix-algebra.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../data-frame/data-frame.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Frame</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../data-visualization/data-visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Visualización de Datos</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visualización de Datos</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../manova/manova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pca/pca.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">PCA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pcoa/pcoa.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCoA</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../multivariate-hypotheses/multivariate-hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></span></a>
   </div>
 </li>
     </ul>
@@ -225,32 +225,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">6.1</span> Objetivo</a></li>
-  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">6.2</span> Datos Utilizados</a></li>
-  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">6.3</span> Procedimiento</a>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">7.1</span> Objetivo</a></li>
+  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">7.2</span> Datos Utilizados</a></li>
+  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">7.3</span> Procedimiento</a>
   <ul>
-  <li><a href="#calcular-la-matriz-de-disimilaridades" id="toc-calcular-la-matriz-de-disimilaridades" class="nav-link" data-scroll-target="#calcular-la-matriz-de-disimilaridades"><span class="header-section-number">6.3.1</span> Calcular la matriz de disimilaridades</a></li>
-  <li><a href="#calcular-el-pcoa" id="toc-calcular-el-pcoa" class="nav-link" data-scroll-target="#calcular-el-pcoa"><span class="header-section-number">6.3.2</span> Calcular el PCoA</a></li>
-  <li><a href="#eliminar-la-observación-atípica-renglón-41" id="toc-eliminar-la-observación-atípica-renglón-41" class="nav-link" data-scroll-target="#eliminar-la-observación-atípica-renglón-41"><span class="header-section-number">6.3.3</span> Eliminar la observación atípica (renglón 41)</a></li>
-  <li><a href="#recalcular-el-pcoa-sin-la-observación-atípica" id="toc-recalcular-el-pcoa-sin-la-observación-atípica" class="nav-link" data-scroll-target="#recalcular-el-pcoa-sin-la-observación-atípica"><span class="header-section-number">6.3.4</span> Recalcular el PCoA sin la observación atípica</a></li>
+  <li><a href="#calcular-la-matriz-de-disimilaridades" id="toc-calcular-la-matriz-de-disimilaridades" class="nav-link" data-scroll-target="#calcular-la-matriz-de-disimilaridades"><span class="header-section-number">7.3.1</span> Calcular la matriz de disimilaridades</a></li>
+  <li><a href="#calcular-el-pcoa" id="toc-calcular-el-pcoa" class="nav-link" data-scroll-target="#calcular-el-pcoa"><span class="header-section-number">7.3.2</span> Calcular el PCoA</a></li>
+  <li><a href="#eliminar-la-observación-atípica-renglón-41" id="toc-eliminar-la-observación-atípica-renglón-41" class="nav-link" data-scroll-target="#eliminar-la-observación-atípica-renglón-41"><span class="header-section-number">7.3.3</span> Eliminar la observación atípica (renglón 41)</a></li>
+  <li><a href="#recalcular-el-pcoa-sin-la-observación-atípica" id="toc-recalcular-el-pcoa-sin-la-observación-atípica" class="nav-link" data-scroll-target="#recalcular-el-pcoa-sin-la-observación-atípica"><span class="header-section-number">7.3.4</span> Recalcular el PCoA sin la observación atípica</a></li>
   </ul></li>
-  <li><a href="#gráficas-personalizadas" id="toc-gráficas-personalizadas" class="nav-link" data-scroll-target="#gráficas-personalizadas"><span class="header-section-number">6.4</span> Gráficas personalizadas</a>
+  <li><a href="#gráficas-personalizadas" id="toc-gráficas-personalizadas" class="nav-link" data-scroll-target="#gráficas-personalizadas"><span class="header-section-number">7.4</span> Gráficas personalizadas</a>
   <ul>
-  <li><a href="#a-gráfica-con-colores-por-sexo" id="toc-a-gráfica-con-colores-por-sexo" class="nav-link" data-scroll-target="#a-gráfica-con-colores-por-sexo"><span class="header-section-number">6.4.1</span> a) Gráfica con colores por sexo</a></li>
-  <li><a href="#b-gráfica-con-nombres-un-solo-color" id="toc-b-gráfica-con-nombres-un-solo-color" class="nav-link" data-scroll-target="#b-gráfica-con-nombres-un-solo-color"><span class="header-section-number">6.4.2</span> b) Gráfica con nombres (un solo color)</a></li>
-  <li><a href="#c-gráfica-con-nombres-y-colores-por-sexo" id="toc-c-gráfica-con-nombres-y-colores-por-sexo" class="nav-link" data-scroll-target="#c-gráfica-con-nombres-y-colores-por-sexo"><span class="header-section-number">6.4.3</span> c) Gráfica con nombres y colores por sexo</a></li>
-  <li><a href="#d-gráfica-con-nombres-colores-y-leyenda" id="toc-d-gráfica-con-nombres-colores-y-leyenda" class="nav-link" data-scroll-target="#d-gráfica-con-nombres-colores-y-leyenda"><span class="header-section-number">6.4.4</span> d) Gráfica con nombres, colores y leyenda</a></li>
+  <li><a href="#a-gráfica-con-colores-por-sexo" id="toc-a-gráfica-con-colores-por-sexo" class="nav-link" data-scroll-target="#a-gráfica-con-colores-por-sexo"><span class="header-section-number">7.4.1</span> a) Gráfica con colores por sexo</a></li>
+  <li><a href="#b-gráfica-con-nombres-un-solo-color" id="toc-b-gráfica-con-nombres-un-solo-color" class="nav-link" data-scroll-target="#b-gráfica-con-nombres-un-solo-color"><span class="header-section-number">7.4.2</span> b) Gráfica con nombres (un solo color)</a></li>
+  <li><a href="#c-gráfica-con-nombres-y-colores-por-sexo" id="toc-c-gráfica-con-nombres-y-colores-por-sexo" class="nav-link" data-scroll-target="#c-gráfica-con-nombres-y-colores-por-sexo"><span class="header-section-number">7.4.3</span> c) Gráfica con nombres y colores por sexo</a></li>
+  <li><a href="#d-gráfica-con-nombres-colores-y-leyenda" id="toc-d-gráfica-con-nombres-colores-y-leyenda" class="nav-link" data-scroll-target="#d-gráfica-con-nombres-colores-y-leyenda"><span class="header-section-number">7.4.4</span> d) Gráfica con nombres, colores y leyenda</a></li>
   </ul></li>
-  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">6.5</span> Resultados</a>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">7.5</span> Resultados</a>
   <ul>
-  <li><a href="#gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" id="toc-gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" class="nav-link" data-scroll-target="#gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier"><span class="header-section-number">6.5.1</span> Gráfica 1 — PCoA con todos los datos (incluyendo el outlier)</a></li>
-  <li><a href="#gráfica-2-pcoa-sin-la-observación-atípica" id="toc-gráfica-2-pcoa-sin-la-observación-atípica" class="nav-link" data-scroll-target="#gráfica-2-pcoa-sin-la-observación-atípica"><span class="header-section-number">6.5.2</span> Gráfica 2 — PCoA sin la observación atípica</a></li>
-  <li><a href="#gráfica-3-pcoa-con-colores-por-sexo" id="toc-gráfica-3-pcoa-con-colores-por-sexo" class="nav-link" data-scroll-target="#gráfica-3-pcoa-con-colores-por-sexo"><span class="header-section-number">6.5.3</span> Gráfica 3 — PCoA con colores por sexo</a></li>
-  <li><a href="#gráfica-4-pcoa-con-nombres-un-solo-color" id="toc-gráfica-4-pcoa-con-nombres-un-solo-color" class="nav-link" data-scroll-target="#gráfica-4-pcoa-con-nombres-un-solo-color"><span class="header-section-number">6.5.4</span> Gráfica 4 — PCoA con nombres (un solo color)</a></li>
-  <li><a href="#gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" id="toc-gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" class="nav-link" data-scroll-target="#gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final"><span class="header-section-number">6.5.5</span> Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)</a></li>
+  <li><a href="#gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" id="toc-gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" class="nav-link" data-scroll-target="#gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier"><span class="header-section-number">7.5.1</span> Gráfica 1 — PCoA con todos los datos (incluyendo el outlier)</a></li>
+  <li><a href="#gráfica-2-pcoa-sin-la-observación-atípica" id="toc-gráfica-2-pcoa-sin-la-observación-atípica" class="nav-link" data-scroll-target="#gráfica-2-pcoa-sin-la-observación-atípica"><span class="header-section-number">7.5.2</span> Gráfica 2 — PCoA sin la observación atípica</a></li>
+  <li><a href="#gráfica-3-pcoa-con-colores-por-sexo" id="toc-gráfica-3-pcoa-con-colores-por-sexo" class="nav-link" data-scroll-target="#gráfica-3-pcoa-con-colores-por-sexo"><span class="header-section-number">7.5.3</span> Gráfica 3 — PCoA con colores por sexo</a></li>
+  <li><a href="#gráfica-4-pcoa-con-nombres-un-solo-color" id="toc-gráfica-4-pcoa-con-nombres-un-solo-color" class="nav-link" data-scroll-target="#gráfica-4-pcoa-con-nombres-un-solo-color"><span class="header-section-number">7.5.4</span> Gráfica 4 — PCoA con nombres (un solo color)</a></li>
+  <li><a href="#gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" id="toc-gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" class="nav-link" data-scroll-target="#gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final"><span class="header-section-number">7.5.5</span> Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)</a></li>
   </ul></li>
-  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">6.6</span> Problemas Encontrados</a></li>
-  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">6.7</span> Aprendizaje</a></li>
+  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">7.6</span> Problemas Encontrados</a></li>
+  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">7.7</span> Aprendizaje</a></li>
   </ul>
 </nav>
     </div>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCoA</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></h1>
 <p class="subtitle lead">Análisis de Coordenadas Principales (PCoA)</p>
 </div>
 
@@ -283,8 +283,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="objetivo" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">6.1</span> Objetivo</h2>
+<section id="objetivo" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">7.1</span> Objetivo</h2>
 <ul>
 <li>Aprender a realizar un Análisis de Coordenadas Principales (PCoA) a partir de una <strong>matriz de distancias o disimilaridades</strong> entre individuos, lo que permite usar cualquier métrica de distancia y no solo la euclidiana.</li>
 <li>Calcular una <strong>matriz de disimilaridades</strong> entre individuos usando la métrica de Bray-Curtis, adecuada para datos de abundancias o medidas morfométricas no negativas.</li>
@@ -292,14 +292,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Visualizar los resultados en un diagrama de dispersión bidimensional.</li>
 </ul>
 </section>
-<section id="datos-utilizados" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="datos-utilizados"><span class="header-section-number">6.2</span> Datos Utilizados</h2>
+<section id="datos-utilizados" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="datos-utilizados"><span class="header-section-number">7.2</span> Datos Utilizados</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">descripción general</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">código R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">datos propios</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<section id="instalación-de-paquetes" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="instalación-de-paquetes"><span class="header-section-number">6.2.1</span> instalación de paquetes</h3>
+<section id="instalación-de-paquetes" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="instalación-de-paquetes"><span class="header-section-number">7.2.1</span> instalación de paquetes</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Abre un chunk de código R con el nombre/etiqueta "instalar-paquetes"</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -333,8 +333,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Solo se necesita ejecutar una vez. Por eso eval: false (no se corre al renderizar).</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="instalación-de-librerías" class="level3" data-number="6.2.2">
-<h3 data-number="6.2.2" class="anchored" data-anchor-id="instalación-de-librerías"><span class="header-section-number">6.2.2</span> instalación de librerías</h3>
+<section id="instalación-de-librerías" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="instalación-de-librerías"><span class="header-section-number">7.2.2</span> instalación de librerías</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Abre un chunk de código R con el nombre "cargar-paquetes"</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -429,10 +429,10 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </div>
 </section>
-<section id="procedimiento" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">6.3</span> Procedimiento</h2>
-<section id="calcular-la-matriz-de-disimilaridades" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="calcular-la-matriz-de-disimilaridades"><span class="header-section-number">6.3.1</span> Calcular la matriz de disimilaridades</h3>
+<section id="procedimiento" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">7.3</span> Procedimiento</h2>
+<section id="calcular-la-matriz-de-disimilaridades" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="calcular-la-matriz-de-disimilaridades"><span class="header-section-number">7.3.1</span> Calcular la matriz de disimilaridades</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-distancia</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -466,8 +466,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>dist_datos <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(datos2, <span class="at">method =</span> <span class="st">"bray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="calcular-el-pcoa" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="calcular-el-pcoa"><span class="header-section-number">6.3.2</span> Calcular el PCoA</h3>
+<section id="calcular-el-pcoa" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="calcular-el-pcoa"><span class="header-section-number">7.3.2</span> Calcular el PCoA</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-pcoa</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -504,8 +504,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> pcoa_datos[, <span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="eliminar-la-observación-atípica-renglón-41" class="level3" data-number="6.3.3">
-<h3 data-number="6.3.3" class="anchored" data-anchor-id="eliminar-la-observación-atípica-renglón-41"><span class="header-section-number">6.3.3</span> Eliminar la observación atípica (renglón 41)</h3>
+<section id="eliminar-la-observación-atípica-renglón-41" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="eliminar-la-observación-atípica-renglón-41"><span class="header-section-number">7.3.3</span> Eliminar la observación atípica (renglón 41)</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-outlier</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -526,8 +526,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">&lt;-</span> datos[<span class="sc">-</span><span class="dv">41</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="recalcular-el-pcoa-sin-la-observación-atípica" class="level3" data-number="6.3.4">
-<h3 data-number="6.3.4" class="anchored" data-anchor-id="recalcular-el-pcoa-sin-la-observación-atípica"><span class="header-section-number">6.3.4</span> Recalcular el PCoA sin la observación atípica</h3>
+<section id="recalcular-el-pcoa-sin-la-observación-atípica" class="level3" data-number="7.3.4">
+<h3 data-number="7.3.4" class="anchored" data-anchor-id="recalcular-el-pcoa-sin-la-observación-atípica"><span class="header-section-number">7.3.4</span> Recalcular el PCoA sin la observación atípica</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-pcoa-limpio</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -558,10 +558,10 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </section>
 </section>
-<section id="gráficas-personalizadas" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="gráficas-personalizadas"><span class="header-section-number">6.4</span> Gráficas personalizadas</h2>
-<section id="a-gráfica-con-colores-por-sexo" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="a-gráfica-con-colores-por-sexo"><span class="header-section-number">6.4.1</span> a) Gráfica con colores por sexo</h3>
+<section id="gráficas-personalizadas" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="gráficas-personalizadas"><span class="header-section-number">7.4</span> Gráficas personalizadas</h2>
+<section id="a-gráfica-con-colores-por-sexo" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="a-gráfica-con-colores-por-sexo"><span class="header-section-number">7.4.1</span> a) Gráfica con colores por sexo</h3>
 <p>Podemos usar dos colores (uno por sexo) para distinguir aquellas observaciones que fueron tomadas de mujeres o de hombres. Para ésto, necesitamos escribir nuestra propia función, que estará guardada en el objeto colores_sexo. Nuestra función utiliza condicionales, básicamente las instrucciones que le estamos dando a R se leen como: “busca a todo lo largo de la columna sexo, si encuentras la palabra mujer utiliza el color rosa, para todo lo demás utiliza el color azul”.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-colores-sexo</span></span>
@@ -637,8 +637,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </div>
 </section>
-<section id="b-gráfica-con-nombres-un-solo-color" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="b-gráfica-con-nombres-un-solo-color"><span class="header-section-number">6.4.2</span> b) Gráfica con nombres (un solo color)</h3>
+<section id="b-gráfica-con-nombres-un-solo-color" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="b-gráfica-con-nombres-un-solo-color"><span class="header-section-number">7.4.2</span> b) Gráfica con nombres (un solo color)</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-nombres</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -694,8 +694,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </div>
 </section>
-<section id="c-gráfica-con-nombres-y-colores-por-sexo" class="level3" data-number="6.4.3">
-<h3 data-number="6.4.3" class="anchored" data-anchor-id="c-gráfica-con-nombres-y-colores-por-sexo"><span class="header-section-number">6.4.3</span> c) Gráfica con nombres y colores por sexo</h3>
+<section id="c-gráfica-con-nombres-y-colores-por-sexo" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="c-gráfica-con-nombres-y-colores-por-sexo"><span class="header-section-number">7.4.3</span> c) Gráfica con nombres y colores por sexo</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-nombres-colores</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -734,8 +734,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </div>
 </section>
-<section id="d-gráfica-con-nombres-colores-y-leyenda" class="level3" data-number="6.4.4">
-<h3 data-number="6.4.4" class="anchored" data-anchor-id="d-gráfica-con-nombres-colores-y-leyenda"><span class="header-section-number">6.4.4</span> d) Gráfica con nombres, colores y leyenda</h3>
+<section id="d-gráfica-con-nombres-colores-y-leyenda" class="level3" data-number="7.4.4">
+<h3 data-number="7.4.4" class="anchored" data-anchor-id="d-gráfica-con-nombres-colores-y-leyenda"><span class="header-section-number">7.4.4</span> d) Gráfica con nombres, colores y leyenda</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-leyenda</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
@@ -785,10 +785,10 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 </section>
 </section>
-<section id="resultados" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="resultados"><span class="header-section-number">6.5</span> Resultados</h2>
-<section id="gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier"><span class="header-section-number">6.5.1</span> Gráfica 1 — PCoA con todos los datos (incluyendo el outlier)</h3>
+<section id="resultados" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="resultados"><span class="header-section-number">7.5</span> Resultados</h2>
+<section id="gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="gráfica-1-pcoa-con-todos-los-datos-incluyendo-el-outlier"><span class="header-section-number">7.5.1</span> Gráfica 1 — PCoA con todos los datos (incluyendo el outlier)</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-inicial</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -811,8 +811,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <p><strong>Interpretación:</strong> Los individuos se agrupan en el diagrama de la Coordenada 1 entre aproximadamente −0.05 y 0.05, mientras que existe un punto completamente aislado en el extremo izquierdo (Coordenada 1 ≈ −0.22). Este individuo, correspondiente al renglón 41 de la base de datos, tiene un perfil de medidas morfométricas muy diferente al del resto del grupo.</p>
 <p>El efecto del valor atípico <strong>distorsiona la escala del eje X</strong>, para acomodar ese punto, el eje abarca un rango de casi 0.28 unidades, lo que comprime toda la variación del grupo principal en apenas un tercio del espacio visual. <strong>Afecta el cálculo de las propias coordenadas principales</strong>, <code>cmdscale()</code> busca los ejes que mejor preservan las distancias entre todos los pares de individuos, incluyendo al outlier; su presencia redirige parte de la varianza explicada hacia el eje que lo separa del grupo, restando información sobre las diferencias internas del conjunto principal. Por estas razones es indispensable eliminar esa observación antes de interpretar el PCoA.</p>
 </section>
-<section id="gráfica-2-pcoa-sin-la-observación-atípica" class="level3" data-number="6.5.2">
-<h3 data-number="6.5.2" class="anchored" data-anchor-id="gráfica-2-pcoa-sin-la-observación-atípica"><span class="header-section-number">6.5.2</span> Gráfica 2 — PCoA sin la observación atípica</h3>
+<section id="gráfica-2-pcoa-sin-la-observación-atípica" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="gráfica-2-pcoa-sin-la-observación-atípica"><span class="header-section-number">7.5.2</span> Gráfica 2 — PCoA sin la observación atípica</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-sin-outlier</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -835,8 +835,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <p><strong>Interpretación:</strong> Los rangos de ambos ejes se han reducido a aproximadamente −0.06 a 0.06 en la Coordenada 1 y −0.02 a 0.04 en la Coordenada 2.</p>
 <p>La nube de puntos no forma clusters perfectamente separados, sino una distribución continua con mayor densidad en la zona central y algunos puntos en la periferia. Esto es consistente con datos morfométricos humanos de un mismo grupo de clase, espera observar variación continua entre individuos en lugar de grupos discretos. La <strong>Coordenada 1</strong> capta la dirección de mayor variación entre personas; individuos que difieren más en sus medidas morfométricas quedan más separados horizontalmente. La <strong>Coordenada 2</strong> capta la segunda dirección de variación, ortogonal (independiente) a la primera.</p>
 </section>
-<section id="gráfica-3-pcoa-con-colores-por-sexo" class="level3" data-number="6.5.3">
-<h3 data-number="6.5.3" class="anchored" data-anchor-id="gráfica-3-pcoa-con-colores-por-sexo"><span class="header-section-number">6.5.3</span> Gráfica 3 — PCoA con colores por sexo</h3>
+<section id="gráfica-3-pcoa-con-colores-por-sexo" class="level3" data-number="7.5.3">
+<h3 data-number="7.5.3" class="anchored" data-anchor-id="gráfica-3-pcoa-con-colores-por-sexo"><span class="header-section-number">7.5.3</span> Gráfica 3 — PCoA con colores por sexo</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-colores</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -860,8 +860,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <p><strong>Interpretación:</strong> Los puntos rosas (mujeres) tienden a aparecer con mayor frecuencia en la mitad izquierda del eje X, mientras que los puntos azules (hombres) tienden a concentrarse más hacia la derecha; esta separación parcial a lo largo de la Coordenada 1 sugiere que esa dirección captura, al menos en parte, diferencias morfométricas sistemáticas entre sexos.</p>
 <p>Sin embargo, existe una región de alta densidad alrededor del origen donde ambos colores se mezclan, esto indica que una parte sustancial del grupo tiene perfiles morfométricos similares independientemente del sexo. En el eje Y (Coordenada 2), los puntos de ambos sexos se distribuyen de forma parecida, sugiriendo que la segunda dimensión de variación no está relacionada con el sexo de manera tan clara como la primera. Este gráfico constituye la exploración visual preliminar antes de aplicar pruebas estadísticas formales como ANOSIM o PERMANOVA.</p>
 </section>
-<section id="gráfica-4-pcoa-con-nombres-un-solo-color" class="level3" data-number="6.5.4">
-<h3 data-number="6.5.4" class="anchored" data-anchor-id="gráfica-4-pcoa-con-nombres-un-solo-color"><span class="header-section-number">6.5.4</span> Gráfica 4 — PCoA con nombres (un solo color)</h3>
+<section id="gráfica-4-pcoa-con-nombres-un-solo-color" class="level3" data-number="7.5.4">
+<h3 data-number="7.5.4" class="anchored" data-anchor-id="gráfica-4-pcoa-con-nombres-un-solo-color"><span class="header-section-number">7.5.4</span> Gráfica 4 — PCoA con nombres (un solo color)</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -874,8 +874,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 </div>
 <p><strong>Interpretación:</strong> El diagrama ahora se puede observar <strong>trazabilidad individual</strong>. Las personas que aparecen en los bordes del diagrama son aquellas cuyo perfil morfométrico es más diferente al del grupo. Cuando dos nombres quedan muy juntos, significa que esas personas tienen medidas morfométricas muy parecidas entre sí en las 14 variables.</p>
 </section>
-<section id="gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" class="level3" data-number="6.5.5">
-<h3 data-number="6.5.5" class="anchored" data-anchor-id="gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final"><span class="header-section-number">6.5.5</span> Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)</h3>
+<section id="gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final" class="level3" data-number="7.5.5">
+<h3 data-number="7.5.5" class="anchored" data-anchor-id="gráfica-5-pcoa-con-nombres-colores-y-leyenda-versión-final"><span class="header-section-number">7.5.5</span> Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-final</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
@@ -908,8 +908,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <p>La interpretación integradora confirma el patrón descrito en la Gráfica 3: los nombres rosas (mujeres) se concentran relativamente más hacia la izquierda (Coordenada 1 negativa), mientras que muchos nombres azules (hombres) aparecen hacia la derecha (Coordenada 1 positiva), con un amplio traslape en la zona central. Esto es consistente con la existencia de <strong>diferencias morfométricas estadísticamente significativas entre sexos</strong> que se confirmarán en el tema de Pruebas de Hipótesis Multivariadas.</p>
 </section>
 </section>
-<section id="problemas-encontrados" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">6.6</span> Problemas Encontrados</h2>
+<section id="problemas-encontrados" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">7.6</span> Problemas Encontrados</h2>
 <ul>
 <li>No quedaba claro por qué era necesario separar las columnas de texto antes de calcular la matriz de distancias. La función <code>vegdist()</code> produce un error si se incluyen columnas no numéricas, lo que obligó a revisar la estructura del data frame con <code>str()</code> antes de continuar.</li>
 <li>Usar <code>grep()</code> dentro de <code>if()</code> no es la forma más intuitiva de hacer una condicional, pero facilita con <code>length(grep(...)) &gt; 0</code> preguntar: “¿encontré este patrón la base de datos?”.</li>
@@ -918,8 +918,8 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <li>La observación atípica requirió buscar manualmente cuál fila tenía la Coordenada 1 más negativa. Una forma más eficiente habría sido usar <code>which.min(pcoa_datos[,1])</code>.</li>
 </ul>
 </section>
-<section id="aprendizaje" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">6.7</span> Aprendizaje</h2>
+<section id="aprendizaje" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">7.7</span> Aprendizaje</h2>
 <ul>
 <li>El PCA descompone la varianza de la matriz de datos original; el PCoA descompone una matriz de distancias.</li>
 <li>La métrica de Bray-Curtis es preferible a la distancia euclidiana para datos morfométricos: la euclidiana es sensible a la escala absoluta de las variables, mientras que Bray-Curtis trabaja con diferencias relativas y está acotada entre 0 y 1, lo que la hace comparable entre estudios y conjuntos de datos con distintas unidades.</li>
@@ -1337,12 +1337,12 @@ Successfully installed 1 package in 6.7 milliseconds.</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../pca/pca.html" class="pagination-link" aria-label="PCA">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">PCA</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCA</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../multivariate-hypotheses/multivariate-hypotheses.html" class="pagination-link" aria-label="Pruebas de Hipótesis Multivariadas">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

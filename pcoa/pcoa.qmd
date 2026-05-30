@@ -29,27 +29,6 @@ execute:
 
 ## paquetes
 
-### instalación de paquetes
-
-```{r instalar-paquetes}
-
-# Abre un chunk de código R con el nombre/etiqueta "instalar-paquetes"
-
-#| eval: false
-# Opción de chunk: NO ejecuta este código al renderizar el documento
-
-#| echo: true
-# Opción de chunk: SÍ muestra el código fuente en el documento final
-
-install.packages("vegan")
-install.packages("here")
-
-# Descarga e instala el paquete "vegan" desde CRAN en el sistema.
-# Solo se necesita ejecutar una vez. Por eso eval: false (no se corre al renderizar).
-
-```
-
-### instalación de librerías
 
 ```{r cargar-paquetes}
 
