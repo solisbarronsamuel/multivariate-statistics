@@ -779,6 +779,7 @@ ggpairs(iris1)
 El biplot combina en una sola gráfica el mapa de variables (círculo de correlaciones) y el mapa de individuos (puntos por especie), y es la visualización más completa del PCA.
 
 ```{r biplot}
+
 #| eval: false
 
 # fviz_pca_biplot() superpone variables e individuos en el plano PC1–PC2.
@@ -793,6 +794,7 @@ El biplot combina en una sola gráfica el mapa de variables (círculo de correla
 # anotados directamente, evitando que el lector deba consultar la tabla de eigenvalores.
 # colour, shape y fill con el mismo título "Especies" unifican las tres leyendas
 # generadas por los distintos estéticos en una sola leyenda compacta.
+
 fviz_pca_biplot(
   pcaIris,
   habillage   = iris$Species,
@@ -807,104 +809,103 @@ fviz_pca_biplot(
     shape  = "Especies",
     fill   = "Especies"
   )
-```
 
----
+```
 
 ## Resultados
 
-::: {.callout-note}
-En esta sección el código se ejecuta y el resultado se interpreta en detalle. Los gráficos se acompañan de explicaciones que conectan la salida visual con los fundamentos matemáticos desarrollados en el Procedimiento.
-:::
-
 ```{r res-setup}
-#| echo: false
 
-# Carga silenciosa de los paquetes y cálculo del objeto PCA para los bloques
-# de resultados. Se usa echo: false porque estas líneas no son objeto de
-# explicación en la sección de resultados; la carga ya fue documentada
-# en la sección de código.
-library(FactoMineR)
-library(factoextra)
-library(GGally)
+#| echo: false
 
 # PCA() sobre las cuatro variables numéricas de iris, con estandarización
 # por defecto (scale.unit = TRUE). graph = FALSE suprime los gráficos
 # automáticos para controlar la presentación en el documento.
+
 pcaIris <- PCA(iris1, graph = FALSE)
+
 ```
 
-### Tabla de eigenvalores y varianza explicada
+#### Tabla de eigenvalores y varianza explicada
 
 ```{r res-eigenvalores}
+
 #| echo: false
 
 # pcaIris$eig devuelve la tabla de eigenvalores con tres columnas:
 # eigenvalue, percentage of variance y cumulative percentage.
+
 pcaIris$eig
+
 ```
 
 **Interpretación:** La tabla muestra los cuatro eigenvalores del PCA sobre `iris` estandarizado. El **primer componente principal (Dim.1)** captura el 72.96% de la varianza total, con un eigenvalor de 2.918. El **segundo componente (Dim.2)** añade el 22.85%, con un eigenvalor de 0.914. Juntos, **PC1 y PC2 acumulan el 95.81% de la varianza total**, lo que significa que proyectar los datos desde el espacio original de cuatro dimensiones al plano bidimensional PC1–PC2 conserva prácticamente toda la información estructural. Los componentes PC3 y PC4 retienen apenas el 4.19% restante, por lo que su eliminación representa una pérdida de información despreciable.
 
 Este resultado tiene una interpretación directa en términos de la propiedad de conservación de la traza: la suma de los cuatro eigenvalores (2.918 + 0.914 + 0.147 + 0.021 = 4.000) es igual a la suma de las varianzas de las variables estandarizadas — que por construcción todas son 1, sumando $p = 4$.
 
----
-
 ### Screeplot
 
 ```{r res-screeplot}
+
 #| echo: false
 #| fig-cap: "Screeplot: el primer componente captura el 73% de la varianza y el segundo el 22.9%. El codo visible entre PC1 y PC2 confirma que dos componentes son suficientes para representar los datos."
 
 # fviz_screeplot() grafica la varianza explicada (%) de cada componente
 # como barras. La línea superpuesta muestra la tendencia de decaimiento.
+
 fviz_screeplot(pcaIris)
+
 ```
 
 **Interpretación:** El screeplot confirma visualmente lo que muestra la tabla de eigenvalores. Existe un **codo pronunciado** entre PC1 (72.96%) y PC2 (22.85%): la caída desde PC1 a PC2 ya es notable, y desde PC2 a PC3 la varianza adicional se vuelve casi plana. El criterio del codo — uno de los métodos más utilizados para decidir cuántos componentes retener — apunta claramente a conservar los dos primeros. El criterio alternativo de Kaiser (retener los componentes con eigenvalor mayor que 1, equivalente a retener componentes que capturan más varianza que una sola variable estandarizada) también selecciona exactamente dos componentes, ya que solo los eigenvalores de PC1 (2.918) y PC2 (0.914) superan la unidad.
 
----
-
-### Variables — círculo de correlaciones
+#### Variables — círculo de correlaciones
 
 ```{r res-var-contrib}
+
 #| echo: false
 #| fig-cap: "Círculo de correlaciones. Las variables de pétalo dominan PC1; el ancho del sépalo es el principal contribuyente a PC2."
 
 # fviz_pca_var() dibuja cada variable como un vector desde el origen en el
 # plano PC1–PC2. col.var = "contrib" colorea los vectores según su
 # contribución al plano: gradiente de azul (bajo) a rojo (alto).
+
 fviz_pca_var(pcaIris, col.var = "contrib") +
   labs(
     x      = "Componente Principal 1 (72.96%)",
     y      = "Componente Principal 2 (22.85%)",
     colour = "Contribución (%)"
   )
+
 ```
 
 **Interpretación:** El círculo de correlaciones es el gráfico de variables del PCA y permite leer tres tipos de información simultáneamente. La **longitud del vector** indica la calidad de representación de cada variable en el plano PC1–PC2: los cuatro vectores son largos y alcanzan casi el círculo unitario, confirmando que todas las variables están bien representadas con solo dos componentes. La **dirección del vector** indica su correlación con los componentes: `Petal.Length` y `Petal.Width` apuntan casi horizontalmente hacia la derecha, indicando una correlación muy alta con PC1 y una contribución prácticamente nula a PC2. `Sepal.Length` apunta en una dirección similar pero con un ángulo ligeramente mayor, mostrando que también está dominada por PC1 aunque contribuye algo más a PC2. `Sepal.Width` es el caso más llamativo: su vector apunta hacia arriba y ligeramente hacia la izquierda, casi perpendicular a los vectores de las variables de pétalo, lo que indica que captura información **independiente** de las demás variables — información que se concentra principalmente en PC2. El **ángulo entre vectores** refleja la correlación entre variables: `Petal.Length` y `Petal.Width` tienen vectores casi paralelos, confirmando su correlación de Pearson de 0.96.
 
----
-
-### Contribución de variables por componente
+#### Contribución de variables por componente
 
 ```{r res-contrib-pc1}
+
 #| echo: false
 #| fig-cap: "Contribución de variables a PC1. Petal.Length y Petal.Width son las más influyentes, seguidas de Sepal.Length."
 
 # fviz_contrib() muestra la contribución porcentual de cada variable a PC1.
 # La línea roja marca la contribución esperada bajo igualdad: 100/4 = 25%.
+
 fviz_contrib(pcaIris, choice = "var", axes = 1) +
   labs(y = "Contribución a PC1 (%)")
+
 ```
 
 ```{r res-contrib-pc2}
+
 #| echo: false
 #| fig-cap: "Contribución de variables a PC2. Sepal.Width domina claramente el segundo componente."
 
 # axes = 2 cambia el análisis al segundo componente principal.
+
 fviz_contrib(pcaIris, choice = "var", axes = 2) +
   labs(y = "Contribución a PC2 (%)")
+
 ```
 
 **Interpretación:** La línea roja horizontal en cada gráfico marca el umbral de contribución equitativa (100/4 = 25%). Las variables que superan ese umbral son las que realmente **definen** ese componente.
@@ -913,27 +914,30 @@ Para **PC1**, `Petal.Length` y `Petal.Width` contribuyen aproximadamente un 40% 
 
 Para **PC2**, la situación se invierte: `Sepal.Width` domina con cerca del 70% de la contribución, mientras que las variables de pétalo apenas aportan. `Sepal.Length` también tiene una contribución relevante. PC2 captura principalmente la **variación en el ancho del sépalo**, que es la variable que menos correlaciona con las demás (como confirmó el círculo de correlaciones).
 
----
-
-### Individuos en el espacio PCA
+#### Individuos en el espacio PCA
 
 ```{r res-ind-contrib}
+
 #| echo: false
-#| fig-cap: "Distribución de individuos coloreados por su contribución al plano PCA. Los puntos más rojos son los más influyentes."
+#| fig-cap: "Distribución de individuos coloreados por su contribución al plano PCA. Los puntos más oscuros son los más influyentes."
 
 # col.ind = "contrib" colorea cada punto según cuánto contribuye esa
 # observación a la construcción del plano PC1–PC2.
+
 fviz_pca_ind(pcaIris, col.ind = "contrib") +
   labs(x = "PC1 (72.96%)", y = "PC2 (22.85%)", colour = "Contribución (%)")
+
 ```
 
 ```{r res-ind-species}
+
 #| echo: false
 #| fig-cap: "Individuos coloreados por especie con elipses de confianza al 95%. Setosa está completamente separada de las otras dos especies."
 
 # habillage = iris$Species colorea los puntos por especie sin que Species
 # haya participado en el cálculo del PCA — es una validación externa.
 # addEllipses = TRUE dibuja elipses de concentración al 95% por grupo.
+
 fviz_pca_ind(
   pcaIris,
   habillage   = iris$Species,
@@ -941,51 +945,56 @@ fviz_pca_ind(
   geom        = "point"
 ) +
   labs(x = "PC1 (72.96%)", y = "PC2 (22.85%)", color = "Especie")
+
 ```
 
 **Interpretación:** El mapa de individuos revela la estructura grupal que el PCA descubrió **sin haber utilizado la variable Species en ningún momento del cálculo**. *Setosa* forma un clúster perfectamente separado en el extremo izquierdo del eje PC1 (valores bajos en PC1, correspondientes a pétalos pequeños), sin ningún solapamiento con las otras dos especies. Esta separación es tan nítida que las elipses de *setosa* y del par *versicolor*–*virginica* no se tocan en absoluto. *Versicolor* ocupa una posición intermedia y *virginica* está desplazada hacia valores más altos de PC1 (pétalos más grandes), aunque sus elipses se solapan levemente en la región límite, indicando que algunas flores son difíciles de distinguir con estas cuatro mediciones. El eje PC2 separa parcialmente ambas species en sentido vertical (mayor dispersión en el ancho del sépalo), pero su poder discriminante es menor que el de PC1. Este resultado es completamente coherente con los hallazgos del MANOVA del capítulo anterior: la mayor diferencia entre grupos reside en las variables de pétalo.
 
----
-
-### Contribución de individuos
+#### Contribución de individuos
 
 ```{r res-ind-contrib-pc1}
+
 #| echo: false
 #| fig-cap: "Observaciones con mayor influencia sobre PC1."
 
 fviz_contrib(pcaIris, choice = "ind", axes = 1)
+
 ```
 
 ```{r res-ind-contrib-pc2}
+
 #| echo: false
 #| fig-cap: "Top 20 observaciones con mayor influencia sobre PC2."
 
 # top = 20 limita la visualización a las 20 observaciones más influyentes,
 # evitando saturar el eje X con las 150 etiquetas del dataset completo.
+
 fviz_contrib(pcaIris, choice = "ind", axes = 2, top = 20)
+
 ```
 
 **Interpretación:** La contribución de individuos identifica las observaciones que ejercen mayor influencia sobre la orientación de cada componente. Para **PC1**, las observaciones más influyentes son aquellas ubicadas en los extremos del eje: flores de *setosa* con pétalos muy pequeños (extremo izquierdo) y flores de *virginica* con pétalos muy grandes (extremo derecho). Estas observaciones extremas son las que "estiran" el primer componente y definen su dirección. Para **PC2**, las observaciones más influyentes son flores con valores inusualmente altos o bajos en `Sepal.Width` — la variable que domina este componente. Identificar estas observaciones es útil en análisis posteriores: si alguna de ellas corresponde a un error de medición, su corrección podría alterar ligeramente la orientación de los componentes.
 
----
 
-### Matriz de correlación
+#### Matriz de correlación
 
 ```{r res-cor}
+
 #| echo: false
 
 # cor() calcula la matriz de correlación de Pearson entre las cuatro
 # variables numéricas de iris1.
+
 cor(iris1)
+
 ```
 
 **Interpretación:** La matriz de correlación cuantifica numéricamente los patrones que visualizaron el círculo de correlaciones y el gráfico `ggpairs`. `Petal.Length` y `Petal.Width` tienen una correlación de **0.963**, la más alta del dataset — prácticamente colineales, lo que explica que ambas apunten casi en la misma dirección en el círculo de correlaciones y que juntas dominen PC1. `Sepal.Length` correlaciona moderadamente con las variables de pétalo (0.872 y 0.818), lo que la ancla también a PC1 pero con menor peso. `Sepal.Width` tiene correlaciones bajas o negativas con todas las demás variables (−0.118 con `Sepal.Length`, −0.428 con `Petal.Length`), lo que explica que su vector apunte en una dirección perpendicular en el círculo de correlaciones y que domine PC2. Esta estructura de correlaciones justifica plenamente la reducción a dos componentes: PC1 captura la covariación compartida entre las tres variables correlacionadas, y PC2 captura la variación residual de `Sepal.Width` que no está explicada por el tamaño del pétalo.
 
----
-
-### Exploración visual de pares
+#### Exploración visual de pares
 
 ```{r res-ggpairs}
+
 #| echo: false
 #| fig-cap: "Matriz de gráficos ggpairs: distribuciones, dispersión y correlaciones."
 #| fig-width: 8
@@ -996,15 +1005,15 @@ cor(iris1)
 # Triángulo superior: coeficientes de correlación de Pearson con asteriscos
 # de significancia (* p<0.05, ** p<0.01, *** p<0.001).
 ggpairs(iris1)
+
 ```
 
 **Interpretación:** La matriz `ggpairs` integra en una sola figura toda la información que la matriz de correlación resume numéricamente. Las **densidades de la diagonal** revelan que `Petal.Length` y `Petal.Width` tienen distribuciones claramente bimodales, una firma visual de la presencia de dos grupos bien separados (en este caso, *setosa* frente a las otras dos especies). `Sepal.Width` tiene la distribución más cercana a la normal entre las cuatro variables, lo que es consistente con su baja correlación con las demás. Los **scatter plots del triángulo inferior** muestran relaciones lineales fuertes entre las variables de pétalo (prácticamente una línea recta con dos nubes separadas), mientras que el par `Sepal.Width`–`Petal.Length` muestra la relación más dispersa y con menor tendencia lineal. Los **coeficientes de correlación del triángulo superior** coinciden con los valores de la matriz `cor()` calculada anteriormente, con tres asteriscos (`***`) en todas las celdas, indicando que todas las correlaciones son estadísticamente significativas en el nivel $p < 0.001$.
 
----
-
-### Biplot
+#### Biplot
 
 ```{r res-biplot}
+
 #| echo: false
 #| fig-cap: "Biplot: variables (vectores) e individuos (puntos por especie) en el mismo plano principal."
 #| fig-width: 8
@@ -1013,6 +1022,7 @@ ggpairs(iris1)
 # fviz_pca_biplot() superpone el mapa de variables y el mapa de individuos
 # en el plano PC1–PC2. Es la visualización más informativa del PCA porque
 # permite leer simultáneamente la estructura de variables y de individuos.
+
 fviz_pca_biplot(
   pcaIris,
   habillage   = iris$Species,
@@ -1027,31 +1037,25 @@ fviz_pca_biplot(
     shape  = "Especies",
     fill   = "Especies"
   )
+
 ```
 
 **Interpretación:** El biplot integra ambas perspectivas del PCA en una única visualización. Los **vectores** (variables) y los **puntos** (individuos) comparten el mismo sistema de coordenadas, lo que permite leer relaciones entre ellos directamente. Las observaciones de *setosa* se agrupan en el extremo izquierdo del eje PC1, en la dirección opuesta a los vectores de `Petal.Length` y `Petal.Width`, lo que indica que *setosa* tiene valores bajos en estas variables. *Virginica* se ubica en el extremo derecho, en la misma dirección que los vectores de pétalo, confirmando que tiene pétalos más grandes que las demás especies. *Versicolor* ocupa la posición intermedia. La proyección de cada grupo sobre el vector de `Sepal.Width` (eje aproximadamente vertical) muestra que *setosa* tiende hacia valores más altos en esta variable — una observación biológica conocida sobre la especie. El biplot también revela que las observaciones más alejadas del origen (mayor contribución al PCA) son precisamente las de *setosa* en PC1 y algunas flores con `Sepal.Width` inusualmente alto o bajo en PC2, lo que es consistente con los gráficos de contribución de individuos.
-
----
 
 ## Problemas Encontrados
 
 - La comprensión de la diferencia entre `prcomp()` y `PCA()` de FactoMineR requirió revisión adicional. Ambas funciones producen el mismo análisis, pero los objetos de salida tienen estructuras completamente distintas: `prcomp()` almacena los scores en `$x` y los loadings en `$rotation`, mientras que FactoMineR los almacena en `$ind$coord` y `$var$coord` respectivamente. Esto generó confusión al intentar acceder a los resultados.
 - Al llamar `prcomp()` sin el argumento `scale. = TRUE`, la varianza del PCA estaba dominada por `Petal.Length`, produciendo un primer componente que solo reflejaba esa variable. El error se detectó al comparar los porcentajes de varianza explicada con los de la versión estandarizada: sin escalar, PC1 capturaba más del 92% de la varianza, mientras que con escalado captura el 73%, un resultado más equilibrado.
-- La función `fviz_pca_biplot()` generó una advertencia sobre las leyendas al usar `habillage` con `addEllipses = TRUE`: los tres estéticos `colour`, `shape` y `fill` deben tener exactamente el mismo título en `labs()` para que R los fusione en una sola leyenda. Si se omite cualquiera de los tres o se le da un nombre diferente, aparecen tres leyendas separadas.
-- La interpretación del signo de los vectores propios causó confusión inicial: los signos pueden estar invertidos entre `prcomp()` y `eigen()` sin que esto afecte el resultado — tanto $\mathbf{v}$ como $-\mathbf{v}$ son soluciones válidas de la ecuación de valores propios. Lo relevante es la magnitud y la dirección relativa entre vectores, no el signo absoluto.
-- Los gráficos de `ggpairs()` con variables bimodales como `Petal.Length` fueron inicialmente interpretados como errores de los datos, antes de comprender que la bimodalidad es una señal de la presencia de grupos con características morfológicas muy distintas (*setosa* vs. el par *versicolor*–*virginica*).
-
----
 
 ## Aprendizaje
 
-- El PCA no es simplemente una técnica de reducción de dimensionalidad: es una transformación algebraica rigurosa que maximiza la varianza de las proyecciones. Comprender la cadena suma de cuadrados → varianza → covarianza → eigendescomposición hace que los resultados sean interpretables y no solo recetas de código.
-- La estandarización previa al PCA no es un paso automático que siempre debe aplicarse: la decisión depende de si las diferencias de escala entre variables tienen significado sustantivo o son simplemente artefactos de las unidades de medida. En `iris`, aunque todas las variables están en centímetros, las diferencias de varianza son lo suficientemente grandes como para justificar la estandarización.
-- Los eigenvalores no son solo números en una tabla: son exactamente la varianza de los datos proyectados sobre cada componente principal. Esta equivalencia, demostrada mediante el lagrangiano en la sección de fundamentos, hace que la tabla `$eig` tenga un significado matemático preciso y no meramente descriptivo.
-- El círculo de correlaciones y el biplot son complementarios pero no redundantes: el primero se centra en las relaciones entre variables, y el segundo integra variables e individuos en un mismo espacio para leer relaciones cruzadas. Combinar ambos gráficos en el análisis produce una interpretación mucho más completa.
-- Que el PCA de `iris` recupere la estructura de especies sin haber utilizado la variable `Species` en ningún momento es una demostración poderosa de que las cuatro variables morfológicas capturan información suficiente para discriminar entre grupos. Este resultado anticipa y justifica el uso de análisis discriminante en los capítulos posteriores.
+- El PCA es una transformación algebraica que maximiza la varianza de las proyecciones. Comprender la cadena suma de cuadrados → varianza → covarianza → eigenvectores → eigenvalores hace que los resultados sean interpretables.
+- La estandarización previa al PCA depende de si las diferencias de escala entre variables tienen significado sustantivo o son simplemente artefactos de las unidades de medida. En `iris`, aunque todas las variables están en centímetros, las diferencias de varianza son lo suficientemente grandes como para justificar la estandarización.
+- Los eigenvalores son la varianza de los datos sobre cada componente principal.
+- El círculo de correlaciones y el biplot son complementarios pero no redundantes: el primero se centra en las relaciones entre variables, y el segundo integra variables e individuos en un mismo espacio para leer relaciones cruzadas.
+- Que el PCA de `iris` recupere la estructura de especies sin haber utilizado la variable `Species` en ningún momento es una demostración poderosa de que las cuatro variables morfológicas capturan información suficiente para discriminar entre grupos. 
 - La diferencia entre `$x` (prcomp) y `$ind$coord` (FactoMineR) para los scores, y entre `$rotation` y `$var$coord` para los loadings, es fuente de errores frecuentes. Documentar explícitamente la estructura del objeto al inicio del análisis evita confusiones al acceder a los resultados.
 
 ---
 
-*Bitácora de Cómputo — Estadística Descriptiva Multivariada*
+*Bitácora de Cómputo — PCA*
