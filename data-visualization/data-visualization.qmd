@@ -32,32 +32,23 @@ execute:
 
 ::: {.panel-tabset}
 
-## paquetes
-
-```{r instalar-paquetes}
-
-#| eval: false
-#| echo: true
-
-install.packages(c("ggplot2", "GGally", "pheatmap", "aplpack", "dplyr", "here"))
-
-```
+## Paquetes
 
 ```{r cargar-paquetes}
 
 #| eval: true
 #| echo: true
 
-library(ggplot2)
-library(GGally)
-library(pheatmap)
-library(aplpack)
-library(dplyr)
-library(here)
+library(ggplot2)   # Visualización de datos (gramática de gráficos)
+library(GGally)    # Extensión de ggplot2; matriz de gráficas con ggpairs()
+library(pheatmap)  # Mapas de calor con clustering jerárquico
+library(aplpack)   # Gráficas especializadas, incluyendo Caras de Chernoff
+library(dplyr)     # Manipulación de datos (filtrar, agrupar, resumir, etc.)
+library(here)      # Rutas de archivos reproducibles desde la raíz del proyecto
 
 ```
 
-## descripción general
+## Descripción general
 
 La base de datos **`mtcars`** incluida en R base. Proviene de la revista *Motor Trend* (1974) y contiene datos de pruebas de rendimiento para 32 automóviles. No tiene una variable categórica principal, aunque `cyl` (cilindros: 4, 6 u 8) suele usarse como factor de agrupación. Las variables utilizadas en el heatmap son:
 
@@ -75,9 +66,11 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 - `Petal.Length` — longitud del pétalo (cm).
 - `Petal.Width` — ancho del pétalo (cm).
 
+URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
+
 La base de datos `datos-multivariada`. Proviene de las mediciones generadas durante el curso con variables morfométricas medidas en el grupo e incluye las mediciones de otras generaciones. Contiene una columna de identificador (columna 1), una columna de sexo (columna 2) y variables numéricas en las columnas restantes.
 
-## código R
+## Código R
 
 ```{r}
 
@@ -823,4 +816,4 @@ Las Caras de Chernoff son especialmente útiles como herramienta exploratoria po
 
 ---
 
-*Bitácora de Cómputo — Estadística Descriptiva Multivariada*
+*Bitácora de Cómputo — Data Visualization en R*

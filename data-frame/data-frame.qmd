@@ -31,18 +31,6 @@ Extraer subconjuntos de un data frame de dos maneras distintas: usando la sintax
 
 ```{r}
 
-#| label: instalar-paquetes
-#| eval: false   
-#| echo: true   
-
-# Instalar el paquete dplyr (correr solo una vez)
-
-install.packages("dplyr")
-
-```
-
-```{r}
-
 #| label: cargar-paquetes
 #| eval: true   
 #| echo: true    
@@ -61,6 +49,8 @@ La base de datos utilizada es `iris`, incluida en R base. Proviene de las observ
 - `Sepal.Width` — ancho del sépalo (cm).
 - `Petal.Length` — longitud del pétalo (cm).
 - `Petal.Width` — ancho del pétalo (cm).
+
+URL: https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x
 
 La base de datos `ChickWeight`, incluida en R base, proviene de un experimento  nutricional descrito por Crowder & Hand (1990) en el que se evaluó el efecto de cuatro dietas proteicas sobre el crecimiento de pollitos. La variable de agrupación (factor) es `Diet` (dietas 1, 2, 3 y 4), con mediciones repetidas por sujeto a lo largo del tiempo. Las variables del conjunto son:
 
@@ -151,7 +141,7 @@ La sintaxis general de indexación en R es `data[filas, columnas]`. Dejar un esp
 
 #| label: sintaxis-general
 #| echo: true
-#| eval: false # ← Esto evita que se ejecute y busque el objeto 'datos'
+#| eval: false
 
 datos[filas, columnas]   # seleccionar filas y columnas específicas
 datos[ , ]               # conservar todas las filas y todas las columnas
@@ -711,4 +701,4 @@ iris %>%
 
 ---
 
-*Bitácora de Cómputo — Álgebra Matricial en R*
+*Bitácora de Cómputo — Data Frame en R*
