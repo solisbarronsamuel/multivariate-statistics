@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Samuel Solís Barrón">
+
+<title>8&nbsp; Pruebas de Hipótesis Multivariadas – Bitácora de Estadística Multivariada con R</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../pcoa/pcoa.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-10cd32ddddd1e7f9444b54219d42bcb8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="../site_libs/datatables-binding-0.34.0/datatables.js"></script>
+
+<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../multivariate-hypotheses/multivariate-hypotheses.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Bitácora de Estadística Multivariada con R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Prefacio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../matrix-algebra/matrix-algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Matrix Algebra</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../data-frame/data-frame.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../data-visualization/data-visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visualización de Datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../manova/manova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">MANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pca/pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">PCA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pcoa/pcoa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../multivariate-hypotheses/multivariate-hypotheses.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo"><span class="header-section-number">8.1</span> Objetivo</a></li>
+  <li><a href="#datos-utilizados" id="toc-datos-utilizados" class="nav-link" data-scroll-target="#datos-utilizados"><span class="header-section-number">9</span> Datos Utilizados</a>
+  <ul class="collapse">
+  <li><a href="#procedimiento" id="toc-procedimiento" class="nav-link" data-scroll-target="#procedimiento"><span class="header-section-number">9.1</span> Procedimiento</a>
+  <ul class="collapse">
+  <li><a href="#a-anosim-análisis-de-similitud" id="toc-a-anosim-análisis-de-similitud" class="nav-link" data-scroll-target="#a-anosim-análisis-de-similitud"><span class="header-section-number">9.1.1</span> a) ANOSIM — Análisis de Similitud</a></li>
+  <li><a href="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones" id="toc-b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="nav-link" data-scroll-target="#b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">9.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</a></li>
+  </ul></li>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">9.2</span> Resultados</a>
+  <ul class="collapse">
+  <li><a href="#resultado-del-anosim" id="toc-resultado-del-anosim" class="nav-link" data-scroll-target="#resultado-del-anosim"><span class="header-section-number">9.2.1</span> Resultado del ANOSIM</a></li>
+  </ul></li>
+  <li><a href="#resultado-del-permanova" id="toc-resultado-del-permanova" class="nav-link" data-scroll-target="#resultado-del-permanova"><span class="header-section-number">9.3</span> Resultado del PERMANOVA</a></li>
+  <li><a href="#problemas-encontrados" id="toc-problemas-encontrados" class="nav-link" data-scroll-target="#problemas-encontrados"><span class="header-section-number">9.4</span> Problemas Encontrados</a></li>
+  <li><a href="#aprendizaje" id="toc-aprendizaje" class="nav-link" data-scroll-target="#aprendizaje"><span class="header-section-number">9.5</span> Aprendizaje</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pruebas de Hipótesis Multivariadas</span></h1>
+<p class="subtitle lead">Pruebas de Hipótesis con Datos Multivariados: ANOSIM y PERMANOVA</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Samuel Solís Barrón </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="objetivo" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">8.1</span> Objetivo</h2>
+<ul>
+<li>Comprender las <strong>pruebas de permutación</strong> como alternativa no paramétrica a las pruebas clásicas (ANOVA, MANOVA) cuando no se cumplen los supuestos de normalidad multivariada.</li>
+<li>Aprender a usar <strong>ANOSIM</strong> para comparar la disimilaridad entre grupos con la disimilaridad dentro de grupos.</li>
+<li>Aprender a usar <strong>PERMANOVA</strong> para probar si una o más variables explicativas tienen efecto sobre la composición multivariada.</li>
+</ul>
+</section>
+<section id="datos-utilizados" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Datos Utilizados</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Paquetes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Descripción general</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Código R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Datos propios</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">dune</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">dune.env</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: load-packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)   <span class="co"># Análisis multivariado: vegdist(), anosim(), adonis2()</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)      <span class="co"># Tablas interactivas en HTML con datatable()</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)    <span class="co"># Rutas reproducibles desde la raíz del proyecto</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)   <span class="co"># Manipulación de datos (filter, select, mutate, etc.)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Se utilizaron dos fuentes de datos en este tema.</p>
+<p>Para el <strong>ANOSIM</strong> se emplearon los datos morfométricos propios del semestre 2026 (<code>multivariate-data.csv</code>), con la variable de agrupamiento <code>sexo</code> (columna 2). Se utilizan los mismos datos del PCoA porque las pruebas de hipótesis multivariadas son el paso estadístico natural después de la exploración visual por ordenamiento.</p>
+<p>Para el <strong>PERMANOVA</strong> se usaron los conjuntos <code>dune</code> y <code>dune.env</code>, incluidos en el paquete <code>vegan</code>. <code>dune</code> contiene la abundancia de 30 especies de plantas en 20 sitios, y <code>dune.env</code> contiene las variables de manejo y uso de cada sitio.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: data-load-display</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Datos propios del semestre ────────────────────────────────────────────────</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read.csv() lee el archivo y lo convierte en un data frame.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dec = ","  es necesario en archivos generados con configuración regional</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#             en español, donde la coma es el separador decimal.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sep = ";"  se usa si el archivo delimita columnas con punto y coma</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#             (formato CSV europeo). Ajustar a "," si el delimitador es coma.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># stringsAsFactors = FALSE evita la conversión automática de texto a factores,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#             lo que da mayor control sobre el tratamiento de variables categóricas.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"datos-multivariada.csv"</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">dec              =</span> <span class="st">","</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep              =</span> <span class="st">","</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Datos de dunas (incluidos en vegan) ───────────────────────────────────────</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># data() carga conjuntos de datos de paquetes instalados sin leer archivos externos.</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># dune:     20 sitios × 30 especies (abundancias en escala 0-9).</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># dune.env: 20 sitios × 5 variables ambientales y de manejo.</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(dune)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(dune.env)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-bf2c26fc1ec33e4b9396" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-bf2c26fc1ec33e4b9396">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99"],["carmen","isabel","enoe","ariadna","edoardo","lizbeth","jorge","javier","fernanda","paloma","francisco","andres","cindy","gabriela","ana","daniela","edith","sara","gerardo","emilio","carlos","paloma1","michelle","mayela","diego","fer","tere","marco","karen","lucy","eric","susana","andrea","pablo","erick","alex","isis","israel","gude","armando","nahum","hatziry","naomi","ceci","raul","oswaldo","jose","olga","felix","pablo1","fer1","adrian","antonio","luis","julian","regina","ernesto","emilia","daniela1","susana1","kevin","ximena","antonio1","mayra","ale","janetzy","yoali","pedro","melisa","valeria","andrea1","diana","ximena1","samuel","mario","alejandro","valeria1","erik","abi","francisco1","carmen1","garvey","melanie","bere","diego","montse","kathia","emiliano","lizeth","celina ","samuel2","paulina","amelie","danae","ana1","victor","maru","julieta","joaquin"],["mujer","mujer","mujer","mujer","hombre","mujer","hombre","hombre","mujer","mujer","hombre","hombre","mujer","mujer","mujer","mujer","mujer","mujer","hombre","hombre","hombre","mujer","mujer","mujer","hombre","mujer","mujer","hombre","mujer","mujer","hombre","mujer","mujer","hombre","hombre","hombre","mujer","hombre","mujer","hombre","hombre","mujer","mujer","mujer","hombre","hombre","hombre","mujer","hombre","hombre","mujer","hombre","hombre","hombre","hombre","mujer","hombre","mujer","mujer","mujer","hombre","mujer","hombre","mujer","mujer","mujer","mujer","hombre","mujer","mujer","mujer","mujer","mujer","hombre","hombre","hombre","mujer","hombre","mujer","hombre","mujer","hombre","mujer","mujer","hombre","mujer","mujer","hombre","mujer","mujer","hombre","mujer","mujer","mujer","mujer","hombre","mujer","mujer","hombre"],[169,159,158,158,178,160,175,179,163,168,185,170,175,156,164,161,170,159,170,170,175,155,167,153,178,152,167,163,158,160,169,150,159,165,169,166,155,173,144,165,101,160,163,156,172,167,169,150,168,176,151,169,165,172,169,156,154,160,158,168,184,166,182,163,163,165,159,179,153,172,176,162,164,180,170,173,158,176,160,185,152,187,151,157,175,163,165,165,153,156,165,156,165,161,152,170,164,158,183],[74.5,69.5,68.5,70,77,70,80,77,76,77,81,76,75,67,75,67,72,68,76,78,73,59,72,60.1,70.5,66,72,74,61,63,65,58,56,65,72,70.8,64.5,71,56,67.59999999999999,43,69,69,60.5,76,72,78,65,73,80,70,70,67,71,71,67,56,56,52,75,86,70,82,65,69.5,73,69,82,64,73,74,69,72,72,77,75,73,76,61,77,67.5,78,65.5,67,78,55,69.5,72.5,66.5,68.5,77,71,74,72.5,68.5,76.5,69.5,70.5,82.5],[89,82,80,84,88,85,94,92,85,89,96,89,94,79,90,85,90,85,88,89,93,85,89.5,87.5,101,74,93,99,86,88.5,89.59999999999999,80,81,88,90,92,97,103.5,82,93,28,90,93,89.8,97,95,98,88,88,96,81,95,93,97,102.5,92,93,95,90,105,103,96.5,99,95,98,95,92,102,81,100,102.5,96,93,101,100,90,90,105,81,109,80.5,110,91,94,105,99,97,96,92,87,103,94,104,98,87,100,99,95,109],[24.5,24.5,24,23,29,24,27.5,27.2,25,25.5,29,28,24.5,23,25.5,23,24,23,28,26,24.5,21,23.5,23.5,27,22,25,26,24,24.5,26.5,23,24,27,25,25,21,26.2,21,28.4,17,25,25,23,26.5,26,27.5,25,27,29,24,26,26,27,25,21,23,22,23.5,26,27.5,23,29,24.5,25,25,23,27.3,23,25,25,24,24,26,26,26,25,29,25,27,21.5,28,24,24,26.5,24.5,23,26,23.5,24,26.5,23.5,25.5,24.5,23.5,27,24,23,28.5],[42.5,42,43,42,53,39,50,47,43,45,50.5,49,40,36,43,42,40,40,46,45,50,42,48,38,57.5,50,42,54,42,44,50,45,52,55,54,54.3,48.2,58,43,52.9,34,46,36,38,49,49,50.5,48,50,54,39,50,46,50,56,44,49,45,46,45,57,45,68,38,53.5,45,37,54,37,41.5,41,45,36,53,44,47,43,50.5,40,48,50,54,38,43,47,44,42,46,44,43,46,39,44,41,43,50,41,40,52],[32.1,31,33.5,34,46,31.8,40.8,33,39,32,38.5,41.5,32.5,31.2,31.8,33,31.5,30.6,36,35.2,37,31,34,27,39.3,30,39,41,31,33,37,38,37,40,40,43.2,33.5,48.5,35,41.6,27,34.5,31.5,30.5,45,37.5,44,43,40,39,34,40,39,40,37,29,34,31,31,32,35,34.3,46,34,34,31,31,36,33,31,35,35,32,40,38,36,32,41,31,41,33,35.5,30.7,31.5,37.3,34.5,35,36.2,32.6,35,37.1,31.2,32.6,31.5,33,38,33,41,41.3],[56,56,54,52,61,56,65,54,60,57,59,62,55,54,57.5,53,55,53,59,58,54.7,57.6,55,55,58.5,54,56,55,54,55,59.2,54,57,56,60,56.5,52.5,59.5,58,57.9,51,55,56,57,58,58,59,55,62,63,55,56,55,58,59,54,56,55,56,54,60.5,56,55,52,54,55,55,57.5,56,58,57,57,56,58,56,57.1,55,68,57,65,54,60,52,55,57,57,57,61,56,55,62,56,58,54,60,59,60,52,63],[2.95,3.45,2.97,2.96,3.29,2.8,4,3,3.07,3.6,4.13,3.71,2.92,2.82,2.85,3.1,3.1,2.32,3.58,3.04,3,2.5,2.5,3,4,2.5,3.5,3,2.5,2.5,2.7,3,4,4,3.5,3.4,3,4,3.4,1.8,3,3.5,4,3,3.5,5,4,3,3,4,3,3,3,3,5,4,4,4,3.5,3,3.5,3.4,3,3,3.5,4,4,5,3,3.5,3.5,4,3.4,3.6,3,5,3.5,4,5,4.5,4.5,3.32,3.12,3.17,3.11,2.78,3.49,3.33,3.24,3.11,4.72,2.57,3.02,2.56,3.33,2.89,3.53,2.98,3.86],[5.93,5.18,3.99,5.41,5.76,4.39,5.61,5.11,5.15,4.68,5.51,5.53,4.41,5.8,4.7,5.16,5.8,5.55,5.8,5.3,5.5,5,4.3,6.3,7.3,5,6,6,6.7,6.2,6.8,5.5,7,5,6,5.8,6.3,7,7.7,6.2,4.5,5.5,6,5,8,8,9,7,5.5,5.5,5,5,7,7.5,7,5,7,6.5,6,5,7.4,7.2,5.4,6,6,5,4.8,6,5.5,5.5,5,5.5,5,5.5,6,6,6,7.3,6.5,5,6.5,5.23,5.75,5.03,6.69,5.16,5.87,5.69,6.34,5.63,5.9,5.28,6.54,5.2,5.44,5.67,5.92,5.17,4.3],[3.57,4.4,4.33,3.9,4.96,3.51,4.6,3.64,4.48,3.8,4.36,4.47,3.57,4.32,3.85,4.4,3.83,3.47,4.9,3.77,4.5,4,2.5,5,5.2,3.5,3.5,4,4.5,5,4.8,3,4.5,3.6,5,4.8,4,4.5,5,4.9,3.5,4.5,5,4,4,5,6,4,4,4.5,3.5,4.5,5,5,7,5,5,5,4.5,4.7,4.5,3,4,4,5,4,3,2,3,3.5,3.5,4,3.7,4,4,4.5,4,4.5,4,4,2.5,3.64,3.45,3.42,3.89,3.66,3.95,3.93,3.8,3.69,3.85,3.21,3.78,3.31,3.52,3.46,3.66,3.21,3.58],[6.1,5.58,5.41,5.91,6.95,6.07,6.14,5.65,5.64,6.72,6.89,6.67,5,5.5,6.1,5.9,5.68,5.5,6.5,5.42,6.5,5.9,6,6.7,6.8,5,7,8,5.4,5.7,6,5,6,5.5,7,6.5,6.2,7.5,7.3,7,5,6,6.5,7,7,6.5,8,6.5,7.5,6.5,6,6.5,7,7.5,7,6,6,5,6,6,6.7,5,7,6,6,6,6,5.1,6,6,6.6,6,6.5,6.3,7,6.4,5,7,5,7.7,7.5,7.7,6,6.5,7,6.8,6,6.5,6,6.5,6.8,6,6,6,6.5,7,6.8,5.8,7.5],[20.5,19.4,20.2,19.4,20,29.9,20.8,23.1,20.2,18.6,22.8,21.5,20,18.4,19.6,19.5,19.3,18.5,22.3,20.9,19.5,17,16.5,20.2,21.8,21,20,21,20.3,18.9,22.5,23,22,25,19.3,20,20.2,22.3,19,20.5,18,21,19,20,18.5,19,21.5,20,20,20,17.5,19.5,19.5,20,20.5,17,17,18,18,21.3,19.3,19.1,21,19,21,21,19,21.5,17,20,20.8,20,17.4,19,22,21,19,22,21,19.5,19,20.5,18,20.4,21.5,20.5,19,20.2,18.5,17.6,20.1,17.4,20,17.5,19.5,20,21.5,19,24],[5.5,5.5,6.2,4.5,5.5,4,6,5,6,4.5,5,5,4.5,5,5.5,5.5,6,5,5.5,5,5,5.5,5,7.2,7,7,7,7,5.4,5.3,6.2,5,5,6,6,6.2,7,6,6.5,6,6,6,7.3,6.2,5,5.5,7,6,6,7,6,6,5.5,5.5,5,6.5,4.5,7,5.5,6,6,5,7.1,7,5,6,5,5.1,5,6.5,6.8,5.5,5.4,5.2,5.5,5.2,5,7,6,6.4,5.5,7,8,7,6.5,7.5,7.5,9,7,6,7.3,6.8,6,6.5,7.5,7,8,7.7,8.699999999999999],[1.42,1.5,1.26,1.16,1.64,1.5,1.53,1.63,1.14,1.35,1.84,1.7,1.49,1.12,1.63,1.1,1.4,1.1,2.1,1.97,2.5,2,1.5,1.2,2,2.5,2,2.5,1.5,1.3,1.7,1,1.8,1.5,1.5,1.7,1.8,1.7,2,3.4,1.5,2,2.3,2,1.5,2,2.5,1,2,2,1.5,2,2.5,2.5,1,1.5,2,1.5,2,1.4,1.5,1,1.2,1.3,2,2,1.8,1.5,1.2,1.8,1.3,2,1,1.8,2,2,2,2,2,2.3,2,2.45,1.96,1.56,1.77,1.79,1.34,1.09,0.98,1.39,2.06,1.77,0.98,1.65,1.2,1.31,1.3,1.5,1.8]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>sexo<\/th>\n      <th>altura<\/th>\n      <th>largo_brazoD<\/th>\n      <th>largo_piernaD<\/th>\n      <th>largo_pieD<\/th>\n      <th>ancho_espalda<\/th>\n      <th>cuello<\/th>\n      <th>cabeza<\/th>\n      <th>separacion_ojos<\/th>\n      <th>largo_boca<\/th>\n      <th>ancho_nariz<\/th>\n      <th>largo_orejaD<\/th>\n      <th>largo_cara<\/th>\n      <th>ancho_frente<\/th>\n      <th>surco<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7,8,9,10,11,12,13,14,15,16]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"id","targets":1},{"name":"sexo","targets":2},{"name":"altura","targets":3},{"name":"largo_brazoD","targets":4},{"name":"largo_piernaD","targets":5},{"name":"largo_pieD","targets":6},{"name":"ancho_espalda","targets":7},{"name":"cuello","targets":8},{"name":"cabeza","targets":9},{"name":"separacion_ojos","targets":10},{"name":"largo_boca","targets":11},{"name":"ancho_nariz","targets":12},{"name":"largo_orejaD","targets":13},{"name":"largo_cara","targets":14},{"name":"ancho_frente","targets":15},{"name":"surco","targets":16}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b12d35729c2630a90293" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b12d35729c2630a90293">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"],[1,3,0,0,2,2,2,0,0,4,0,0,0,0,0,0,2,0,0,0],[0,0,4,8,0,0,0,4,3,0,0,4,5,4,4,7,0,0,0,5],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,3,0],[0,2,7,2,0,0,0,5,3,0,0,8,5,0,0,4,0,0,0,0],[0,0,0,0,4,3,2,0,0,4,0,0,0,0,0,0,4,0,4,0],[0,3,2,2,2,0,0,0,0,2,0,0,0,0,0,0,0,2,0,0],[0,4,0,3,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],[0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0],[0,0,0,0,0,0,0,4,0,0,0,0,0,4,5,8,0,0,0,4],[4,4,4,4,4,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0],[0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,5,0],[0,0,0,0,0,0,0,4,4,0,0,0,0,0,3,3,0,0,0,4],[0,0,0,0,0,0,2,0,4,0,0,4,3,0,0,0,0,0,0,0],[7,5,6,5,2,6,6,4,2,6,7,0,0,0,0,0,0,2,0,0],[0,0,0,0,5,5,5,0,0,3,3,0,0,0,0,0,2,3,0,0],[4,4,5,4,2,3,4,4,4,4,4,0,2,0,0,0,1,3,0,0],[2,7,6,5,6,4,5,4,5,4,0,4,9,0,0,2,0,0,0,0],[0,0,0,0,0,0,0,2,0,0,0,0,2,2,2,2,0,0,0,4],[0,0,0,0,5,6,3,0,2,0,0,2,0,0,0,0,0,0,0,0],[0,0,0,5,0,0,0,2,2,0,2,4,2,0,0,0,0,0,3,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,5],[0,5,2,2,3,3,3,3,2,3,5,2,2,2,2,0,2,5,6,2],[0,0,0,0,2,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,5,2,1,2,5,2,2,3,6,3,3,2,6,1,0,0,2,2,0],[0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,1,0,0],[0,0,2,2,2,6,2,2,2,2,4,4,0,0,4,4,0,6,3,4],[0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,3,0,0,0,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Achimill<\/th>\n      <th>Agrostol<\/th>\n      <th>Airaprae<\/th>\n      <th>Alopgeni<\/th>\n      <th>Anthodor<\/th>\n      <th>Bellpere<\/th>\n      <th>Bromhord<\/th>\n      <th>Chenalbu<\/th>\n      <th>Cirsarve<\/th>\n      <th>Comapalu<\/th>\n      <th>Eleopalu<\/th>\n      <th>Elymrepe<\/th>\n      <th>Empenigr<\/th>\n      <th>Hyporadi<\/th>\n      <th>Juncarti<\/th>\n      <th>Juncbufo<\/th>\n      <th>Lolipere<\/th>\n      <th>Planlanc<\/th>\n      <th>Poaprat<\/th>\n      <th>Poatriv<\/th>\n      <th>Ranuflam<\/th>\n      <th>Rumeacet<\/th>\n      <th>Sagiproc<\/th>\n      <th>Salirepe<\/th>\n      <th>Scorautu<\/th>\n      <th>Trifprat<\/th>\n      <th>Trifrepe<\/th>\n      <th>Vicilath<\/th>\n      <th>Bracruta<\/th>\n      <th>Callcusp<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Achimill","targets":1},{"name":"Agrostol","targets":2},{"name":"Airaprae","targets":3},{"name":"Alopgeni","targets":4},{"name":"Anthodor","targets":5},{"name":"Bellpere","targets":6},{"name":"Bromhord","targets":7},{"name":"Chenalbu","targets":8},{"name":"Cirsarve","targets":9},{"name":"Comapalu","targets":10},{"name":"Eleopalu","targets":11},{"name":"Elymrepe","targets":12},{"name":"Empenigr","targets":13},{"name":"Hyporadi","targets":14},{"name":"Juncarti","targets":15},{"name":"Juncbufo","targets":16},{"name":"Lolipere","targets":17},{"name":"Planlanc","targets":18},{"name":"Poaprat","targets":19},{"name":"Poatriv","targets":20},{"name":"Ranuflam","targets":21},{"name":"Rumeacet","targets":22},{"name":"Sagiproc","targets":23},{"name":"Salirepe","targets":24},{"name":"Scorautu","targets":25},{"name":"Trifprat","targets":26},{"name":"Trifrepe","targets":27},{"name":"Vicilath","targets":28},{"name":"Bracruta","targets":29},{"name":"Callcusp","targets":30}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8d610a3c4bdca1c90c6f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8d610a3c4bdca1c90c6f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"],[2.8,3.5,4.3,4.2,6.3,4.3,2.8,4.2,3.7,3.3,3.5,5.8,6,9.300000000000001,11.5,5.7,4,4.6,3.7,3.5],["1","1","2","2","1","1","1","5","4","2","1","4","5","5","5","5","2","1","5","5"],["SF","BF","SF","SF","HF","HF","HF","HF","HF","BF","BF","SF","SF","NM","NM","SF","NM","NM","NM","NM"],["Haypastu","Haypastu","Haypastu","Haypastu","Hayfield","Haypastu","Pasture","Pasture","Hayfield","Hayfield","Pasture","Haypastu","Haypastu","Pasture","Haypastu","Pasture","Hayfield","Hayfield","Hayfield","Hayfield"],["4","2","4","4","2","2","3","3","1","1","1","2","3","0","0","3","0","0","0","0"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>A1<\/th>\n      <th>Moisture<\/th>\n      <th>Management<\/th>\n      <th>Use<\/th>\n      <th>Manure<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"A1","targets":1},{"name":"Moisture","targets":2},{"name":"Management","targets":3},{"name":"Use","targets":4},{"name":"Manure","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="procedimiento" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="procedimiento"><span class="header-section-number">9.1</span> Procedimiento</h2>
+<section id="a-anosim-análisis-de-similitud" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="a-anosim-análisis-de-similitud"><span class="header-section-number">9.1.1</span> a) ANOSIM — Análisis de Similitud</h3>
+<p>El ANOSIM (Analysis of Similarities) es una prueba no paramétrica que evalúa si la disimilaridad entre grupos es significativamente mayor que la disimilaridad dentro de cada grupo. En lugar de suponer una distribución teórica, construye una distribución nula del estadístico R reordenando (permutando) aleatoriamente las etiquetas de grupo y recalculando el estadístico en cada permutación. El p-valor resulta de la proporción de permutaciones en las que el R aleatorio iguala o supera al R observado.</p>
+<p>El estadístico R se define formalmente como:</p>
+<p><span class="math display">\[
+R = \frac{\bar{r}_B - \bar{r}_W}{M/2}
+\]</span></p>
+<p>donde <span class="math inline">\(\bar{r}_B\)</span> es el rango promedio de las disimilaridades <strong>entre</strong> grupos, <span class="math inline">\(\bar{r}_W\)</span> es el rango promedio de las disimilaridades <strong>dentro</strong> de cada grupo, y <span class="math inline">\(M = n(n-1)/2\)</span> es el número total de pares de observaciones. Un valor de R cercano a 1 indica separación perfecta entre grupos; R cercano a 0 indica que no hay diferencia estructural entre la variación inter e intra-grupal.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-anosim-distancia</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar la observación atípica ─────────────────────────────────────────────</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Se elimina el renglón 41, identificado en el análisis de PCoA como un</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># valor atípico extremo. La notación [-41, ] conserva todas las filas</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># excepto la 41; dejar la columna en blanco conserva todas las columnas.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>datos1 <span class="ot">&lt;-</span> data[<span class="sc">-</span><span class="dv">41</span>, ]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># PASO 1: SELECCIÓN DE COLUMNAS NUMÉRICAS</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># datos1[, 3:ncol(datos1)] extrae únicamente las columnas morfométricas numéricas.</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Las columnas 1 (id) y 2 (sexo) son texto; vegdist() lanzaría un error</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># si se intentara incluirlas en el cálculo de la matriz de distancias.</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># El uso de ncol(datos1) en lugar de un número fijo hace el código robusto</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ante cambios en el número de columnas del archivo.</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>datos2 <span class="ot">&lt;-</span> datos1[, <span class="dv">3</span><span class="sc">:</span><span class="fu">ncol</span>(datos1)]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># PASO 2: CÁLCULO DE LA MATRIZ DE DISIMILARIDAD</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># vegdist() calcula la disimilaridad de Bray-Curtis entre todos los pares</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># de individuos. El resultado es un objeto de clase "dist": una matriz</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># triangular inferior de dimensión n × n almacenada de forma compacta</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># para ahorrar memoria.</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># method = "bray" es adecuado para datos morfométricos no negativos porque</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co"># mide diferencias relativas entre perfiles y produce valores entre 0 y 1.</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Un valor de 0 indica que dos individuos tienen perfiles idénticos;</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># un valor de 1 indica que no comparten ninguna característica común.</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>dist_datos2 <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(datos2, <span class="at">method =</span> <span class="st">"bray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-anosim-prueba</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># PASO 3: EJECUCIÓN DEL ANOSIM</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># set.seed() ──────────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fija la semilla del generador de números pseudoaleatorios. Las pruebas de</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># permutación implican aleatorización, por lo que sin esta instrucción el</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># p-valor podría diferir levemente entre ejecuciones. Con set.seed() el</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># resultado es perfectamente reproducible en cualquier máquina.</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># anosim() ────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Realiza el Análisis de Similitud (ANOSIM).</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># La lógica de la prueba es: si los grupos son realmente distintos,</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># la disimilaridad promedio ENTRE grupos debería ser mayor que la</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># disimilaridad promedio DENTRO de cada grupo.</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># El estadístico R cuantifica esta diferencia en una escala de -1 a 1:</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#   R = 1  → separación perfecta entre grupos.</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#   R = 0  → no hay diferencia entre la variación inter e intra-grupal.</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   R &lt; 0  → los individuos dentro del mismo grupo son MÁS distintos</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#             entre sí que con respecto a individuos de otros grupos</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#             (resultado raro que indica heterogeneidad intra-grupal alta).</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co"># El p-valor se obtiene por permutación: se barajan aleatoriamente las</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># etiquetas de grupo 999 veces y se calcula cuántas veces el R aleatorio</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># supera al R observado. Si eso ocurre pocas veces, el R observado es</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># estadísticamente significativo.</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Argumentos:</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">#   x            = la matriz de distancias (objeto "dist").</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">#   grouping     = vector que indica el grupo de cada observación.</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Se usa la columna 2 del data frame (sexo).</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">#   permutations = número de permutaciones. 999 es el estándar;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">#                  el p-valor mínimo posible con 999 permutaciones es 0.001.</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">anosim</span>(dist_datos2, datos1[, <span class="dv">2</span>], <span class="at">permutations =</span> <span class="dv">999</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones" class="level3" data-number="9.1.2">
+<h3 data-number="9.1.2" class="anchored" data-anchor-id="b-permanova-análisis-de-varianza-multivariado-por-permutaciones"><span class="header-section-number">9.1.2</span> b) PERMANOVA — Análisis de Varianza Multivariado por Permutaciones</h3>
+<p>El PERMANOVA (Permutational Multivariate Analysis of Variance, implementado como <code>adonis2()</code> en vegan) es una generalización del ANOVA que opera sobre una matriz de distancias o disimilaridades en lugar de sobre una variable de respuesta única. Al igual que el ANOSIM, utiliza permutaciones para construir la distribución nula, pero a diferencia de él puede incluir múltiples variables explicativas e interacciones, descomponiendo la variación total de forma análoga a un ANOVA balanceado. El estadístico central es R², que expresa qué proporción de la variación total en la matriz de disimilaridades es explicada por cada término del modelo.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-permanova-datos</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># CARGAR LOS DATOS DE DUNAS</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># data() carga conjuntos de datos incluidos en paquetes de R sin necesidad</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de leer archivos externos. Aquí se cargan dos objetos relacionados:</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># dune:     data frame de 20 filas (sitios) × 30 columnas (especies).</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#           Cada celda contiene la cobertura estimada de esa especie en ese</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#           sitio en una escala ordinal de 0 a 9.</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># dune.env: data frame de 20 filas × 5 columnas con variables ambientales</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#           y de manejo para cada uno de los 20 sitios:</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#           - A1        : profundidad del horizonte A del suelo (cm).</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#           - Moisture  : nivel de humedad del suelo (factor ordinal, 1-5).</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#           - Management: tipo de manejo agrícola (4 niveles:</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#                         BF = biológico, HF = convencional hobby,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#                         NM = sin manejo, SF = estándar de pradera).</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#           - Use       : uso del sitio (Hayfield, Haypastu, Pasture).</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#           - Manure    : nivel de abono aplicado (factor ordinal, 0-4).</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(dune)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(dune.env)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-permanova-distancia</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># MATRIZ DE DISIMILARIDAD DE DUNE</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Se calcula la disimilaridad de Bray-Curtis entre los 20 sitios.</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># En este contexto ecológico, valores altos de disimilaridad indican</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># que dos sitios comparten pocas especies en abundancias similares;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># valores bajos indican comunidades muy parecidas en composición.</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># El resultado es un objeto "dist" de 20 × 20 elementos.</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>dist_dune <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(dune, <span class="at">method =</span> <span class="st">"bray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: proc-permanova-prueba</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># EJECUCIÓN DEL PERMANOVA</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># set.seed() garantiza la reproducibilidad de las permutaciones,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># tal como se hizo en el ANOSIM.</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># adonis2() ───────────────────────────────────────────────────────────────────</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Realiza el PERMANOVA (Permutational Multivariate Analysis of Variance).</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># A diferencia del ANOSIM, que solo acepta un factor de agrupamiento,</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># adonis2() admite modelos con múltiples variables explicativas e</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># interacciones, igual que un ANOVA o una regresión lineal clásica.</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co"># La variable de respuesta NO es una columna numérica sino la MATRIZ DE</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># DISTANCIAS (dist_dune). adonis2() descompone esa matriz en partes</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># atribuibles a cada término del modelo, análogo a cómo un ANOVA</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co"># descompone la suma de cuadrados total.</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Fórmula del modelo: dist_dune ~ Management * Use</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#   El operador * es un atajo que expande a:</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#       Management + Use + Management:Use</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   Es decir, incluye los efectos principales de Management y Use</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#   MÁS su término de interacción (Management:Use), que prueba si</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   el efecto de Management sobre la composición de especies depende</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   del nivel de Use (y viceversa).</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Argumentos:</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co">#   formula      = la fórmula del modelo estadístico.</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co">#   data         = data frame que contiene las variables explicativas</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">#                  listadas en la fórmula (aquí, dune.env).</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co">#   permutations = número de permutaciones para estimar la distribución</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co">#                  nula de cada estadístico F. Con 999 el p-valor mínimo</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co">#                  posible es 0.001.</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(dist_dune <span class="sc">~</span> Management <span class="sc">*</span> Use,</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>                <span class="at">data         =</span> dune.env,</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                <span class="at">permutations =</span> <span class="dv">999</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="resultados" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="resultados"><span class="header-section-number">9.2</span> Resultados</h2>
+<section id="resultado-del-anosim" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="resultado-del-anosim"><span class="header-section-number">9.2.1</span> Resultado del ANOSIM</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-anosim</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: true</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Imprime el resumen completo del objeto ANOSIM: estadístico R,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># p-valor por permutación y número de permutaciones realizadas.</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+anosim(x = dist_datos2, grouping = datos1[, 2], permutations = 999) 
+Dissimilarity: bray 
+
+ANOSIM statistic R: 0.5908 
+      Significance: 0.001 
+
+Permutation: free
+Number of permutations: 999</code></pre>
+</div>
+</div>
+<p><strong>Interpretación:</strong> La salida del ANOSIM reporta los siguientes elementos, que se interpretan en conjunto.</p>
+<p><strong>Estadístico R.</strong> El estadístico R de ANOSIM cuantifica la diferencia normalizada entre el rango promedio de las disimilaridades entre grupos y el rango promedio de las disimilaridades dentro de grupos. Su escala va de −1 a 1. Un valor de R cercano a 1 indica que los grupos son morfométricamente discretos; un valor cercano a 0 indica que no hay separación entre ellos. Como referencia orientativa, valores de R &gt; 0.75 se consideran separación buena; entre 0.50 y 0.75, separación moderada pero biológicamente relevante; entre 0.25 y 0.50, separación débil.</p>
+<p><strong>Significancia por permutación.</strong> El p-valor reportado indica en qué proporción de las 999 permutaciones aleatorias de las etiquetas de sexo se obtuvo un R igual o mayor al observado. Un p-valor bajo (por convención, &lt; 0.05) conduce a <strong>rechazar la hipótesis nula</strong> (H₀: la distancia entre grupos es igual a la distancia dentro de grupos). En términos sustantivos, la hipótesis nula es que el sexo no estructura la variación morfométrica del grupo; rechazarla significa que las diferencias morfométricas entre hombres y mujeres son estadísticamente improbables bajo un escenario de ausencia de efecto del sexo.</p>
+<p><strong>Consistencia con el PCoA.</strong> Este resultado es coherente con la separación visual observada en la gráfica de PCoA con colores por sexo de la bitácora anterior: si los grupos se separaban visualmente en el espacio de ordenamiento, era de esperar que una prueba formal sobre la misma matriz de disimilaridades confirmara esa separación.</p>
+</section>
+</section>
+<section id="resultado-del-permanova" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="resultado-del-permanova"><span class="header-section-number">9.3</span> Resultado del PERMANOVA</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: res-permanova</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: true</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Imprime la tabla ANOVA-style del PERMANOVA, con una fila por término del</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo, una fila de residuos y una de totales.</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>fit1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = dist_dune ~ Management * Use, data = dune.env, permutations = 999)
+         Df SumOfSqs      R2      F Pr(&gt;F)  
+Model    10   2.6370 0.61339 1.4279  0.085 .
+Residual  9   1.6621 0.38661                
+Total    19   4.2990 1.00000                
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>Interpretación:</strong> La tabla del PERMANOVA tiene el formato de una tabla ANOVA con una fila por término del modelo, una fila de residuos y una de totales. El significado de cada columna es el siguiente.</p>
+<p><strong><code>Df</code></strong> indica los grados de libertad consumidos por ese término. El modelo completo (<code>Management * Use</code>) usa 10 grados de libertad: 3 para Management (4 niveles − 1), 2 para Use (3 niveles − 1), y 6 para la interacción (3 × 2). Los 9 grados de libertad residuales son los que quedan para estimar el error con n = 20 sitios.</p>
+<p><strong><code>SumOfSqs</code></strong> es la suma de cuadrados en unidades de disimilaridad de Bray-Curtis explicada por ese término. El modelo explica 2.637 de las 4.299 unidades totales.</p>
+<p><strong><code>R2</code></strong> es la proporción de la variación total explicada, análoga al R² de una regresión. El modelo completo explica el <strong>61.3 %</strong> de la variación en la composición de comunidades entre sitios, un porcentaje alto que indica que el manejo y el uso del sitio son variables relevantes para entender las diferencias entre comunidades de plantas.</p>
+<p><strong><code>F</code></strong> es el pseudo-estadístico F, calculado como la razón entre la suma de cuadrados del modelo por grado de libertad y la suma de cuadrados residual por grado de libertad. Un F mayor indica que el efecto del modelo es grande en relación con la variación no explicada.</p>
+<p><strong><code>Pr(&gt;F)</code></strong> es el p-valor obtenido por permutación. El valor de <strong>0.071</strong> supera el umbral convencional de α = 0.05, por lo que formalmente <strong>no se rechaza</strong> la hipótesis nula al nivel del 5 %. El punto (<code>.</code>) junto al valor indica una tendencia marginal según los códigos de significancia de R.</p>
+<p><strong>Interpretación integradora.</strong> Aunque el porcentaje de variación explicado es alto (61.3 %), el modelo no alcanza significancia estadística estricta. Esto se debe principalmente a dos factores que actúan en conjunto: el tamaño de muestra es muy pequeño (n = 20 sitios) y el modelo con interacción consume muchos grados de libertad (10 de los 19 disponibles), dejando solo 9 grados de libertad residuales para estimar el error. Con tan pocos grados de libertad, el test tiene poco poder estadístico. Una posible estrategia para mejorar el análisis sería probar modelos más parsimoniosos, comenzando por los efectos principales (<code>Management + Use</code>) sin interacción, y evaluar si la interacción es realmente necesaria mediante comparación de modelos.</p>
+</section>
+<section id="problemas-encontrados" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="problemas-encontrados"><span class="header-section-number">9.4</span> Problemas Encontrados</h2>
+<ul>
+<li><p>Ambas pruebas usan matrices de distancias y permutaciones, ANOSIM solo acepta un factor de agrupamiento y produce un único estadístico R, mientras que PERMANOVA puede incluir múltiples predictores e interacciones y descompone la variación de forma análoga a un ANOVA.</p></li>
+<li><p>El operador <code>*</code> en la fórmula causó confusión adicional: no es una multiplicación sino un operador de modelo que expande automáticamente a efectos principales más interacción. En una primera versión se usó <code>+</code> (solo efectos principales), lo que produjo resultados distintos y llevó a revisar la documentación de fórmulas en R.</p></li>
+<li><p>Las pruebas de permutación varíen ligeramente entre ejecuciones generó desconcierto hasta aprender a usar <code>set.seed()</code> para fijar la semilla y garantizar la reproducibilidad.</p></li>
+</ul>
+</section>
+<section id="aprendizaje" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="aprendizaje"><span class="header-section-number">9.5</span> Aprendizaje</h2>
+<ul>
+<li><p>Las <strong>pruebas de permutación</strong> compara un estadístico contra una distribución teórica (como la distribución F o la chi-cuadrada), se construye una distribución empírica barajando aleatoriamente las etiquetas de grupo muchas veces. Esto hace que las pruebas sean válidas incluso cuando los datos no cumplen supuestos de normalidad multivariada, lo que es frecuente en datos morfométricos y ecológicos.</p></li>
+<li><p>El <strong>p-valor marginal</strong> (como 0.071) no significa necesariamente que el efecto no exista, sino que con el tamaño de muestra disponible no hay suficiente poder estadístico para detectarlo con certeza.</p></li>
+</ul>
+<hr>
+<p><em>Bitácora de Cómputo — Pruebas de Hipótesis Multivariadas en R</em></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../pcoa/pcoa.html" class="pagination-link" aria-label="PCoA">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">PCoA</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
