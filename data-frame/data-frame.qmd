@@ -683,18 +683,27 @@ iris %>%
 ## Problemas Encontrados
 
 - La sintaxis de R base con `[filas, columnas]` resultó confusa al principio porque requiere recordar el orden (primero filas, luego columnas) y usar el signo `$` para referirse a columnas por nombre dentro de las condiciones de filtrado.
+
 - El operador `%in%` no era conocido; fue necesario buscarlo en la documentación porque al intentar combinar muchos valores con `|` el código se volvía largo y propenso a errores tipográficos.
+
 - Hubo confusión inicial entre `filter()` (para filas) y `select()` (para columnas) en `dplyr`; en R base ambas operaciones se realizan con `[ , ]`, lo que llevó en algunos intentos a usar los verbos en orden invertido.
+
 - Al seleccionar una sola columna en R base con `[ , "Species"]` se obtiene un vector en lugar de un data frame, lo que causó un error al intentar aplicarle directamente verbos de `dplyr` en pruebas posteriores. Con `dplyr` esto no ocurre porque `select()` siempre preserva la estructura de data frame.
+
 - El operador pipe `%>%` requirió práctica para interiorizar el flujo de datos: el objeto a la izquierda se convierte en el primer argumento de la función a la derecha. Una vez comprendido, los pipelines encadenados resultaron más legibles que las expresiones anidadas de R base.
 
 ## Aprendizaje
 
 - R ofrece dos paradigmas equivalentes para manipular data frames: R base (más compacto pero menos legible para operaciones complejas) y `dplyr` (más expresivo y legible, especialmente en pipelines largos con múltiples pasos encadenados).
+
 - En `dplyr`, `filter()` opera sobre filas y `select()` opera sobre columnas; la separación explícita de estas operaciones en verbos distintos obliga a pensar con mayor claridad qué dimensión del data frame se está modificando.
+
 - El operador `%in%` es más eficiente y escalable que encadenar múltiples condiciones con `|` cuando se quieren incluir varios valores de una misma variable categórica.
+
 - La combinación `group_by()` + `summarise()` permite obtener estadísticas descriptivas por grupo en muy pocas líneas, algo que en R base requeriría `tapply()`, `aggregate()` o un bucle explícito.
+
 - Se confirmó que `select()` en `dplyr` siempre devuelve un data frame, mientras que `[ , nombre]` en R base devuelve un vector cuando se selecciona una sola columna. Esta diferencia es relevante cuando el resultado se usa como entrada para funciones que requieren un data frame.
+
 - Los problemas se resolvieron comparando sistemáticamente los resultados de R base y `dplyr` para verificar que fueran idénticos, y consultando la documentación con `?filter`, `?select` y `?which`.
 
 ---
