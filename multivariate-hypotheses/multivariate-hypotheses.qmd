@@ -171,7 +171,9 @@ datos2 <- datos1[, 3:ncol(datos1)]
 # mide diferencias relativas entre perfiles y produce valores entre 0 y 1.
 # Un valor de 0 indica que dos individuos tienen perfiles idénticos;
 # un valor de 1 indica que no comparten ninguna característica común.
+
 dist_datos2 <- vegdist(datos2, method = "bray")
+
 ```
 
 ```{r}

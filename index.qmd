@@ -1,9 +1,17 @@
-# Preface {.unnumbered}
+# Prefacio
 
-This is a Quarto book.
+Esta bitácora de cómputo documenta el trabajo realizado a lo largo del semestre en el análisis estadístico multivariado con R. Cada capítulo corresponde a un tema abordado en clase, e incluye el objetivo, los datos utilizados, el procedimiento comentado, los resultados obtenidos, los problemas encontrados y los aprendizajes derivados de cada análisis.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+## Uso de inteligencia artificial
 
-```{r}
-1 + 1
-```
+A lo largo del desarrollo de esta bitácora se utilizó **Claude (Anthropic)** como herramienta de apoyo en distintas etapas del trabajo:
+
+- **Data frame:** La sección de código correspondiente a este tema no es ejecutable en el documento. Se utilizó IA (Claude) para adaptar el script original de manera que los bloques de código queden incluidos con fines ilustrativos sin ser evaluados (`eval=FALSE`).
+
+- **Corrección de errores en GitHub:** Se utilizó IA (Claude) para identificar y resolver errores relacionados con la configuración y el uso del repositorio en GitHub.
+
+- **MANOVA:** La información teórica de referencia proviene del libro *Univariate, Bivariate, and Multivariate Statistics Using R: Quantitative Tools for Data Analysis and Data Science* de Daniel J. Denis. Adicionalmente, se utilizó IA (Claude) para complementar la comprensión del tema y revisar el código.
+
+- **PCA (Análisis de Componentes Principales):** La información sobre varianza y covarianza se obtuvo del libro *Discovering Statistics Using R* de Andy Field. IA (Claude) se utilizó como apoyo complementario para este tema.
+
+- **Scripts en general:** En la mayoría de los temas, IA (Claude) fue empleada para corregir errores en el código, revisar el significado de funciones y argumentos, y recibir sugerencias de mejora. El contenido de los scripts proviene principalmente de lo visto en clases.
