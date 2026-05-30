@@ -3,11 +3,7 @@ project:
     output-dir: _book
 
 book:
-<<<<<<< HEAD
   title: "Bitácora de Estadística Multivariada con R"
-=======
-  title: "Estadística Multivariada con R"
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
   author: "Samuel Solís Barrón"
   date: "5/26/2026"
   chapters:

@@ -1,9 +1,5 @@
 ---
-<<<<<<< HEAD
 title: "Data Frame"
-=======
-title: "Data Frames"
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 subtitle: "Indexación y Manipulación con R Base y `dplyr`"
 author: "Samuel Solís Barrón"
 format:
@@ -31,7 +27,6 @@ Extraer subconjuntos de un data frame de dos maneras distintas: usando la sintax
 
 ::: {.panel-tabset}
 
-<<<<<<< HEAD
 ## Paquetes
 
 ```{r}
@@ -58,8 +53,6 @@ library(dplyr)
 
 ```
 
-=======
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 ## Descripción general
 
 La base de datos utilizada es `iris`, incluida en R base. Proviene de las observaciones de Ronald Fisher (1936) sobre el género *Iris*. La variable categórica (factor) es `Species` (setosa, versicolor y virginica), con 50 observaciones por especie. Las variables de respuesta son:
@@ -82,7 +75,6 @@ El código para cargar las bases de datos es el siguiente:
 
 ```{r}
 
-<<<<<<< HEAD
 #| label: data-iris-chick
 #| echo: true
 #| eval: false
@@ -100,24 +92,6 @@ cw <- ChickWeight     # Asigna un nombre más corto para facilitar su uso en el 
 ```{r}
 
 #| label: tabla-iris
-=======
-#| echo: false
-
-data(iris)            # Carga iris desde R base. No requiere paquetes adicionales.
-iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Species).
-DT::datatable(iris1)  # Genera una tabla HTML interactiva con búsqueda, orden y paginación.
-
-data(ChickWeight)     # Carga ChickWeight desde R base.
-cw <- ChickWeight     # Asigna un nombre más corto para facilitar su uso en el código.
-DT::datatable(cw, options = list(pageLength = 10))  # Muestra 10 filas por página.
-
-```
-
-### iris
-
-```{r}
-
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 #| echo: false
 #| eval: true
 
@@ -127,18 +101,11 @@ DT::datatable(iris1)
 
 ```
 
-<<<<<<< HEAD
 ## ChickWeight
 
 ```{r}
 
 #| label: tabla-chickweight
-=======
-### ChickWeight
-
-```{r}
-
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 #| echo: false
 #| eval: true
 

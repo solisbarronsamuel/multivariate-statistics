@@ -554,23 +554,13 @@ plot(x1, y1,
 
 ```
 
-<<<<<<< HEAD
 **Interpretación:** Los puntos rosas (mujeres) tienden a aparecer con mayor frecuencia en la mitad izquierda del eje X, mientras que los puntos azules (hombres) tienden a concentrarse más hacia la derecha; esta separación parcial a lo largo de la Coordenada 1 sugiere que esa dirección captura, al menos en parte, diferencias morfométricas sistemáticas entre sexos.
 
 Sin embargo, existe una región de alta densidad alrededor del origen donde ambos colores se mezclan, esto indica que una parte sustancial del grupo tiene perfiles morfométricos similares independientemente del sexo. En el eje Y (Coordenada 2), los puntos de ambos sexos se distribuyen de forma parecida, sugiriendo que la segunda dimensión de variación no está relacionada con el sexo de manera tan clara como la primera. Este gráfico constituye la exploración visual preliminar antes de aplicar pruebas estadísticas formales como ANOSIM o PERMANOVA.
-=======
-**Interpretación:** La adición de color transforma la gráfica de una exploración puramente geométrica a una herramienta de comparación entre grupos. Varios patrones son visibles. Los puntos rosas (mujeres) tienden a aparecer con mayor frecuencia en la mitad izquierda del eje X, mientras que los puntos azules (hombres) tienden a concentrarse más hacia la derecha; esta separación parcial a lo largo de la Coordenada 1 sugiere que esa dirección captura, al menos en parte, diferencias morfométricas sistemáticas entre sexos.
-
-Sin embargo, existe una región de alta densidad alrededor del origen donde ambos colores se mezclan, lo que indica que una parte sustancial del grupo tiene perfiles morfométricos similares independientemente del sexo. En el eje Y (Coordenada 2), los puntos de ambos sexos se distribuyen de forma parecida, lo que sugiere que la segunda dimensión de variación no está relacionada con el sexo de manera tan clara como la primera. Este gráfico constituye la exploración visual preliminar antes de aplicar pruebas estadísticas formales como ANOSIM o PERMANOVA.
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 
 ### Gráfica 4 — PCoA con nombres (un solo color)
 
 ```{r}
-<<<<<<< HEAD
-
-=======
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 #| label: res-nombres
 #| echo: false
 #| output: true
@@ -582,7 +572,6 @@ plot(x1, y1,
      type = "n",
      main = "con nombres")
 text(x1, y1, labels = etiquetas_nombres, cex = 0.8)
-<<<<<<< HEAD
 
 ```
 
@@ -592,17 +581,6 @@ text(x1, y1, labels = etiquetas_nombres, cex = 0.8)
 
 ```{r}
 
-=======
-```
-
-Esta versión sacrifica la distinción visual por sexo para ganar **trazabilidad individual**: cada posición en el diagrama puede asociarse a una persona específica. Las personas que aparecen en los bordes del diagrama son aquellas cuyo perfil morfométrico es más diferente al del grupo, y su identificación permite revisar si se trata de variación biológica genuina o de posibles errores de medición. Cuando dos nombres se sobreimprimen o quedan muy juntos, significa que esas personas tienen medidas morfométricas muy parecidas entre sí en las 14 variables. Este solapamiento de etiquetas es una característica inherente del PCoA con datos humanos y no puede evitarse sin herramientas interactivas.
-
----
-
-## Gráfica 5 — PCoA con nombres, colores y leyenda (versión final)
-
-```{r}
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
 #| label: res-final
 #| echo: false
 #| output: true
@@ -622,7 +600,6 @@ legend("bottomright",
        col    = c("deeppink", "royalblue"),
        pch    = 1,
        cex    = 1)
-<<<<<<< HEAD
 
 ```
 
@@ -650,32 +627,3 @@ La interpretación integradora confirma el patrón descrito en la Gráfica 3: lo
 ---
 
 *Bitácora de Cómputo — PCoA*
-=======
-```
-
-Esta es la visualización más informativa de las cinco y la que se reportaría en un trabajo o presentación. Integra tres niveles de información simultáneamente: la posición de cada nombre en el plano refleja la similitud morfométrica global entre individuos; cada nombre permite relacionar la posición con el individuo real y con sus datos originales; y el color permite reconocer de inmediato la categoría de sexo sin necesidad de consultar otra tabla. La leyenda fue colocada en la esquina inferior derecha porque esa zona tiene menor densidad de etiquetas, minimizando la interferencia visual.
-
-La interpretación integradora confirma el patrón descrito en la Gráfica 3: los nombres rosas (mujeres) se concentran relativamente más hacia la izquierda (Coordenada 1 negativa), mientras que muchos nombres azules (hombres) aparecen hacia la derecha (Coordenada 1 positiva), con un amplio traslape en la zona central. Esto es consistente con la existencia de **diferencias morfométricas estadísticamente significativas entre sexos** —que se confirmarán en el tema de Pruebas de Hipótesis Multivariadas— pero también con una **variación intra-grupo considerable**, especialmente entre las mujeres, cuyo rango en la Coordenada 1 es amplio.
-
----
-
-# Problemas Encontrados
-
-- Al principio no quedaba claro por qué era necesario separar las columnas de texto antes de calcular la matriz de distancias. La función `vegdist()` produce un error si se incluyen columnas no numéricas, lo que obligó a revisar la estructura del data frame con `str()` antes de continuar.
-- La lógica de la función `colores_sexo` resultó confusa inicialmente. Usar `grep()` dentro de `if()` no es la forma más intuitiva de hacer una condicional; en un primer intento se trató de usar `== "mujer"` directamente, pero `if()` espera un escalar lógico y al aplicarlo sobre un vector genera una advertencia. Fue necesario entender que `length(grep(...)) > 0` es la forma segura de preguntar "¿encontré este patrón en este texto?".
-- La combinación `lapply()` + `unlist()` no era familiar. Se tuvo que revisar que `lapply()` siempre devuelve una lista (aunque cada elemento sea un solo carácter) y que `plot()` necesita un vector, lo que justifica el paso de conversión con `unlist()`.
-- El uso de `type = "n"` en `plot()` para generar una gráfica vacía y luego superponer texto con `text()` no era evidente; en el primer intento se omitió este argumento y el texto apareció encima de los círculos en lugar de reemplazarlos, produciendo una gráfica ilegible.
-- Identificar que la observación atípica era específicamente el renglón 41 requirió imprimir el objeto `pcoa_datos` completo y buscar manualmente cuál fila tenía la Coordenada 1 más negativa. Una forma más eficiente habría sido usar `which.min(pcoa_datos[,1])`.
-- El error más frecuente en el documento `.qmd` fue el conflicto entre las opciones globales del bloque `execute:` del YAML y las llamadas a `knitr::opts_chunk$set()` dentro del documento. En Quarto, las opciones por chunk con `#| echo:` y `#| output:` siempre tienen prioridad y son la forma recomendada para controlar el comportamiento de cada chunk individualmente, evitando comportamientos inesperados.
-
----
-
-# Aprendizaje
-
-- Se aprendió qué es el PCoA y en qué se diferencia del PCA: el PCA descompone la varianza de la matriz de datos original; el PCoA descompone una matriz de distancias, lo que lo hace aplicable a cualquier tipo de datos siempre que se pueda calcular una disimilaridad entre pares de individuos.
-- Se comprendió por qué la métrica de Bray-Curtis es preferible a la distancia euclidiana para datos morfométricos: la euclidiana es sensible a la escala absoluta de las variables, mientras que Bray-Curtis trabaja con diferencias relativas y está acotada entre 0 y 1, lo que la hace comparable entre estudios y conjuntos de datos con distintas unidades.
-- Se aprendió a escribir funciones propias en R con `function()` y a aplicarlas vectorialmente con `lapply()` + `unlist()`, un patrón central en R base para transformar vectores elemento a elemento sin usar bucles `for`.
-- Se entendió el flujo de tres pasos para gráficas personalizadas en R base: (1) `plot(..., type = "n")` establece el espacio de coordenadas, (2) `text()` o `points()` agregan los elementos visuales, y (3) `legend()` documenta la codificación de colores o símbolos.
-- Se reforzó la importancia de explorar los datos antes de analizar: la gráfica inicial con el outlier habría llevado a conclusiones incorrectas sobre la estructura morfométrica del grupo si no se hubiera detectado y eliminado antes de interpretar.
-- Se aprendió que en Quarto la forma correcta de controlar la visibilidad de código y resultados es usar `#| echo:` y `#| output:` directamente en cada chunk, en lugar de `knitr::opts_chunk$set()`, cuya interacción con el bloque `execute:` del YAML puede producir comportamientos inesperados al renderizar.
->>>>>>> 49b567e7dbc9c962aa048237613ad5af8870e5a5
