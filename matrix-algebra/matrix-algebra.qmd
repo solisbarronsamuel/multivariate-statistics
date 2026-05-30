@@ -3,7 +3,7 @@ title: "Matrix Algebra"
 author: "Samuel Solís Barrón"
 prefer-html: true
 execute:
-  echo: false
+  echo: true
   warning: false
   message: false
   cache: false
@@ -42,7 +42,7 @@ iris1 <- iris[, 1:4]  # Selecciona solo las 4 columnas numéricas (excluye Speci
 
 ```
 
-### iris
+## iris
 
 ```{r}
 
