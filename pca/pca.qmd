@@ -34,7 +34,7 @@ Aprender a reducir la dimensionalidad de datos multivariados mediante un Anális
 
 ```{r instalar-paquetes}
 
-#| eval: false
+#| eval: true
 #| echo: true
 
 # install.packages() descarga e instala paquetes desde el repositorio CRAN.
