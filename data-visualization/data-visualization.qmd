@@ -783,18 +783,26 @@ Las Caras de Chernoff son especialmente útiles como herramienta exploratoria po
 ## Problemas Encontrados
 
 - Al intentar guardar el heatmap de R base con `ggsave()`, el archivo resultaba en blanco. Esto ocurre porque `ggsave()` solo funciona con objetos de clase `ggplot`; los gráficos de R base deben guardarse con `png()` / `pdf()` antes de la llamada a `heatmap()`, y cerrar el dispositivo con `dev.off()` al terminar. Opción eliminada del script.
+
 - En el código original de las Caras de Chernoff por sexo, los subconjuntos estaban invertidos: la variable `hombre` recibía el filtro `sexo == "mujer"` y viceversa. El error se detectó comparando las caras resultantes con estadísticos descriptivos conocidos de los grupos.
+
 - La función `faces()` genera un error si recibe columnas de texto. Fue necesario eliminar las columnas `ID` y `sexo` antes de llamarla.
+
 - `summarise_at()` produce una advertencia de deprecación en versiones recientes de `dplyr`. Se reemplazó por `summarise(across(...))` para mantener compatibilidad con dplyr ≥ 1.0.0.
+
 - La ruta absoluta original (`/home/samuel/Documents/...`) en `read.csv()` impedía la reproducibilidad del documento en otros equipos. Se reemplazó con direccionar la carpeta del archivo utilizando el paquete `here`.
 
 
 ## Aprendizaje
 
 - `ggpairs()` permite explorar simultáneamente distribuciones, correlaciones y agrupamientos en una sola figura, lo que la convierte en la herramienta de exploración multivariada más completa para un primer acercamiento a un dataset.
+
 - La diferencia entre un heatmap sin estandarizar, las variables de mayor magnitud dominan el rango de colores y ocultan los patrones de las variables más pequeñas. `scale = "column"` resuelve este problema colocando todas las variables en la misma escala de desviaciones estándar.
+
 - `pheatmap()` es preferible a `heatmap()` cuando se necesita una leyenda de color automática, anotaciones de filas o columnas, o mayor control sobre el diseño visual.
+
 - Las Caras de Chernoff son una herramienta de exploración cualitativa que permiten detectar diferencias entre grupos de forma intuitiva, pero no reemplazan las pruebas estadísticas formales.
+
 - `lapply()` + `data.frame()` es un patrón eficiente para calcular el promedio de todas las columnas de un data frame en una sola línea.
 
 ---
